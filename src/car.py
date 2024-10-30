@@ -1,3 +1,5 @@
+# car.py
+
 from constants import (
     TIRE_TYPES, DEBUG_MODE, MAX_LAPS, PIT_STOP_THRESHOLD,
     PITLANE_SPEED_LIMIT, PIT_STOP_DURATION
@@ -29,8 +31,14 @@ class Car:
         self.laps_completed = 0
         self.speed = 0.0
         start_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
-        self.distance = start_distance - (0.5 + grid_position * 0.1)
+
+        # Increase spacing between cars on the starting grid
+        spacing_factor = 1.0  # Adjust as needed
+        self.distance = (start_distance - (0.5 + grid_position * spacing_factor)) % TOTAL_TRACK_LENGTH
+
         self.previous_distance = self.distance
+        self.pitlane_distance = 0.0
+        self.previous_pitlane_distance = self.pitlane_distance
 
         # Car stats
         self.engine_power = random.uniform(0.8, 1.2)        # Affects max speed on straights
@@ -48,7 +56,6 @@ class Car:
         self.on_pitlane = False
         self.pitting = False
         self.pit_stop_done = False
-        self.pitlane_distance = 0.0
         self.pit_stop_timer = 0
 
         # Additional variables for pit announcements
@@ -59,6 +66,7 @@ class Car:
         self.lap_times = []
         self.best_lap_time = None
         self.lap_start_frame = None
+        self.first_lap_completed = False  # Flag to skip the first lap time
 
         # Flags to prevent multiple lap counts
         self.just_crossed_start = False
@@ -72,6 +80,13 @@ class Car:
         # Reference to the announcements instance
         self.announcements = announcements
 
+        # Initial time offset based on starting position
+        self.initial_time_offset = 0.0  # Will be set in game.py after all cars are initialized
+
+        # Adjusted distances for leaderboard calculations
+        self.adjusted_distance = 0.0
+        self.adjusted_total_distance = 0.0
+
     def update(self, race_started, current_frame):
         if not race_started:
             return
@@ -80,6 +95,7 @@ class Car:
             self.lap_start_frame = current_frame  # Start timing the lap
 
         self.previous_distance = self.distance
+        self.previous_pitlane_distance = self.pitlane_distance
 
         # Tire wear logic
         wear_rate = TIRE_TYPES[self.tire_type]["wear_rate"] / self.suspension_quality
@@ -122,26 +138,29 @@ class Car:
                 self.distance = PITLANE_ENTRANCE_DISTANCE
         elif self.on_pitlane:
             # Update pitlane distance
-            self.previous_pitlane_distance = self.pitlane_distance
             self.pitlane_distance += self.speed
 
             # Check if car crossed pitstop point (middle of pitlane)
-            if not self.just_crossed_pitstop_point and self.previous_pitlane_distance <= PIT_STOP_POINT < self.pitlane_distance:
-                self.laps_completed += 1
-                # Record lap time
-                if self.lap_start_frame is not None:
-                    lap_time = (current_frame - self.lap_start_frame) / 60.0  # Assuming 60 FPS
-                    self.lap_times.append(lap_time)
-                    if self.best_lap_time is None or lap_time < self.best_lap_time:
-                        self.best_lap_time = lap_time
-                self.lap_start_frame = current_frame
-                self.just_crossed_pitstop_point = True
-                print(f"Car {self.car_number} completed lap {self.laps_completed} with lap time {lap_time:.2f}s")
-            # Reset the flag after the car has moved sufficiently past the pitstop point
-            if self.just_crossed_pitstop_point and self.pitlane_distance > PIT_STOP_POINT + 10:
-                self.just_crossed_pitstop_point = False
+            pitstop_point_distance = PIT_STOP_POINT
+            if self.previous_pitlane_distance <= pitstop_point_distance < self.pitlane_distance:
+                if not self.just_crossed_pitstop_point:
+                    self.laps_completed += 1
+                    # Record lap time if not the first lap
+                    if self.lap_start_frame is not None and self.first_lap_completed:
+                        lap_time = (current_frame - self.lap_start_frame) / 30.0  # Assuming 30 FPS
+                        self.lap_times.append(lap_time)
+                        if self.best_lap_time is None or lap_time < self.best_lap_time:
+                            self.best_lap_time = lap_time
+                        print(f"Car {self.car_number} completed lap {self.laps_completed} with lap time {lap_time:.2f}s")
+                    else:
+                        self.first_lap_completed = True
+                    self.lap_start_frame = current_frame
+                    self.just_crossed_pitstop_point = True
+            else:
+                if self.pitlane_distance > pitstop_point_distance + 1:
+                    self.just_crossed_pitstop_point = False
 
-            # Check if car is at pitstop point
+            # Check if car is at pitstop point for stopping
             if not self.pit_stop_done and self.pitlane_distance >= PIT_STOP_POINT:
                 # Car stops for pitstop
                 self.speed = 0.0
@@ -220,20 +239,36 @@ class Car:
             start_finish_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
 
             # Check if car crossed start-finish line
-            if not self.just_crossed_start and previous_lap_distance <= start_finish_distance < current_lap_distance:
+            crossed_line = False
+            if previous_lap_distance <= start_finish_distance < current_lap_distance:
+                crossed_line = True
+            elif current_lap_distance < previous_lap_distance:
+                # Handle wrap-around
+                if previous_lap_distance <= start_finish_distance or start_finish_distance < current_lap_distance:
+                    crossed_line = True
+
+            if crossed_line and not self.just_crossed_start:
                 self.laps_completed += 1
-                # Record lap time
-                if self.lap_start_frame is not None:
-                    lap_time = (current_frame - self.lap_start_frame) / 60.0  # Assuming 60 FPS
+                # Record lap time if not the first lap
+                if self.lap_start_frame is not None and self.first_lap_completed:
+                    lap_time = (current_frame - self.lap_start_frame) / 30.0  # Assuming 30 FPS
                     self.lap_times.append(lap_time)
                     if self.best_lap_time is None or lap_time < self.best_lap_time:
                         self.best_lap_time = lap_time
                     print(f"Car {self.car_number} completed lap {self.laps_completed} with lap time {lap_time:.2f}s")
+                else:
+                    self.first_lap_completed = True
                 self.lap_start_frame = current_frame
                 self.just_crossed_start = True
-            # Reset the flag after the car has moved sufficiently past the start-finish line
-            if self.just_crossed_start and current_lap_distance > start_finish_distance + 10:
-                self.just_crossed_start = False
+            else:
+                if abs(current_lap_distance - start_finish_distance) > 1:
+                    self.just_crossed_start = False
+        else:
+            # On pitlane, distance is updated via pitlane_distance
+            pass
+
+        # Update adjusted distances for leaderboard calculations
+        self.update_adjusted_distance()
 
         # Send announcements for pit entry and tire change
         if self.just_entered_pit:
@@ -252,6 +287,22 @@ class Car:
                   f"Engine: {self.engine_power:.2f} | Aero: {self.aero_efficiency:.2f} | "
                   f"Gearbox: {self.gearbox_quality:.2f} | "
                   f"Suspension: {self.suspension_quality:.2f} | Brakes: {self.brake_performance:.2f}")
+
+    def update_adjusted_distance(self):
+        """Updates the adjusted distance from the start/finish line."""
+        start_finish_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
+        if self.on_pitlane:
+            # Map pitlane distance to equivalent track distance
+            pitlane_fraction = self.pitlane_distance / PIT_LANE_TOTAL_LENGTH
+            position = (PITLANE_ENTRANCE_DISTANCE + pitlane_fraction * (PITLANE_EXIT_DISTANCE - PITLANE_ENTRANCE_DISTANCE)) % TOTAL_TRACK_LENGTH
+            current_distance = position
+        else:
+            current_distance = self.distance % TOTAL_TRACK_LENGTH
+
+        self.adjusted_distance = (current_distance - start_finish_distance + TOTAL_TRACK_LENGTH) % TOTAL_TRACK_LENGTH
+
+        # Total adjusted distance includes laps completed
+        self.adjusted_total_distance = self.laps_completed * TOTAL_TRACK_LENGTH + self.adjusted_distance
 
     def is_in_corner(self):
         """Determine if the car is in a corner based on the desired speed profile."""
@@ -276,10 +327,16 @@ class Car:
             x, y = get_position_along_track(self.distance, TRACK_POINTS, CUMULATIVE_DISTANCES)
         pyxel.circ(x, y, 3, self.color)
 
-    def get_current_time(self):
+    def get_total_distance_traveled(self):
+        """Returns the total distance the car has traveled."""
+        return self.adjusted_total_distance
+
+    def get_current_position(self):
+        """Returns the car's current position along the track, considering pitlane."""
         if self.on_pitlane:
-            # Adjust the distance to account for pitlane
-            adjusted_distance = self.distance + self.pitlane_distance
+            # Map pitlane distance to equivalent track distance
+            pitlane_fraction = self.pitlane_distance / PIT_LANE_TOTAL_LENGTH
+            position = (PITLANE_ENTRANCE_DISTANCE + pitlane_fraction * (PITLANE_EXIT_DISTANCE - PITLANE_ENTRANCE_DISTANCE)) % TOTAL_TRACK_LENGTH
         else:
-            adjusted_distance = self.distance
-        return self.laps_completed + (adjusted_distance % TOTAL_TRACK_LENGTH) / TOTAL_TRACK_LENGTH
+            position = self.distance % TOTAL_TRACK_LENGTH
+        return position

@@ -1,4 +1,7 @@
+# announcements.py
+
 import pyxel
+
 class Announcements:
     def __init__(self, pyuni):
         self.pyuni = pyuni
