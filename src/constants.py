@@ -9,7 +9,7 @@ TIRE_TYPES = {
     "soft": {"wear_rate": 0.005, "initial_grip": 1.5, "threshold": 50}
 }
 
-CURRENT_VER = "Pre-alpha 0.0.3"
+CURRENT_VER = "Pre-alpha 0.0.3a"
 
 # Pitstop constants
 PIT_STOP_THRESHOLD = 20.0     # Tire percentage to trigger pitstop

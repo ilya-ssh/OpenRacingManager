@@ -23,6 +23,8 @@ implemented dummy car class with tyres and stats, implement track loading from .
 _0.0.3_ Pitstops introduced as well as some changes in balance. Cars now will pitstop when having destroyed tyres. Pitstops can be built using Trackbuilder. Leaderboard is now scrollable. Introduced announcements class for race announcements.
 Utilities.py removed.
 
+_0.0.3a_ Fixed leaderboard and interval race menu.
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and basically not playable**
 1. Lap count set incorrectly
