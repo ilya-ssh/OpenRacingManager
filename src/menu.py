@@ -23,9 +23,9 @@ class MainMenu:
 
     def select_menu_item(self):
         selected_item = self.menu_items[self.selected_index]
-        if selected_item == "Start Race":
+        if selected_item == "Start Career":
             self.game.start_race()
-        elif selected_item == "Options":
+        elif selected_item == "Load Career":
             # You can implement an OptionsMenu class similarly
             self.game.state = 'options_menu'
         elif selected_item == "About":
