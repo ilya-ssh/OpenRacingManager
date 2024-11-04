@@ -8,8 +8,8 @@ TIRE_TYPES = {
     "medium": {"wear_rate": 0.0025, "initial_grip": 1.3, "threshold": 35},
     "soft": {"wear_rate": 0.005, "initial_grip": 1.5, "threshold": 50}
 }
-
-CURRENT_VER = "Pre-alpha 0.0.3a"
+GAME_TITLE = "OpenRacingManager"
+CURRENT_VER = "Pre-alpha 0.0.3b"
 
 # Pitstop constants
 PIT_STOP_THRESHOLD = 20.0     # Tire percentage to trigger pitstop
