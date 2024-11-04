@@ -25,6 +25,8 @@ Utilities.py removed.
 
 _0.0.3a_ Fixed leaderboard and interval race info.
 
+_0.0.3b_ Splitting state logic.
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and basically not playable**
 1. Lap count set incorrectly
