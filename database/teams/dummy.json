@@ -1,0 +1,216 @@
+{
+  "teams": [
+    {
+      "team_id": 0,
+      "full_name": "Speedster Racing",
+      "team_color": "#FF5733",
+      "team_money": 5000000,
+      "reputation": 85,
+      "drivers": {
+        "main_driver_ids": [101, 102],
+        "reserve_driver_id": 103,
+        "academy_driver_ids": [201, 202]
+      },
+      "driver_contracts": {
+        "101": {
+          "contract_start": "2023-01-01",
+          "contract_end": "2025-12-31",
+          "salary_per_race": 150000
+        },
+        "102": {
+          "contract_start": "2024-01-01",
+          "contract_end": "2026-12-31",
+          "salary_per_race": 140000
+        },
+        "103": {
+          "contract_start": "2024-06-01",
+          "contract_end": "2025-12-31",
+          "salary_per_race": 50000
+        },
+        "201": {
+          "contract_start": "2024-01-01",
+          "contract_end": "2026-12-31",
+          "salary_per_race": 0
+        },
+        "202": {
+          "contract_start": "2023-05-01",
+          "contract_end": "2025-12-31",
+          "salary_per_race": 0
+        }
+      },
+      "constructor_id": 1,
+      "engineers": [301, 302],
+      "sponsors": [401, 402, 403, 404, 405],
+      "pit_stop_team_strength": 18.5,
+      "HQ_levels": {
+        "factory": 5,
+        "test_track": 3,
+        "wind_tunnel": 4,
+        "simulator": 2,
+        "R&D_center": 6
+      },
+      "car_stats": {
+        "base_weight": 740,
+        "engine": {
+          "manufacturer": "PowerTech",
+          "power": 850,
+          "durability": 80,
+          "efficiency": 75,
+          "weight": 150
+        },
+        "front_wing": {
+          "downforce": 75,
+          "drag_reduction": 65,
+          "weight": 10
+        },
+        "rear_wing": {
+          "downforce": 73,
+          "drag_reduction": 66,
+          "weight": 12
+        },
+        "underfloor": {
+          "downforce": 70,
+          "drag_reduction": 60,
+          "weight": 15
+        },
+        "suspension": {
+          "stability": 68,
+          "weight": 8,
+          "durability": 78
+        },
+        "brakes": {
+          "braking_power": 72,
+          "cooling_efficiency": 65,
+          "durability": 70
+        },
+        "chassis": {
+          "rigidity": 85,
+          "weight": 80,
+          "aero_efficiency": 72
+        },
+        "gearbox": {
+          "shifting_speed": 90,
+          "durability": 85,
+          "weight": 25
+        }
+      },
+      "car_setup": {
+        "philosophy": {
+          "rake": 2.5,
+          "damper": 3,
+          "spring": 3,
+          "ride_height": 4,
+          "anti_roll_bars": 2,
+          "gear_ratios": [4.2, 3.9, 3.5, 3.0, 2.7, 2.5, 2.2]
+        }
+      },
+      "is_players_team": 0
+    },
+    {
+      "team_id": 1,
+      "full_name": "Thunderbolt Racing",
+      "team_color": "#3355FF",
+      "team_money": 6000000,
+      "reputation": 88,
+      "drivers": {
+        "main_driver_ids": [104, 105],
+        "reserve_driver_id": 106,
+        "academy_driver_ids": [203, 204]
+      },
+      "driver_contracts": {
+        "104": {
+          "contract_start": "2023-05-01",
+          "contract_end": "2026-05-01",
+          "salary_per_race": 160000
+        },
+        "105": {
+          "contract_start": "2024-03-01",
+          "contract_end": "2027-03-01",
+          "salary_per_race": 145000
+        },
+        "106": {
+          "contract_start": "2025-01-01",
+          "contract_end": "2026-12-31",
+          "salary_per_race": 60000
+        },
+        "203": {
+          "contract_start": "2024-01-01",
+          "contract_end": "2026-12-31",
+          "salary_per_race": 0
+        },
+        "204": {
+          "contract_start": "2023-06-01",
+          "contract_end": "2025-06-01",
+          "salary_per_race": 0
+        }
+      },
+      "constructor_id": 2,
+      "engineers": [303, 304],
+      "sponsors": [406, 407, 408, 409, 410],
+      "pit_stop_team_strength": 17.0,
+      "HQ_levels": {
+        "factory": 4,
+        "test_track": 5,
+        "wind_tunnel": 3,
+        "simulator": 4,
+        "R&D_center": 5
+      },
+      "car_stats": {
+        "base_weight": 750,
+        "engine": {
+          "manufacturer": "MaxTorque",
+          "power": 830,
+          "durability": 78,
+          "efficiency": 73,
+          "weight": 155
+        },
+        "front_wing": {
+          "downforce": 78,
+          "drag_reduction": 67,
+          "weight": 11
+        },
+        "rear_wing": {
+          "downforce": 76,
+          "drag_reduction": 64,
+          "weight": 13
+        },
+        "underfloor": {
+          "downforce": 72,
+          "drag_reduction": 61,
+          "weight": 16
+        },
+        "suspension": {
+          "stability": 69,
+          "weight": 9,
+          "durability": 77
+        },
+        "brakes": {
+          "braking_power": 71,
+          "cooling_efficiency": 66,
+          "durability": 69
+        },
+        "chassis": {
+          "rigidity": 87,
+          "weight": 82,
+          "aero_efficiency": 74
+        },
+        "gearbox": {
+          "shifting_speed": 88,
+          "durability": 84,
+          "weight": 27
+        }
+      },
+      "car_setup": {
+        "philosophy": {
+          "rake": 2.8,
+          "damper": 3.5,
+          "spring": 2.5,
+          "ride_height": 4.2,
+          "anti_roll_bars": 2.8,
+          "gear_ratios": [4.1, 3.8, 3.4, 3.0, 2.6, 2.3, 2.0]
+        }
+      },
+      "is_players_team": 0
+    }
+  ]
+}

@@ -6,7 +6,6 @@ from constants import CURRENT_VER
 from title_screen import TitleScreen
 from menu import MainMenu
 from race import Race
-# from options_menu import OptionsMenu  # Implement if needed
 
 class Game:
     def __init__(self):
