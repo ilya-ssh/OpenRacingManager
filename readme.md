@@ -27,6 +27,8 @@ _0.0.3a_ Fixed leaderboard and interval race info.
 
 _0.0.3b_ Splitting state logic.
 
+_0.0.4_ Safety car logic added with debug features
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and basically not playable**
 1. Lap count set incorrectly
@@ -55,4 +57,5 @@ Racing with 100 cars
 - [ ] Add dummy teams, load from .json with stats
 - [ ] Add qualifying state before race
 - [ ] Add more comprehensive readme
+- [x] Add safety car
 - [ ] .... more to come

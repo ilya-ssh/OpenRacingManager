@@ -83,10 +83,10 @@ def get_desired_speed_at_distance(distance, desired_speeds_list, total_length, c
             # Base speed interpolation
             base_speed = base_speed1 + (base_speed2 - base_speed1) * t
             # Adjust base speed based on car's aero efficiency
-            adjusted_speed = base_speed * car.aero_efficiency
+            adjusted_speed = base_speed * car.aero_efficiency * car.engine_power
             return adjusted_speed
     # If distance exceeds the last point, return the last speed adjusted for the car
-    return desired_speeds_list[-1][1] * car.aero_efficiency
+    return desired_speeds_list[-1][1]
 
 def smooth_track(points, num_points=200, per=False):
     # Remove duplicate points
