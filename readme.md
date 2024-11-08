@@ -47,10 +47,10 @@ Racing with 100 cars
 - [ ] Fix palette differences, handle palettes responsibly
 - [ ] Fix car stats (partly done)
 - [x] Add pits to trackbuilder and to race. Add the ability to pit and change tyres
-- [ ] Add safety car spawn from pits
+- [x] Add safety car spawn from pits
 - [ ] Add dummy drivers, load from .json with stats
-- [ ] Add dummy teams, load from .json with stats
+- [ ] Add dummy teams, load from .json with stats (base .json added)
 - [ ] Add qualifying state before race
+- [ ] Add practice session and pre-qualifying if needed
 - [ ] Add more comprehensive readme
-- [x] Add safety car
 - [ ] .... more to come
