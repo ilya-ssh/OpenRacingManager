@@ -131,66 +131,9 @@ class Car:
         else:
             self.attempt_overtake(cars, safety_car_active)
             if self.pitting and not self.on_pitlane:
-                current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
-                distance_to_entrance = (PITLANE_ENTRANCE_DISTANCE -
-                                        current_lap_distance) % \
-                                        TOTAL_TRACK_LENGTH
-                if self.speed > 0:
-                    time_to_entrance = distance_to_entrance / self.speed
-                else:
-                    time_to_entrance = distance_to_entrance / self.min_speed
-                time_to_entrance = max(time_to_entrance, 1)
-                self.target_speed = distance_to_entrance / time_to_entrance
-                self.target_speed = max(self.target_speed, self.min_speed)
-                if distance_to_entrance < self.speed * 2 or \
-                   distance_to_entrance < 1:
-                    self.on_pitlane = True
-                    self.just_entered_pit = True
-                    self.pitlane_distance = 0.0
-                    self.speed = min(self.speed, PITLANE_SPEED_LIMIT)
-                    self.distance = PITLANE_ENTRANCE_DISTANCE
+                self.to_pitlane(current_frame)
             elif self.on_pitlane:
-                self.pitlane_distance += self.speed
-                pitstop_point_distance = PIT_STOP_POINT
-                if self.previous_pitlane_distance <= pitstop_point_distance \
-                   < self.pitlane_distance:
-                    if not self.just_crossed_pitstop_point:
-                        self.laps_completed += 1
-                        if self.lap_start_frame is not None and \
-                           self.first_lap_completed:
-                            lap_time = (current_frame -
-                                        self.lap_start_frame) / 30.0
-                            self.lap_times.append(lap_time)
-                            if self.best_lap_time is None or \
-                               lap_time < self.best_lap_time:
-                                self.best_lap_time = lap_time
-                        else:
-                            self.first_lap_completed = True
-                        self.lap_start_frame = current_frame
-                        self.just_crossed_pitstop_point = True
-                else:
-                    if self.pitlane_distance > pitstop_point_distance + 1:
-                        self.just_crossed_pitstop_point = False
-                if not self.pit_stop_done and \
-                   self.pitlane_distance >= PIT_STOP_POINT:
-                    self.speed = 0.0
-                    self.pit_stop_timer += 1
-                    if self.pit_stop_timer >= PIT_STOP_DURATION:
-                        self.pit_stop_done = True
-                        self.pit_stop_timer = 0
-                        self.tire_type = random.choice(list(
-                                         TIRE_TYPES.keys()))
-                        self.tire_percentage = 100.0
-                        self.just_changed_tires = True
-                else:
-                    self.speed = min(self.speed, PITLANE_SPEED_LIMIT)
-                if self.pitlane_distance >= PIT_LANE_TOTAL_LENGTH:
-                    self.on_pitlane = False
-                    self.pitting = False
-                    self.pit_stop_done = False
-                    self.pitlane_distance = 0.0
-                    self.speed = PITLANE_SPEED_LIMIT
-                    self.distance = PITLANE_EXIT_DISTANCE
+                self.in_pitlane(current_frame)
             else:
                 self.target_speed = get_desired_speed_at_distance(
                     self.distance % TOTAL_TRACK_LENGTH,
@@ -273,6 +216,72 @@ class Car:
                       f"{self.suspension_quality:.2f} | Brakes: "
                       f"{self.brake_performance:.2f}")
 
+    def to_pitlane(self, current_frame):
+        current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
+        distance_to_entrance = (PITLANE_ENTRANCE_DISTANCE -
+                                current_lap_distance) % \
+                               TOTAL_TRACK_LENGTH
+        if self.speed > 0:
+            time_to_entrance = distance_to_entrance / self.speed
+        else:
+            time_to_entrance = distance_to_entrance / self.min_speed
+        time_to_entrance = max(time_to_entrance, 1)
+        self.target_speed = distance_to_entrance / time_to_entrance
+        self.target_speed = max(self.target_speed, self.min_speed)
+        if distance_to_entrance < self.speed * 2 or \
+                distance_to_entrance < 1:
+            self.on_pitlane = True
+            self.just_entered_pit = True
+            self.pitlane_distance = 0.0
+            self.speed = min(self.speed, PITLANE_SPEED_LIMIT)
+            self.distance = PITLANE_ENTRANCE_DISTANCE
+
+    def in_pitlane(self, current_frame):
+        self.pitlane_distance += self.speed
+        pitstop_point_distance = PIT_STOP_POINT
+        if self.previous_pitlane_distance <= pitstop_point_distance \
+                < self.pitlane_distance:
+            if not self.just_crossed_pitstop_point:
+                self.laps_completed += 1
+                if self.lap_start_frame is not None and \
+                        self.first_lap_completed:
+                    lap_time = (current_frame -
+                                self.lap_start_frame) / 30.0
+                    self.lap_times.append(lap_time)
+                    if self.best_lap_time is None or \
+                            lap_time < self.best_lap_time:
+                        self.best_lap_time = lap_time
+                else:
+                    self.first_lap_completed = True
+                self.lap_start_frame = current_frame
+                self.just_crossed_pitstop_point = True
+        else:
+            if self.pitlane_distance > pitstop_point_distance + 1:
+                self.just_crossed_pitstop_point = False
+        if not self.pit_stop_done and \
+                self.pitlane_distance >= PIT_STOP_POINT:
+            self.speed = 0.0
+            self.pit_stop_timer += 1
+            print(self.pit_stop_timer)
+            if self.pit_stop_timer >= PIT_STOP_DURATION:
+                self.pit_stop_done = True
+                self.pit_stop_timer = 0
+                self.tire_type = random.choice(list(
+                    TIRE_TYPES.keys()))
+                self.tire_percentage = 100.0
+                self.just_changed_tires = True
+        else:
+            self.speed = PITLANE_SPEED_LIMIT
+            print(self.speed)
+        if self.pitlane_distance >= PIT_LANE_TOTAL_LENGTH:
+            print('True')
+            self.on_pitlane = False
+            self.pitting = False
+            self.pit_stop_done = False
+            self.pitlane_distance = 0.0
+            self.speed = PITLANE_SPEED_LIMIT
+            self.distance = PITLANE_EXIT_DISTANCE
+
     def update_safety_car_behavior(self):
         self.previous_distance = self.distance
         if self.is_exiting:
@@ -289,6 +298,12 @@ class Car:
 
     def update_under_safety_car(self, current_frame, safety_car, car_ahead=None):
         if self.crashed or not self.is_active:
+            return
+        if self.pitting and not self.on_pitlane:
+            print(self.speed)
+            self.to_pitlane(current_frame)
+        if self.on_pitlane:
+            self.in_pitlane(current_frame)
             return
         self.previous_distance = self.distance
 

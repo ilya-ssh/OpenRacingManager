@@ -220,7 +220,6 @@ class Race:
       #  all_cars_caught_up = all(car.has_caught_safety_car or not car.is_active
                                #  for car in self.cars)
         all_cars_caught_up = all(car.speed == SAFETY_CAR_SPEED for car in self.cars)
-        print(all_cars_caught_up)
         if all_cars_caught_up and not self.safety_car_laps_started:
             self.safety_car_laps_started = True
             self.safety_car_start_lap = self.cars[0].laps_completed

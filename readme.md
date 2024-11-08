@@ -29,6 +29,8 @@ _0.0.3b_ Splitting state logic.
 
 _0.0.4_ Safety car logic added with debug features
 
+_0.0.4a_ Fixed safety car and pitstop bugs - cars stuck in pitstop while safetycar is active, cars won't do a planned pitstop if safetycar becomes active
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and right now only race is playable**
 Bugs moved to issues
