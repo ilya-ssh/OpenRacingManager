@@ -30,13 +30,8 @@ _0.0.3b_ Splitting state logic.
 _0.0.4_ Safety car logic added with debug features
 
 ## Major bugs
-**TLDR The game is in pre-alpha state and basically not playable**
-1. Lap count set incorrectly
-2. Speed decrease from tyre degradation is way too much
-3. Visualization bugs with leaderboard
-4. Max laps is getting from constants, but from track file
-5. Aero is incredibly strong
-6. No differenece between tyre compounds
+**TLDR The game is in pre-alpha state and right now only race is playable**
+Bugs moved to issues
 ## trackbuilder.py
 Build your own tracks to race your cars on.
 ![Game Demo](/gifs/trackbuilder.gif)
