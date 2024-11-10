@@ -103,6 +103,27 @@ class Car:
         elif self.mode == 'race':
             self.update_race(race_started, current_frame, cars, safety_car_active)
 
+    def update_warmup(self, current_frame):
+        if not self.warmup_started:
+            if current_frame >= self.start_delay_frames:
+                self.warmup_started = True
+                self.speed = 0.3
+            else:
+                self.speed = 0.0
+                return
+        if not self.warmup_completed:
+            self.distance += self.speed
+            self.distance %= TOTAL_TRACK_LENGTH
+            distance_to_grid = (self.grid_distance - self.distance) % \
+                               TOTAL_TRACK_LENGTH
+            if distance_to_grid <= self.speed:
+                self.distance = self.grid_distance
+                self.speed = 0.0
+                self.warmup_completed = True
+                self.is_at_grid_position = True
+        else:
+            self.speed = 0.0
+
     def update_race(self, race_started, current_frame, cars, safety_car_active):
         if not self.is_active:
             return
@@ -595,7 +616,7 @@ class Car:
             pyxel.circ(x, y, 3, self.color)
         elif self.mode == 'race':
             if self.is_safety_car:
-                pyxel.circ(x, y, 4, self.color)
-                pyxel.text(x - 3, y - 2, "SC", 11)
+                pyxel.circ(x, y, 4, 0)
+                pyxel.text(x - 3, y - 2, "SC", 1)
             else:
                 pyxel.circ(x, y, 3, self.color)
