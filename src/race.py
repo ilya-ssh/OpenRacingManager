@@ -1,14 +1,4 @@
 # race.py
-import pyxel
-import random
-from car import Car
-from track import (
-    TRACK_POINTS, START_FINISH_INDEX_SMOOTHED, PIT_LANE_POINTS,
-    TOTAL_TRACK_LENGTH, PIT_LANE_TOTAL_LENGTH, PITLANE_ENTRANCE_DISTANCE,
-    PITLANE_EXIT_DISTANCE
-)
-from constants import *
-from announcements import Announcements
 
 import pyxel
 import random
@@ -20,9 +10,10 @@ from track import (
 )
 from constants import *
 from announcements import Announcements
-
+from load_teams import load_teams
 class Race:
-    def __init__(self, game):
+    def __init__(self, game, starting_grid):
+        self.starting_grid = starting_grid
         self.game = game
         self.pyuni = self.game.pyuni
         self.frame_count = 0
@@ -35,35 +26,35 @@ class Race:
         self.state = 'warmup_lap' if ENABLE_WARMUP_LAP else 'countdown'
         self.init_race()
 
+
     def init_race(self):
         pyxel.colors[0] = 0xFFFFFFFF
-        team_colors = [
-            0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00,
-            0xFF00FF, 0x00FFFF, 0x800000, 0x008000,
-            0x000080, 0x808000, 0x000000
-        ]
-        for i, hex_color in enumerate(team_colors, start=1):
-            pyxel.colors[i] = hex_color
-        pyxel.colors[13] = 0x00FFFF
+        teams_data = load_teams()
+
+        # Set pyxel colors based on team data
+        for i, team in enumerate(teams_data, start=2):
+            pyxel.colors[i] = int(team["color"], 16)  # Convert hex to integer
+
+
         grid_positions = list(range(20))
         random.shuffle(grid_positions)
-        cars_list = []
-        for i in range(20):
-            team_color_index = (i // 2) + 1
-            car_number = i + 1
-            grid_position = grid_positions[i]
-            car = Car(
-                color_index=team_color_index,
-                car_number=car_number,
-                grid_position=grid_position,
-                announcements=self.announcements
-            )
-            cars_list.append(car)
-        cars_list.sort(key=lambda car: car.grid_position)
-        for idx, car in enumerate(cars_list):
+
+        # Initialize cars using team data
+        for i, team in enumerate(teams_data):
+            for driver in team["drivers"]:
+                car_number = driver["name"]
+                color_index = i + 2
+                grid_position = self.starting_grid.index(car_number) if car_number in self.starting_grid else len(
+                    self.cars)
+                car = Car(color_index, car_number, grid_position, self.announcements, mode='race')
+                car.game = self.game
+                self.cars.append(car)
+
+        # Sort cars by grid position for the race
+        self.cars.sort(key=lambda car: car.grid_position)
+        for idx, car in enumerate(self.cars):
             start_delay_frames = idx * 30
             car.start_delay_frames = start_delay_frames
-        self.cars = cars_list
         if ENABLE_WARMUP_LAP:
             self.announcements.add_message("Warm-up lap has started.",
                                            duration=90)
@@ -114,24 +105,17 @@ class Race:
                                            duration=60)
 
     def update_countdown(self):
-        if self.countdown > 0:
-            if self.countdown % 30 == 0:
-                seconds_left = self.countdown // 30
-                self.announcements.add_message(f"Race starts in "
-                                               f"{seconds_left}...",
-                                               duration=30)
-            self.countdown -= 1
-        else:
-            self.race_started = True
-            self.state = 'race'
-            leader_distance = self.cars[0].distance
-            average_speed = sum(car.base_max_speed for car in self.cars) / \
-                            len(self.cars)
-            for car in self.cars:
-                distance_diff = (leader_distance - car.distance) % \
-                                TOTAL_TRACK_LENGTH
-                car.initial_time_offset = distance_diff / average_speed
-            self.announcements.add_message("Go!", duration=60)
+        self.race_started = True
+        self.state = 'race'
+        print(self.cars[0])
+        leader_distance = self.cars[0].distance
+        average_speed = sum(car.base_max_speed for car in self.cars) / \
+                        len(self.cars)
+        for car in self.cars:
+            distance_diff = (leader_distance - car.distance) % \
+                            TOTAL_TRACK_LENGTH
+            car.initial_time_offset = distance_diff / average_speed
+        self.announcements.add_message("Go!", duration=60)
 
     def update_race_logic(self):
         if self.race_started and not self.race_finished:
@@ -247,7 +231,7 @@ class Race:
                 car.is_active = False
 
     def draw(self):
-        pyxel.cls(11)
+        pyxel.cls(1)
         self.pyuni.text(370, 480, CURRENT_VER, 0)
         for i in range(len(TRACK_POINTS) - 1):
             x1, y1 = TRACK_POINTS[i]

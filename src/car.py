@@ -1,60 +1,34 @@
-# car.py
-from constants import (
-    TIRE_TYPES, DEBUG_MODE, MAX_LAPS, PIT_STOP_THRESHOLD,
-    PITLANE_SPEED_LIMIT, PIT_STOP_DURATION, OVERTAKE_CHANCE,
-    CRASH_CHANCE, SAFETY_CAR_SPEED, SAFETY_CAR_GAP_DISTANCE,
-    SAFETY_CAR_CATCH_UP_SPEED
-)
-from track import (
-    START_FINISH_INDEX_SMOOTHED,
-    TRACK_POINTS,
-    CUMULATIVE_DISTANCES,
-    TOTAL_TRACK_LENGTH,
-    get_position_along_track,
-    get_desired_speed_at_distance,
-    DESIRED_SPEEDS_LIST,
-    PIT_LANE_POINTS,
-    PIT_LANE_CUMULATIVE_DISTANCES,
-    PIT_LANE_TOTAL_LENGTH,
-    PITLANE_ENTRANCE_DISTANCE,
-    PITLANE_EXIT_DISTANCE,
-    PIT_STOP_POINT
-)
 import random
 import pyxel
+from constants import (
+    TIRE_TYPES, PITLANE_SPEED_LIMIT,  OVERTAKE_CHANCE, CRASH_CHANCE,
+    SAFETY_CAR_SPEED, SAFETY_CAR_GAP_DISTANCE, SAFETY_CAR_CATCH_UP_SPEED,
+    PIT_STOP_THRESHOLD, PIT_STOP_DURATION, MAX_LAPS, DEBUG_MODE
+)
+from track import (
+    get_desired_speed_at_distance, get_position_along_track,
+    PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES, TRACK_POINTS, PITLANE_ENTRANCE_DISTANCE,
+    PITLANE_EXIT_DISTANCE, TOTAL_TRACK_LENGTH, DESIRED_SPEEDS_LIST,
+    PIT_STOP_POINT, PIT_LANE_TOTAL_LENGTH, CUMULATIVE_DISTANCES,
+    START_FINISH_INDEX_SMOOTHED,
+)
 
 class Car:
     def __init__(self, color_index, car_number, grid_position,
-                 announcements, start_delay_frames=0):
+                 announcements, game=None, mode='race', start_delay_frames=0):
         self.color = color_index
         self.car_number = car_number
-        self.tire_type = random.choice(list(TIRE_TYPES.keys()))
-        self.tire_percentage = 100.0
-        self.laps_completed = 0
-        self.speed = 0.0
         self.grid_position = grid_position
-        self.is_at_grid_position = True
-        self.warmup_completed = False
-        self.announced_on_grid = False
         self.announcements = announcements
+        self.game = game
+        self.mode = mode
         self.crashed = False
-        self.crash_timer = 0
-        self.is_under_safety_car = False
-        self.is_safety_car = False
-        self.is_exiting = False
+        self.speed = 0.0
+        self.previous_distance = 0.0
+        self.lap_times = []
+        self.best_lap_time = None
+        self.current_lap_start_frame = None
         self.is_active = True
-        self.has_caught_safety_car = False
-        self.is_safety_car_ending = False
-        self.start_delay_frames = start_delay_frames
-        self.warmup_started = False
-        spacing_factor = 1.0
-        start_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
-        self.grid_distance = (start_distance - (0.5 + grid_position *
-                               spacing_factor)) % TOTAL_TRACK_LENGTH
-        self.distance = self.grid_distance
-        self.previous_distance = self.distance
-        self.pitlane_distance = 0.0
-        self.previous_pitlane_distance = self.pitlane_distance
         self.engine_power = random.uniform(0.8, 1.2)
         self.aero_efficiency = random.uniform(0.8, 1.2)
         self.gearbox_quality = random.uniform(0.8, 1.2)
@@ -63,48 +37,73 @@ class Car:
         self.base_max_speed = 1.0
         self.base_acceleration = 0.007
         self.braking_intensity = 3.0 * self.brake_performance
+        self.min_speed = 0.1
+        self.min_max_speed = 0.2
+        if self.mode == 'qualifying':
+            self.initialize_qualifying_mode()
+        elif self.mode == 'race':
+            self.initialize_race_mode()
+
+    def initialize_qualifying_mode(self):
+        self.in_pit = True
+        self.on_out_lap = False
+        self.on_fast_lap = False
+        self.on_in_lap = False
+        self.has_time_for_another_run = True
+        self.qualifying_exit_delay = random.randint(0, 60 * 30 * 3)
+        self.last_exit_time = 0
+        self.on_pitlane = True
+        self.pitlane_distance = PIT_STOP_POINT
+        self.distance = PITLANE_ENTRANCE_DISTANCE
+        self.previous_distance = self.distance
+        self.laps_completed = 0
+
+    def initialize_race_mode(self):
+        self.just_crossed_pitstop_point = False
+        self.lap_start_frame = None
+        self.just_crossed_start = False
+        self.laps_completed = 0
+        self.is_at_grid_position = True
+        self.warmup_completed = False
+        self.announced_on_grid = False
+        self.crash_timer = 0
+        self.is_under_safety_car = False
+        self.is_safety_car = False
+        self.is_exiting = False
+        self.has_caught_safety_car = False
+        self.is_safety_car_ending = False
+        self.start_delay_frames = 0
+        self.warmup_started = False
+        self.tire_type = random.choice(list(TIRE_TYPES.keys()))
+        self.tire_percentage = 100.0
+        spacing_factor = 1.0
+        start_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
+        self.grid_distance = (start_distance - (0.5 + self.grid_position * spacing_factor)) % TOTAL_TRACK_LENGTH
+        self.distance = self.grid_distance
+        self.previous_distance = self.distance
         self.on_pitlane = False
         self.pitting = False
         self.pit_stop_done = False
         self.pit_stop_timer = 0
         self.just_entered_pit = False
         self.just_changed_tires = False
-        self.lap_times = []
-        self.best_lap_time = None
-        self.lap_start_frame = None
-        self.first_lap_completed = False
-        self.just_crossed_start = False
-        self.just_crossed_pitstop_point = False
         self.target_speed = self.base_max_speed
-        self.min_speed = 0.1
-        self.min_max_speed = 0.2
         self.initial_time_offset = 0.0
         self.adjusted_distance = 0.0
         self.adjusted_total_distance = 0.0
 
-    def update_warmup(self, current_frame):
-        if not self.warmup_started:
-            if current_frame >= self.start_delay_frames:
-                self.warmup_started = True
-                self.speed = 0.3
-            else:
-                self.speed = 0.0
-                return
-        if not self.warmup_completed:
-            self.distance += self.speed
-            self.distance %= TOTAL_TRACK_LENGTH
-            distance_to_grid = (self.grid_distance - self.distance) % \
-                               TOTAL_TRACK_LENGTH
-            if distance_to_grid <= self.speed:
-                self.distance = self.grid_distance
-                self.speed = 0.0
-                self.warmup_completed = True
-                self.is_at_grid_position = True
-        else:
-            self.speed = 0.0
+        self.pitlane_distance = 0.0
+        self.previous_pitlane_distance = self.pitlane_distance
 
-    def update(self, race_started, current_frame, cars,
-               safety_car_active):
+    def update(self, race_started, current_frame, cars, safety_car_active):
+        if not self.is_active:
+            return
+        if self.mode == 'qualifying':
+            self.update_qualifying()
+        elif self.mode == 'race':
+            self.update_race(race_started, current_frame, cars, safety_car_active)
+
+    def update_race(self, race_started, current_frame, cars, safety_car_active):
         if not self.is_active:
             return
         if self.is_safety_car:
@@ -121,7 +120,7 @@ class Car:
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
         self.tire_percentage = max(self.tire_percentage, 1)
         if not self.pitting and not self.on_pitlane and \
-           self.tire_percentage <= PIT_STOP_THRESHOLD:
+                self.tire_percentage <= PIT_STOP_THRESHOLD:
             self.pitting = True
         if safety_car_active or self.is_under_safety_car:
             self.update_adjusted_distance()
@@ -168,24 +167,24 @@ class Car:
                 previous_lap_distance = self.previous_distance % \
                                         TOTAL_TRACK_LENGTH
                 start_finish_distance = CUMULATIVE_DISTANCES[
-                                        START_FINISH_INDEX_SMOOTHED]
+                    START_FINISH_INDEX_SMOOTHED]
                 crossed_line = False
                 if previous_lap_distance <= start_finish_distance < \
-                   current_lap_distance:
+                        current_lap_distance:
                     crossed_line = True
                 elif current_lap_distance < previous_lap_distance:
                     if previous_lap_distance <= start_finish_distance or \
-                       start_finish_distance < current_lap_distance:
+                            start_finish_distance < current_lap_distance:
                         crossed_line = True
                 if crossed_line and not self.just_crossed_start:
                     self.laps_completed += 1
                     if self.lap_start_frame is not None and \
-                       self.first_lap_completed:
+                            self.first_lap_completed:
                         lap_time = (current_frame - self.lap_start_frame) \
                                    / 30.0
                         self.lap_times.append(lap_time)
                         if self.best_lap_time is None or \
-                           lap_time < self.best_lap_time:
+                                lap_time < self.best_lap_time:
                             self.best_lap_time = lap_time
                     else:
                         self.first_lap_completed = True
@@ -215,6 +214,98 @@ class Car:
                       f"{self.gearbox_quality:.2f} | Suspension: "
                       f"{self.suspension_quality:.2f} | Brakes: "
                       f"{self.brake_performance:.2f}")
+    def update_qualifying(self):
+        if self.crashed:
+            return
+        if self.in_pit:
+            if self.has_time_for_another_run:
+                if self.game.qualifying.elapsed_time >= self.qualifying_exit_delay:
+                    self.in_pit = False
+                    self.on_pitlane = True
+                    self.on_out_lap = True
+                    self.speed = 0.0
+                    self.pit_stop_done = True
+            else:
+                pass
+        elif self.on_out_lap:
+            self.previous_distance = self.distance
+            if self.on_pitlane:
+                self.update_pitlane_exit()
+            else:
+                self.update_movement()
+                if self.crossed_start_finish_line():
+                    self.on_out_lap = False
+                    self.on_fast_lap = True
+                    self.current_lap_start_frame = self.game.qualifying.elapsed_time
+        elif self.on_fast_lap:
+            self.previous_distance = self.distance
+            self.update_movement()
+            if self.crossed_start_finish_line():
+                lap_time = (self.game.qualifying.elapsed_time - self.current_lap_start_frame) / 30.0
+                self.lap_times.append(lap_time)
+                if self.best_lap_time is None or lap_time < self.best_lap_time:
+                    self.best_lap_time = lap_time
+                self.on_fast_lap = False
+                self.on_in_lap = True
+        elif self.on_in_lap:
+            self.previous_distance = self.distance
+            self.update_movement()
+            if self.distance >= PITLANE_ENTRANCE_DISTANCE and self.previous_distance < PITLANE_ENTRANCE_DISTANCE:
+                self.on_pitlane = True
+                self.pitlane_distance = 0.0
+            if self.on_pitlane:
+                self.update_pitlane_entry()
+                if self.pitlane_distance >= PIT_STOP_POINT:
+                    self.in_pit = True
+                    self.on_in_lap = False
+                    remaining_time = self.game.qualifying.session_time - self.game.qualifying.elapsed_time
+                    estimated_time_for_run = (self.best_lap_time or 60 * 30) * 2
+                    if remaining_time > estimated_time_for_run:
+                        self.qualifying_exit_delay = self.game.qualifying.elapsed_time + random.randint(60 * 5, 60 * 15)
+                        self.has_time_for_another_run = True
+                    else:
+                        self.has_time_for_another_run = False
+
+    def update_pitlane_exit(self):
+        self.previous_pitlane_distance = self.pitlane_distance
+        self.speed = min(self.speed + self.base_acceleration, PITLANE_SPEED_LIMIT)
+        self.pitlane_distance += self.speed
+        if self.pitlane_distance >= PIT_LANE_TOTAL_LENGTH:
+            self.on_pitlane = False
+            self.distance = PITLANE_EXIT_DISTANCE
+            self.pitlane_distance = 0.0
+            self.speed = self.min_speed
+
+    def update_pitlane_entry(self):
+        self.previous_pitlane_distance = self.pitlane_distance
+        self.speed = min(self.speed + self.base_acceleration, PITLANE_SPEED_LIMIT)
+        self.pitlane_distance += self.speed
+        if self.pitlane_distance >= PIT_STOP_POINT:
+            self.speed = 0.0
+
+    def update_movement(self):
+        self.previous_distance = self.distance
+        self.target_speed = get_desired_speed_at_distance(
+            self.distance % TOTAL_TRACK_LENGTH,
+            DESIRED_SPEEDS_LIST,
+            TOTAL_TRACK_LENGTH,
+            self
+        )
+        effective_acceleration = self.base_acceleration
+        if self.speed < self.target_speed:
+            self.speed += effective_acceleration
+            self.speed = min(self.speed, self.target_speed)
+        elif self.speed > self.target_speed:
+            speed_diff = self.speed - self.target_speed
+            braking_force = (self.braking_intensity * speed_diff) * 0.1
+            self.speed -= braking_force
+            self.speed = max(self.speed, self.target_speed)
+        max_speed = self.base_max_speed
+        self.speed = min(self.speed, max_speed)
+        self.speed = max(self.speed, self.min_speed)
+        self.distance += self.speed
+        self.distance %= TOTAL_TRACK_LENGTH
+        self.update_adjusted_distance()
 
     def to_pitlane(self, current_frame):
         current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
@@ -284,13 +375,14 @@ class Car:
 
     def update_safety_car_behavior(self):
         self.previous_distance = self.distance
-        if self.is_exiting:
+        if self.is_exiting and self.is_safety_car:
+            print(self.car_number)
             self.speed += self.base_acceleration * 0.5
-            self.speed = min(self.speed, SAFETY_CAR_SPEED * 1.5)
+            self.speed = min(self.speed, SAFETY_CAR_SPEED * 2)
             self.distance += self.speed
             self.distance %= TOTAL_TRACK_LENGTH
             if (self.distance >= PITLANE_ENTRANCE_DISTANCE and
-                self.previous_distance < PITLANE_ENTRANCE_DISTANCE):
+                    self.previous_distance < PITLANE_ENTRANCE_DISTANCE):
                 self.is_active = False
         else:
             self.distance += self.speed
@@ -300,20 +392,26 @@ class Car:
         if self.crashed or not self.is_active:
             return
         if self.pitting and not self.on_pitlane:
-            print(self.speed)
             self.to_pitlane(current_frame)
         if self.on_pitlane:
             self.in_pitlane(current_frame)
+            print(f"in pitlane", self.car_number, self.speed)
             return
         self.previous_distance = self.distance
 
         desired_gap = SAFETY_CAR_GAP_DISTANCE
+        #print(self.has_caught_safety_car, self.car_number)
+        #print(self.car_number, car_ahead)
+
         if self.is_safety_car_ending and not self.is_safety_car:
             self.speed = SAFETY_CAR_SPEED
-        if car_ahead and car_ahead.is_active:
+        if car_ahead and car_ahead.is_active and car_ahead != safety_car:
             # Calculate distance to car ahead
+
             distance_to_car_ahead = (car_ahead.distance - self.distance) % TOTAL_TRACK_LENGTH
             gap_error = distance_to_car_ahead - desired_gap
+
+
 
             # Smooth acceleration and braking
             if gap_error > 1.0:
@@ -330,6 +428,12 @@ class Car:
         else:
             # No car ahead, maintain gap to safety car
             distance_to_safety_car = (safety_car.distance - self.distance) % TOTAL_TRACK_LENGTH
+            print(distance_to_safety_car)
+            if distance_to_safety_car > SAFETY_CAR_GAP_DISTANCE*10 and not safety_car.is_exiting:
+                safety_car.speed = SAFETY_CAR_SPEED * 0.1
+            elif distance_to_safety_car < SAFETY_CAR_GAP_DISTANCE*10 and not safety_car.is_exiting:
+                safety_car.speed = SAFETY_CAR_SPEED
+            print(distance_to_safety_car)
             gap_error = distance_to_safety_car - desired_gap
 
             if gap_error > 1.0:
@@ -358,15 +462,15 @@ class Car:
 
     def crossed_start_finish_line(self):
         start_finish_distance = CUMULATIVE_DISTANCES[
-                                START_FINISH_INDEX_SMOOTHED]
+            START_FINISH_INDEX_SMOOTHED]
         current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
         previous_lap_distance = self.previous_distance % TOTAL_TRACK_LENGTH
         if previous_lap_distance <= start_finish_distance < \
-           current_lap_distance:
+                current_lap_distance:
             return True
         elif current_lap_distance < previous_lap_distance:
             if previous_lap_distance <= start_finish_distance or \
-               start_finish_distance < current_lap_distance:
+                    start_finish_distance < current_lap_distance:
                 return True
         return False
 
@@ -381,7 +485,7 @@ class Car:
             return
         for other_car in cars:
             if other_car.car_number == self.car_number or other_car.crashed \
-               or not other_car.is_active:
+                    or not other_car.is_active:
                 continue
             distance_diff = (other_car.distance - self.distance) % \
                             TOTAL_TRACK_LENGTH
@@ -400,12 +504,12 @@ class Car:
 
     def update_adjusted_distance(self):
         start_finish_distance = CUMULATIVE_DISTANCES[
-                                START_FINISH_INDEX_SMOOTHED]
+            START_FINISH_INDEX_SMOOTHED]
         if self.on_pitlane:
             pitlane_fraction = self.pitlane_distance / PIT_LANE_TOTAL_LENGTH
             position = (PITLANE_ENTRANCE_DISTANCE + pitlane_fraction *
                         (PITLANE_EXIT_DISTANCE - PITLANE_ENTRANCE_DISTANCE)) \
-                        % TOTAL_TRACK_LENGTH
+                       % TOTAL_TRACK_LENGTH
             current_distance = position
         else:
             current_distance = self.distance % TOTAL_TRACK_LENGTH
@@ -428,31 +532,70 @@ class Car:
                     return False
         return False
 
-    def draw(self):
-        if not self.is_active:
-            return
+    def update_adjusted_distance(self):
+        start_finish_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
         if self.on_pitlane:
-            x, y = get_position_along_track(self.pitlane_distance,
-                                            PIT_LANE_POINTS,
-                                            PIT_LANE_CUMULATIVE_DISTANCES)
+            pitlane_fraction = self.pitlane_distance / PIT_LANE_TOTAL_LENGTH
+            position = (PITLANE_ENTRANCE_DISTANCE + pitlane_fraction * (PITLANE_EXIT_DISTANCE - PITLANE_ENTRANCE_DISTANCE)) % TOTAL_TRACK_LENGTH
+            current_distance = position
         else:
-            x, y = get_position_along_track(self.distance, TRACK_POINTS,
-                                            CUMULATIVE_DISTANCES)
-        if self.is_safety_car:
-            pyxel.circ(x,y,4,self.color)
-            pyxel.text(x-3,y-2,"SC",11)
-        else:
-            pyxel.circ(x, y, 3, self.color)
+            current_distance = self.distance % TOTAL_TRACK_LENGTH
+        self.adjusted_distance = (current_distance - start_finish_distance + TOTAL_TRACK_LENGTH) % TOTAL_TRACK_LENGTH
+        self.adjusted_total_distance = self.laps_completed * TOTAL_TRACK_LENGTH + self.adjusted_distance
 
-    def get_total_distance_traveled(self):
-        return self.adjusted_total_distance
+    def is_in_corner(self):
+        current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
+        for i in range(len(DESIRED_SPEEDS_LIST) - 1):
+            dist1, base_speed1 = DESIRED_SPEEDS_LIST[i]
+            dist2, base_speed2 = DESIRED_SPEEDS_LIST[i + 1]
+            if dist1 <= current_lap_distance <= dist2:
+                avg_base_speed = (base_speed1 + base_speed2) / 2
+                if avg_base_speed < self.base_max_speed * 0.9:
+                    return True
+                else:
+                    return False
+        return False
+
+    def attempt_overtake(self, cars, safety_car_active):
+        if safety_car_active or self.is_under_safety_car:
+            return
+        for other_car in cars:
+            if other_car.car_number == self.car_number or other_car.crashed or not other_car.is_active:
+                continue
+            distance_diff = (other_car.distance - self.distance) % TOTAL_TRACK_LENGTH
+            if 0 < distance_diff < 5:
+                if random.random() < OVERTAKE_CHANCE:
+                    pass
+                else:
+                    if random.random() < CRASH_CHANCE:
+                        self.crashed = True
+                        self.speed = 0.0
+                        self.is_active = False
+                        self.announcements.add_message(f"Car {self.car_number} has crashed!")
+                        break
 
     def get_current_position(self):
         if self.on_pitlane:
             pitlane_fraction = self.pitlane_distance / PIT_LANE_TOTAL_LENGTH
             position = (PITLANE_ENTRANCE_DISTANCE + pitlane_fraction *
                         (PITLANE_EXIT_DISTANCE - PITLANE_ENTRANCE_DISTANCE)) \
-                        % TOTAL_TRACK_LENGTH
+                       % TOTAL_TRACK_LENGTH
         else:
             position = self.distance % TOTAL_TRACK_LENGTH
         return position
+
+    def draw(self):
+        if not self.is_active:
+            return
+        if self.on_pitlane:
+            x, y = get_position_along_track(self.pitlane_distance, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES)
+        else:
+            x, y = get_position_along_track(self.distance, TRACK_POINTS, CUMULATIVE_DISTANCES)
+        if self.mode == 'qualifying':
+            pyxel.circ(x, y, 3, self.color)
+        elif self.mode == 'race':
+            if self.is_safety_car:
+                pyxel.circ(x, y, 4, self.color)
+                pyxel.text(x - 3, y - 2, "SC", 11)
+            else:
+                pyxel.circ(x, y, 3, self.color)

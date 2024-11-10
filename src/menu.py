@@ -1,5 +1,3 @@
-# menu.py
-
 import pyxel
 from constants import CURRENT_VER
 
@@ -24,12 +22,13 @@ class MainMenu:
     def select_menu_item(self):
         selected_item = self.menu_items[self.selected_index]
         if selected_item == "Start Career":
-            self.game.start_race()
+            self.game.start_qualifying()
         elif selected_item == "Load Career":
-            # You can implement an OptionsMenu class similarly
-            self.game.state = 'options_menu'
+            # Implement load functionality if desired
+            pass
         elif selected_item == "About":
-            pyxel.quit()
+            # Show about information
+            pass
         elif selected_item == "Exit":
             pyxel.quit()
 

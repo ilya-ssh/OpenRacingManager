@@ -1,0 +1,90 @@
+[
+    {
+        "team_name": "Farrini",
+        "color": "0xFF3333",
+        "drivers": [
+            {"name": "Marco Bellini", "number": 1},
+            {"name": "Luca Moretti", "number": 2}
+        ]
+    },
+    {
+        "team_name": "Marandi",
+        "color": "0x3333FF",
+        "drivers": [
+            {"name": "Giorgio Bianchi", "number": 3},
+            {"name": "Alessandro Fiore", "number": 4}
+        ]
+    },
+    {
+        "team_name": "Donnelly",
+        "color": "0xFFFF33",
+        "drivers": [
+            {"name": "Robert Clarkson", "number": 5},
+            {"name": "Patrick Doyle", "number": 6}
+        ]
+    },
+    {
+        "team_name": "Seymour",
+        "color": "0x33FF33",
+        "drivers": [
+            {"name": "John Harris", "number": 7},
+            {"name": "Carl Stewart", "number": 8}
+        ]
+    },
+    {
+        "team_name": "Lionheart",
+        "color": "0xFF33FF",
+        "drivers": [
+            {"name": "Arthur King", "number": 9},
+            {"name": "Victor Sharpe", "number": 10}
+        ]
+    },
+    {
+        "team_name": "Pacifico",
+        "color": "0x33FFFF",
+        "drivers": [
+            {"name": "Hiroshi Sato", "number": 11},
+            {"name": "Kenji Nakamura", "number": 12}
+        ]
+    },
+    {
+        "team_name": "Scorpius",
+        "color": "0xFF6633",
+        "drivers": [
+            {"name": "Alexei Petrov", "number": 14},
+            {"name": "Ivan Popov", "number": 15}
+        ]
+    },
+    {
+        "team_name": "Regal Racing",
+        "color": "0x66FF33",
+        "drivers": [
+            {"name": "James Hill", "number": 16},
+            {"name": "Simon Ellis", "number": 17}
+        ]
+    },
+    {
+        "team_name": "Elron",
+        "color": "0xFF3366",
+        "drivers": [
+            {"name": "Carlos Menendez", "number": 18},
+            {"name": "Raul Alvarez", "number": 19}
+        ]
+    },
+    {
+        "team_name": "Falconetti",
+        "color": "0xFF9933",
+        "drivers": [
+            {"name": "Franco Vieri", "number": 20},
+            {"name": "Dario Nardi", "number": 21}
+        ]
+    },
+    {
+        "team_name": "Nordique",
+        "color": "0xFFD700",
+        "drivers": [
+            {"name": "Jean-Luc Dupont", "number": 22},
+            {"name": "Mathieu Arnaud", "number": 23}
+        ]
+    }
+]
