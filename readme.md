@@ -33,6 +33,8 @@ _0.0.4a_ Fixed safety car and pitstop bugs - cars stuck in pitstop while safetyc
 
 _0.0.6_ Added qualifying stage before the race, added basic team json loader. Fixed some bugs related to safety car, safety car now "waits" for the leader
 
+_0.0.6a_ Testing UI on car hover features in Qualifying
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and right now only race is playable**  
 Bugs moved to issues

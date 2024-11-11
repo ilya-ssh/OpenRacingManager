@@ -57,6 +57,8 @@ class Car:
         self.distance = PITLANE_ENTRANCE_DISTANCE
         self.previous_distance = self.distance
         self.laps_completed = 0
+        self.tire_type = "soft"
+        self.tire_percentage = 100.0
 
     def initialize_race_mode(self):
         self.just_crossed_pitstop_point = False
@@ -305,6 +307,7 @@ class Car:
             self.speed = 0.0
 
     def update_movement(self):
+        '''
         self.previous_distance = self.distance
         self.target_speed = get_desired_speed_at_distance(
             self.distance % TOTAL_TRACK_LENGTH,
@@ -325,6 +328,64 @@ class Car:
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
         self.distance += self.speed
+        self.distance %= TOTAL_TRACK_LENGTH
+        self.update_adjusted_distance()
+        '''
+        wear_rate = TIRE_TYPES[self.tire_type]["wear_rate"] / self.suspension_quality
+        if self.tire_percentage < TIRE_TYPES[self.tire_type]["threshold"]:
+            wear_rate *= 2
+        self.tire_percentage = max(1, self.tire_percentage - wear_rate)
+        self.tire_percentage = max(self.tire_percentage, 1)
+        self.target_speed = get_desired_speed_at_distance(
+            self.distance % TOTAL_TRACK_LENGTH,
+            DESIRED_SPEEDS_LIST,
+            TOTAL_TRACK_LENGTH,
+            self
+        )
+        self.target_speed *= (self.tire_percentage / 100)
+        self.target_speed = max(self.target_speed, self.min_speed)
+
+        effective_acceleration = self.base_acceleration * \
+                                 self.gearbox_quality
+        if self.speed < self.target_speed:
+            self.speed += effective_acceleration
+            self.speed = min(self.speed, self.target_speed)
+        elif self.speed > self.target_speed:
+            speed_diff = self.speed - self.target_speed
+            braking_force = (self.braking_intensity * speed_diff) * 0.1
+            self.speed -= braking_force
+            self.speed = max(self.speed, self.target_speed)
+        max_speed = self.base_max_speed * (self.tire_percentage / 100)
+        is_corner = self.is_in_corner()
+        if is_corner:
+            max_speed *= self.aero_efficiency
+        else:
+            max_speed *= self.engine_power
+        max_speed = max(max_speed, self.min_max_speed)
+        self.speed = min(self.speed, max_speed)
+        self.speed = max(self.speed, self.min_speed)
+        effective_acceleration = self.base_acceleration * self.gearbox_quality
+        if self.speed < self.target_speed:
+            self.speed += effective_acceleration
+            self.speed = min(self.speed, self.target_speed)
+        elif self.speed > self.target_speed:
+            speed_diff = self.speed - self.target_speed
+            braking_force = (self.braking_intensity * speed_diff) * 0.1
+            self.speed -= braking_force
+            self.speed = max(self.speed, self.target_speed)
+        max_speed = self.base_max_speed * (self.tire_percentage / 100)
+        is_corner = self.is_in_corner()
+        if is_corner:
+            max_speed *= self.aero_efficiency
+        else:
+            max_speed *= self.engine_power
+
+        max_speed = max(max_speed, self.min_max_speed)
+        self.speed = min(self.speed, max_speed)
+        self.speed = max(self.speed, self.min_speed)
+        self.distance += self.speed
+        if self.on_out_lap or self.on_in_lap:
+            self.speed = self.speed * 0.98
         self.distance %= TOTAL_TRACK_LENGTH
         self.update_adjusted_distance()
 
@@ -613,7 +674,11 @@ class Car:
         else:
             x, y = get_position_along_track(self.distance, TRACK_POINTS, CUMULATIVE_DISTANCES)
         if self.mode == 'qualifying':
+
             pyxel.circ(x, y, 3, self.color)
+
+
+
         elif self.mode == 'race':
             if self.is_safety_car:
                 pyxel.circ(x, y, 4, 0)

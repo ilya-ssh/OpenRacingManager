@@ -17,6 +17,7 @@ class Game:
         self.main_menu = MainMenu(self)
         self.qualifying = None
         self.race = None
+        pyxel.mouse(visible=True)
         pyxel.run(self.update, self.draw)
 
     def update(self):
