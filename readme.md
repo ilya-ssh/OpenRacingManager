@@ -44,8 +44,10 @@ Bugs moved to issues
 Build your own tracks to race your cars on.
 ![Game Demo](/gifs/trackbuilder.gif)
 ## Race engine
-Racing with 100 cars
-![Game Demo](/gifs/game.gif)
+Qualifying
+![Game Demo](/gifs/game3.gif)
+## Choose your team
+![Game Demo](/gifs/game2.gif)
 ## TO DO
 - [x] Create trackbuilder with smooth corners, custom starting pos, ability to retract changes
 - [x] Implement basic race loop with leaderboard 
