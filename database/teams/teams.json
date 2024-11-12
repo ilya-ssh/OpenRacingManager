@@ -4,15 +4,15 @@
         "color": "0xFF3333",
         "drivers": [
             {"name": "Marco Bellini", "number": 1},
-            {"name": "Luca Moretti", "number": 2}
+            {"name": "James Griffiths", "number": 2}
         ]
     },
     {
         "team_name": "Marandi",
-        "color": "0x3333FF",
+        "color": "0xA9A9A9",
         "drivers": [
             {"name": "Giorgio Bianchi", "number": 3},
-            {"name": "Alessandro Fiore", "number": 4}
+            {"name": "Patrick O'Neill", "number": 4}
         ]
     },
     {
@@ -20,7 +20,7 @@
         "color": "0xFFFF33",
         "drivers": [
             {"name": "Robert Clarkson", "number": 5},
-            {"name": "Patrick Doyle", "number": 6}
+            {"name": "Emilio Ramirez", "number": 6}
         ]
     },
     {
@@ -44,7 +44,7 @@
         "color": "0x33FFFF",
         "drivers": [
             {"name": "Hiroshi Sato", "number": 11},
-            {"name": "Kenji Nakamura", "number": 12}
+            {"name": "Tom Buchanan", "number": 12}
         ]
     },
     {
@@ -52,7 +52,7 @@
         "color": "0xFF6633",
         "drivers": [
             {"name": "Alexei Petrov", "number": 14},
-            {"name": "Ivan Popov", "number": 15}
+            {"name": "Daniel Klein", "number": 15}
         ]
     },
     {
@@ -60,7 +60,7 @@
         "color": "0x66FF33",
         "drivers": [
             {"name": "James Hill", "number": 16},
-            {"name": "Simon Ellis", "number": 17}
+            {"name": "Liam McKenzie", "number": 17}
         ]
     },
     {
@@ -68,7 +68,7 @@
         "color": "0xFF3366",
         "drivers": [
             {"name": "Carlos Menendez", "number": 18},
-            {"name": "Raul Alvarez", "number": 19}
+            {"name": "Oliver Bradshaw", "number": 19}
         ]
     },
     {
@@ -76,7 +76,7 @@
         "color": "0xFF9933",
         "drivers": [
             {"name": "Franco Vieri", "number": 20},
-            {"name": "Dario Nardi", "number": 21}
+            {"name": "Ethan Harper", "number": 21}
         ]
     },
     {
@@ -84,7 +84,7 @@
         "color": "0xFFD700",
         "drivers": [
             {"name": "Jean-Luc Dupont", "number": 22},
-            {"name": "Mathieu Arnaud", "number": 23}
+            {"name": "Finn Andersen", "number": 23}
         ]
     }
 ]

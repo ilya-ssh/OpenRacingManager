@@ -22,7 +22,7 @@ class MainMenu:
     def select_menu_item(self):
         selected_item = self.menu_items[self.selected_index]
         if selected_item == "Start Career":
-            self.game.start_qualifying()
+            self.game.start_choose_team()
         elif selected_item == "Load Career":
             # Implement load functionality if desired
             pass
@@ -50,4 +50,3 @@ class MainMenu:
             self.pyuni.text(item_x, item_y, item, color)
 
         # Display the version
-        self.pyuni.text(370, 480, CURRENT_VER, 7)

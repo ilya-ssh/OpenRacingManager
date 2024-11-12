@@ -35,6 +35,8 @@ _0.0.6_ Added qualifying stage before the race, added basic team json loader. Fi
 
 _0.0.6a_ Testing UI on car hover features in Qualifying
 
+_0.0.7_ Added team selection menu
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and right now only race is playable**  
 Bugs moved to issues
@@ -50,13 +52,13 @@ Racing with 100 cars
 - [x] Implement states (main menu and race loop)
 - [x] Implement dummy car class with tyres and stats
 - [x] Implement track loading from .json trackbuilder with smoothing. Calculate speed for corners from track
-- [ ] Fix palette differences, handle palettes responsibly
+- [ ] Fix palette differences, handle palettes responsibly (partly done)
 - [ ] Fix car stats (partly done)
 - [x] Add pits to trackbuilder and to race. Add the ability to pit and change tyres
 - [x] Add safety car spawn from pits
 - [ ] Add dummy drivers, load from .json with stats
-- [ ] Add dummy teams, load from .json with stats (base .json added)
-- [ ] Add qualifying state before race
+- [ ] Add dummy teams, load from .json with stats (base .json added) 
+- [x] Add qualifying state before race
 - [ ] Add practice session and pre-qualifying if needed
 - [ ] Add more comprehensive readme
 - [ ] .... more to come
