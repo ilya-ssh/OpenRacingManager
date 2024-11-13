@@ -86,5 +86,13 @@
             {"name": "Jean-Luc Dupont", "number": 22},
             {"name": "Finn Andersen", "number": 23}
         ]
-    }
+    },
+	{
+    "team_name": "Aetheris",
+    "color": "0x3399FF",
+    "drivers": [
+        {"name": "Luca Marinelli", "number": 24},
+        {"name": "Mika Laine", "number": 25}
+    ]
+	}
 ]

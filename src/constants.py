@@ -19,8 +19,9 @@ TIRE_TYPES = {
     "soft": {"wear_rate": 0.005, "initial_grip": 1.5, "threshold": 50}
 }
 GAME_TITLE = "OpenRacingManager"
-CURRENT_VER = "Pre-alpha 0.0.7"
+CURRENT_VER = "Pre-alpha 0.0.7a"
 PIT_STOP_THRESHOLD = 50.0
 PITLANE_SPEED_LIMIT = 0.3
 PIT_STOP_DURATION = 60
 teamsfile = r"../database/teams/teams.json"
+
