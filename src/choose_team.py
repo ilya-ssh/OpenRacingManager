@@ -15,6 +15,7 @@ class ChooseTeam:
         self.sprite_height = 200
         self.current_team_index = 0
         self.teams = self.load_teams()
+        self.drivers_map = self.load_drivers()  # Load drivers and create a mapping
         self.base_color = int(self.teams[self.current_team_index]["color"], 16)
         self.initial_frame = True
 
@@ -42,6 +43,13 @@ class ChooseTeam:
         """Load team data from JSON file."""
         with open("../database/teams/teams.json", "r") as f:
             return json.load(f)
+
+    def load_drivers(self):
+        """Load driver data from JSON file and create a mapping from driver_id to driver data."""
+        with open("../database/drivers/drivers.json", "r") as f:
+            drivers = json.load(f)
+        drivers_map = {driver["id"]: driver for driver in drivers}
+        return drivers_map
 
     def toggle_colors(self):
         """Toggle the colors between white and base color for flashing effect."""
@@ -91,12 +99,13 @@ class ChooseTeam:
                 self.start_animation("palette_update")
 
         elif self.animation_phase == "palette_update":
-            # Update team, color palette, and set up the new car position
+            # Update team index and palette
             self.switch_to_new_team()
 
         elif self.animation_phase == "moving_in":
             self.anim_offset += self.anim_speed * self.anim_direction
-            if self.anim_offset == 0:
+            if (self.anim_direction == 1 and self.anim_offset >= 0) or \
+               (self.anim_direction == -1 and self.anim_offset <= 0):
                 # Finish animation once the new car is centered
                 self.animation_phase = None
 
@@ -199,12 +208,9 @@ class ChooseTeam:
         # Display team information
         team_name = self.teams[self.current_team_index]["team_name"]
 
-
         # Calculate circular offset for the car's slight circular movement
         car_offset_x = math.cos(self.car_angle) * self.car_radius
         car_offset_y = math.sin(self.car_angle) * self.car_radius
-
-
 
         # Draw the car sprite at a fixed position when in the flashing phase
         if self.animation_phase == "flashing":
@@ -230,16 +236,19 @@ class ChooseTeam:
 
         # Draw the animated shaded triangles on both sides
         self.draw_triangles()
-        pyxel.colors[11] = 0xFFFFFFF
+        pyxel.colors[11] = 0xFFFFFF  # Corrected to proper white color (0xFFFFFF)
+
+        # Draw the team selection boxes
         box_width, box_height = 120, 30
         y_box = pyxel.height // 2 + self.sprite_height // 2 + 10  # Position below the car
         x_start = (pyxel.width - 3 * box_width - 20) // 2  # Center all three boxes with 10 px spacing
 
-        menu_title = "Team selection"
-        title_x = pyxel.width // 2 - len(menu_title) * 16 // 2
+        menu_title = "Team Selection"
+        title_x = pyxel.width // 2 - len(menu_title) * 8  # Approximate centering based on font size
         title_y = 20
         self.pyuni.text(title_x, title_y, menu_title, 11)
-        title_x = pyxel.width // 2 - len(team_name) * 16 // 2
+
+        title_x = pyxel.width // 2 - len(team_name) * 8  # Approximate centering
         self.pyuni.text(title_x, 50, f"{team_name}", 7)
 
         # Draw each box
@@ -251,11 +260,15 @@ class ChooseTeam:
             if i == 0:
                 pyxel.text(x_box + 5, y_box + 10, f"Team: {team_name}", 11)  # White color (11)
             elif i == 1:
-                driver = self.teams[self.current_team_index]["drivers"][0]["name"]
-                pyxel.text(x_box + 5, y_box + 10, f"Driver 1: {driver}", 11)  # White color (11)
+                driver_id = self.teams[self.current_team_index]["drivers"][0]["driver_id"]
+                driver = self.drivers_map.get(driver_id, {})
+                driver_name = driver.get("name", "Unknown")
+                pyxel.text(x_box + 5, y_box + 10, f"Driver 1: {driver_name}", 11)  # White color (11)
             elif i == 2:
-                driver = self.teams[self.current_team_index]["drivers"][1]["name"]
-                pyxel.text(x_box + 5, y_box + 10, f"Driver 2: {driver}", 11)  # White color (11)
+                driver_id = self.teams[self.current_team_index]["drivers"][1]["driver_id"]
+                driver = self.drivers_map.get(driver_id, {})
+                driver_name = driver.get("name", "Unknown")
+                pyxel.text(x_box + 5, y_box + 10, f"Driver 2: {driver_name}", 11)  # White color (11)
 
     def confirm_team_selection(self):
         """Confirm the selected team and initiate flashing animation before transition."""

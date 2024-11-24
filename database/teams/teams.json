@@ -1,98 +1,230 @@
 [
     {
+        "id": 1,
         "team_name": "Farrini",
         "color": "0xFF3333",
         "drivers": [
-            {"name": "Marco Bellini", "number": 1},
-            {"name": "James Griffiths", "number": 2}
+            {
+                "driver_id": 1,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 50000
+            },
+            {
+                "driver_id": 2,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 55000
+            }
         ]
     },
     {
+        "id": 2,
         "team_name": "Marandi",
         "color": "0xA9A9A9",
         "drivers": [
-            {"name": "Giorgio Bianchi", "number": 3},
-            {"name": "Patrick O'Neill", "number": 4}
+            {
+                "driver_id": 3,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 48000
+            },
+            {
+                "driver_id": 4,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 60000
+            }
         ]
     },
     {
+        "id": 3,
         "team_name": "Donnelly",
         "color": "0xFFFF33",
         "drivers": [
-            {"name": "Robert Clarkson", "number": 5},
-            {"name": "Emilio Ramirez", "number": 6}
+            {
+                "driver_id": 5,
+                "contract_start": "1995-01-01",
+                "contract_end": "1998-12-31",
+                "salary_per_race": 65000
+            },
+            {
+                "driver_id": 6,
+                "contract_start": "1995-01-01",
+                "contract_end": "1998-12-31",
+                "salary_per_race": 58000
+            }
         ]
     },
     {
+        "id": 4,
         "team_name": "Seymour",
         "color": "0x33FF33",
         "drivers": [
-            {"name": "John Harris", "number": 7},
-            {"name": "Carl Stewart", "number": 8}
+            {
+                "driver_id": 7,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 62000
+            },
+            {
+                "driver_id": 8,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 61000
+            }
         ]
     },
     {
+        "id": 5,
         "team_name": "Lionheart",
         "color": "0xFF33FF",
         "drivers": [
-            {"name": "Arthur King", "number": 9},
-            {"name": "Victor Sharpe", "number": 10}
+            {
+                "driver_id": 9,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 63000
+            },
+            {
+                "driver_id": 10,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 64000
+            }
         ]
     },
     {
+        "id": 6,
         "team_name": "Pacifico",
         "color": "0x33FFFF",
         "drivers": [
-            {"name": "Hiroshi Sato", "number": 11},
-            {"name": "Tom Buchanan", "number": 12}
+            {
+                "driver_id": 11,
+                "contract_start": "1995-01-01",
+                "contract_end": "1998-12-31",
+                "salary_per_race": 57000
+            },
+            {
+                "driver_id": 12,
+                "contract_start": "1995-01-01",
+                "contract_end": "1998-12-31",
+                "salary_per_race": 56000
+            }
         ]
     },
     {
+        "id": 7,
         "team_name": "Scorpius",
         "color": "0xFF6633",
         "drivers": [
-            {"name": "Alexei Petrov", "number": 14},
-            {"name": "Daniel Klein", "number": 15}
+            {
+                "driver_id": 13,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 59000
+            },
+            {
+                "driver_id": 14,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 61000
+            }
         ]
     },
     {
+        "id": 8,
         "team_name": "Regal Racing",
         "color": "0x66FF33",
         "drivers": [
-            {"name": "James Hill", "number": 16},
-            {"name": "Liam McKenzie", "number": 17}
+            {
+                "driver_id": 15,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 60000
+            },
+            {
+                "driver_id": 16,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 59500
+            }
         ]
     },
     {
+        "id": 9,
         "team_name": "Elron",
         "color": "0xFF3366",
         "drivers": [
-            {"name": "Carlos Menendez", "number": 18},
-            {"name": "Oliver Bradshaw", "number": 19}
+            {
+                "driver_id": 17,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 62000
+            },
+            {
+                "driver_id": 18,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 61000
+            }
         ]
     },
     {
+        "id": 10,
         "team_name": "Falconetti",
         "color": "0xFF9933",
         "drivers": [
-            {"name": "Franco Vieri", "number": 20},
-            {"name": "Ethan Harper", "number": 21}
+            {
+                "driver_id": 19,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 60500
+            },
+            {
+                "driver_id": 20,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 63000
+            }
         ]
     },
     {
+        "id": 11,
         "team_name": "Nordique",
         "color": "0xFFD700",
         "drivers": [
-            {"name": "Jean-Luc Dupont", "number": 22},
-            {"name": "Finn Andersen", "number": 23}
+            {
+                "driver_id": 21,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 64000
+            },
+            {
+                "driver_id": 22,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 61500
+            }
         ]
     },
-	{
-    "team_name": "Aetheris",
-    "color": "0x3399FF",
-    "drivers": [
-        {"name": "Luca Marinelli", "number": 24},
-        {"name": "Mika Laine", "number": 25}
-    ]
-	}
+    {
+        "id": 12,
+        "team_name": "Aetheris",
+        "color": "0x3399FF",
+        "drivers": [
+            {
+                "driver_id": 23,
+                "contract_start": "1995-01-01",
+                "contract_end": "1996-12-31",
+                "salary_per_race": 58000
+            },
+            {
+                "driver_id": 24,
+                "contract_start": "1995-01-01",
+                "contract_end": "1997-12-31",
+                "salary_per_race": 59000
+            }
+        ]
+    }
 ]

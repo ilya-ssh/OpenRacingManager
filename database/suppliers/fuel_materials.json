@@ -1,0 +1,321 @@
+{
+  "materials_by_component": {
+    "fuel": [
+      {
+        "id": "fuel_001",
+        "name": "High-Octane Racing Gasoline (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "A high-octane gasoline blend optimized for maximum engine performance and efficiency."
+      },
+      {
+        "id": "fuel_002",
+        "name": "Performance Racing Gasoline (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "A performance-oriented gasoline mix providing reliable combustion and enhanced power output."
+      },
+      {
+        "id": "fuel_003",
+        "name": "Super Boost Racing Fuel (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "A boosted racing fuel designed to deliver extra power and maintain stability under high stress."
+      },
+      {
+        "id": "fuel_004",
+        "name": "Eco Racing Gasoline (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "An eco-friendly racing gasoline blend that balances performance with reduced emissions."
+      },
+      {
+        "id": "fuel_005",
+        "name": "Ultra Performance Gasoline (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "An ultra-performance gasoline formulated for peak engine efficiency and high-speed racing."
+      },
+      {
+        "id": "fuel_006",
+        "name": "Nitro Racing Fuel (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "A nitrogen-enhanced racing fuel that improves combustion speed and engine responsiveness."
+      },
+      {
+        "id": "fuel_007",
+        "name": "Max Performance Gasoline (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "A maximum performance blend designed to optimize engine output and fuel efficiency."
+      },
+      {
+        "id": "fuel_008",
+        "name": "Turbo Boost Gasoline (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "A turbocharged fuel mix that provides additional power and maintains engine integrity under extreme conditions."
+      },
+      {
+        "id": "fuel_009",
+        "name": "EcoBoost Racing Gasoline (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "An EcoBoost blend that enhances performance while minimizing environmental impact."
+      },
+      {
+        "id": "fuel_010",
+        "name": "Pro Performance Gasoline (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "A professional-grade gasoline designed for top-tier racing performance and engine protection."
+      },
+      {
+        "id": "fuel_011",
+        "name": "RaceMax Gasoline (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "RaceMax Gasoline offers a perfect balance of power and efficiency for competitive racing."
+      },
+      {
+        "id": "fuel_012",
+        "name": "EcoElite Racing Fuel (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "EcoElite Racing Fuel combines eco-friendly properties with high performance for sustainable racing."
+      },
+      {
+        "id": "fuel_013",
+        "name": "TurboElite Gasoline (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "TurboElite Gasoline enhances engine performance with advanced turbocharging additives."
+      },
+      {
+        "id": "fuel_014",
+        "name": "UltraBoost Racing Fuel (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "UltraBoost Racing Fuel offers reliable performance with reduced engine wear."
+      },
+      {
+        "id": "fuel_015",
+        "name": "MaxBoost Gasoline (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "MaxBoost Gasoline delivers maximum power output while safeguarding engine components."
+      },
+      {
+        "id": "fuel_016",
+        "name": "NitroMax Racing Fuel (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "NitroMax Racing Fuel enhances combustion efficiency for superior racing performance."
+      },
+      {
+        "id": "fuel_017",
+        "name": "ProBoost Gasoline (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "ProBoost Gasoline is engineered for professional racing, providing consistent power and reliability."
+      },
+      {
+        "id": "fuel_018",
+        "name": "TurboMax Racing Fuel (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "TurboMax Racing Fuel integrates advanced turbo additives for enhanced engine responsiveness."
+      },
+      {
+        "id": "fuel_019",
+        "name": "EcoPro Gasoline (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "EcoPro Gasoline offers an environmentally conscious option without compromising on performance."
+      },
+      {
+        "id": "fuel_020",
+        "name": "UltraPro Racing Fuel (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "UltraPro Racing Fuel is crafted for elite racing teams seeking top-tier engine performance."
+      },
+      {
+        "id": "fuel_021",
+        "name": "RaceElite Gasoline (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "RaceElite Gasoline provides a high-performance blend for competitive racing scenarios."
+      },
+      {
+        "id": "fuel_022",
+        "name": "EcoBoost Elite Fuel (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "EcoBoost Elite Fuel balances environmental benefits with enhanced racing performance."
+      },
+      {
+        "id": "fuel_023",
+        "name": "TurboElite Max Gasoline (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "TurboElite Max Gasoline maximizes engine output with specialized turbocharging agents."
+      },
+      {
+        "id": "fuel_024",
+        "name": "UltraRace Gasoline (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "UltraRace Gasoline ensures consistent engine performance and reduced wear during intense races."
+      },
+      {
+        "id": "fuel_025",
+        "name": "MaxPro Racing Fuel (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "MaxPro Racing Fuel is designed for maximum power and engine longevity in high-performance racing."
+      },
+      {
+        "id": "fuel_026",
+        "name": "NitroElite Gasoline (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "NitroElite Gasoline enhances engine efficiency and power output with advanced nitrogen additives."
+      },
+      {
+        "id": "fuel_027",
+        "name": "ProTurbo Racing Fuel (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "ProTurbo Racing Fuel offers a professional blend for improved engine performance and stability."
+      },
+      {
+        "id": "fuel_028",
+        "name": "TurboMax Elite Gasoline (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "TurboMax Elite Gasoline delivers superior turbocharged performance for competitive racing."
+      },
+      {
+        "id": "fuel_029",
+        "name": "EcoPro Elite Gasoline (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "EcoPro Elite Gasoline combines eco-friendly properties with high-performance racing needs."
+      },
+      {
+        "id": "fuel_030",
+        "name": "UltraPro Elite Racing Fuel (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "UltraPro Elite Racing Fuel is engineered for top-tier performance and engine protection in elite races."
+      },
+      {
+        "id": "fuel_031",
+        "name": "RaceMax Elite Gasoline (102 RON)",
+        "type": "Gasoline",
+        "performance": 8.5,
+        "cost_per_race": 500.0,
+        "engine_damage": 2.0,
+        "description": "RaceMax Elite Gasoline provides a balanced blend for optimal performance and reliability in racing."
+      },
+      {
+        "id": "fuel_032",
+        "name": "EcoBoost Pro Fuel (101 RON)",
+        "type": "Gasoline",
+        "performance": 8.4,
+        "cost_per_race": 495.0,
+        "engine_damage": 1.9,
+        "description": "EcoBoost Pro Fuel offers enhanced performance with environmentally conscious formulation."
+      },
+      {
+        "id": "fuel_033",
+        "name": "TurboElite Pro Gasoline (103 RON)",
+        "type": "Gasoline",
+        "performance": 8.6,
+        "cost_per_race": 505.0,
+        "engine_damage": 2.1,
+        "description": "TurboElite Pro Gasoline maximizes turbocharged engine capabilities for superior race performance."
+      },
+      {
+        "id": "fuel_034",
+        "name": "UltraRace Elite Gasoline (100 RON)",
+        "type": "Gasoline",
+        "performance": 8.3,
+        "cost_per_race": 490.0,
+        "engine_damage": 1.8,
+        "description": "UltraRace Elite Gasoline ensures consistent and reliable engine performance during high-stakes races."
+      },
+      {
+        "id": "fuel_035",
+        "name": "MaxPro Elite Racing Fuel (104 RON)",
+        "type": "Gasoline",
+        "performance": 8.7,
+        "cost_per_race": 510.0,
+        "engine_damage": 2.2,
+        "description": "MaxPro Elite Racing Fuel is tailored for maximum engine performance and durability in demanding racing conditions."
+      }
+    ]
+  }
+}

@@ -14,13 +14,14 @@ from track import (
 )
 
 class Car:
-    def __init__(self, color_index, car_number, grid_position,
+    def __init__(self, color_index, car_number, driver_name, grid_position,
                  announcements, game=None, mode='race', start_delay_frames=0):
         self.color = color_index
         self.car_number = car_number
         self.grid_position = grid_position
         self.announcements = announcements
         self.game = game
+        self.driver_name = driver_name
         self.mode = mode
         self.crashed = False
         self.speed = 0.0

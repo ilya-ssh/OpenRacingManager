@@ -6,11 +6,13 @@ from car import Car
 from track import (
     TRACK_POINTS, START_FINISH_INDEX_SMOOTHED, PIT_LANE_POINTS,
     TOTAL_TRACK_LENGTH, PIT_LANE_TOTAL_LENGTH, PITLANE_ENTRANCE_DISTANCE,
-    PITLANE_EXIT_DISTANCE
+    PITLANE_EXIT_DISTANCE, get_position_along_track, PIT_STOP_POINT, PIT_LANE_CUMULATIVE_DISTANCES, CUMULATIVE_DISTANCES
 )
 from constants import *
 from announcements import Announcements
 from load_teams import load_teams
+import json
+
 class Race:
     def __init__(self, game, starting_grid):
         self.starting_grid = starting_grid
@@ -24,43 +26,74 @@ class Race:
         self.announcements = Announcements(self.pyuni)
         self.cars = []
         self.state = 'warmup_lap' if ENABLE_WARMUP_LAP else 'countdown'
-        self.init_race()
+        self.drivers_map = self.load_drivers()  # Load drivers data
+        self.teams_data = load_teams()  # Load teams data
+        self.create_cars()
 
+    def load_drivers(self):
+        """Load driver data from JSON file and create a mapping from driver_id to driver data."""
+        try:
+            with open("../database/drivers/drivers.json", "r") as f:
+                drivers = json.load(f)
+            drivers_map = {driver["id"]: driver for driver in drivers}
+            return drivers_map
+        except FileNotFoundError:
+            print("Error: drivers.json file not found.")
+            return {}
+        except json.JSONDecodeError as e:
+            print(f"Error decoding drivers.json: {e}")
+            return {}
 
-    def init_race(self):
-        pyxel.colors[0] = 0xFFFFFFFF
-        teams_data = load_teams()
-
-        # Set pyxel colors based on team data
-        for i, team in enumerate(teams_data, start=2):
-            pyxel.colors[i] = int(team["color"], 16)  # Convert hex to integer
-
-
-        grid_positions = list(range(20))
-        random.shuffle(grid_positions)
+    def create_cars(self):
+        """Create Car objects based on teams and their drivers."""
+        # Assign unique color indexes starting from 2 to avoid overriding existing Pyxel colors
+        for i, team in enumerate(self.teams_data, start=2):
+            try:
+                # Set Pyxel colors based on team data
+                pyxel.colors[i] = int(team["color"], 16)  # Convert hex color to integer
+            except ValueError:
+                print(f"Invalid color format for team {team['team_name']}. Using default color 0xFFFFFF.")
+                pyxel.colors[i] = 0xFFFFFF  # Default to white if color parsing fails
 
         # Initialize cars using team data
-        for i, team in enumerate(teams_data):
+        for team_index, team in enumerate(self.teams_data):
             for driver in team["drivers"]:
-                car_number = driver["name"]
-                color_index = i + 2
-                grid_position = self.starting_grid.index(car_number) if car_number in self.starting_grid else len(
-                    self.cars)
-                car = Car(color_index, car_number, grid_position, self.announcements, mode='race')
-                car.game = self.game
-                self.cars.append(car)
+                driver_id = driver["driver_id"]
+                driver_data = self.drivers_map.get(driver_id, None)
+                if driver_data:
+                    driver_name = driver_data["name"]
+                    driver_number = driver_data["number"]
+                    color_index = team_index + 2  # Ensure unique color index per team
+                    grid_position = self.starting_grid.index(
+                        driver_number) if driver_number in self.starting_grid else len(self.cars)
+
+                    car = Car(
+                        color_index=color_index,
+                        car_number=driver_number,
+                        driver_name=driver_name,  # Pass driver_name correctly
+                        grid_position=grid_position,
+                        announcements=self.announcements,
+                        game=self.game,
+                        mode='race'
+                    )
+                    car.qualifying_exit_delay = random.randint(0, 60 * 30 * 3)
+                    self.cars.append(car)
+                else:
+                    print(f"Warning: Driver ID {driver_id} not found in drivers.json")
 
         # Sort cars by grid position for the race
         self.cars.sort(key=lambda car: car.grid_position)
         for idx, car in enumerate(self.cars):
             start_delay_frames = idx * 30
             car.start_delay_frames = start_delay_frames
+
+        # Add initial announcements
         if ENABLE_WARMUP_LAP:
-            self.announcements.add_message("Warm-up lap has started.",
-                                           duration=90)
+            self.announcements.add_message("Warm-up lap has started.", duration=90)
         else:
-            self.announcements.add_message("Race starting soon...",
-                                           duration=90)
+            self.announcements.add_message("Race starting soon.", duration=90)
+
+        # Initialize safety car variables
         self.safety_car_active = False
         self.safety_car_lap_counter = 0
         self.safety_car_triggered = False
@@ -69,12 +102,16 @@ class Race:
         self.safety_car_ending_announced = False
 
     def create_safety_car(self):
+        """Create and initialize the safety car."""
         safety_car_color_index = SAFETY_CAR_COLOR_INDEX
         self.safety_car = Car(
             color_index=safety_car_color_index,
-            car_number=0,
+            car_number=0,  # Assuming 0 represents the safety car
+            driver_name="Safety Car",
             grid_position=0,
-            announcements=self.announcements
+            announcements=self.announcements,
+            game=self.game,
+            mode='race'
         )
         self.safety_car.is_safety_car = True
         self.safety_car.speed = SAFETY_CAR_SPEED
@@ -91,6 +128,7 @@ class Race:
         self.announcements.update()
 
     def update_warmup_lap(self):
+        """Update logic for the warm-up lap."""
         all_cars_ready = True
         for car in self.cars:
             car.update_warmup(self.frame_count)
@@ -99,25 +137,23 @@ class Race:
         if all_cars_ready:
             self.state = 'countdown'
             self.countdown = 90
-            self.announcements.add_message("All cars are on the grid.",
-                                           duration=60)
-            self.announcements.add_message("Race starting soon...",
-                                           duration=60)
+            self.announcements.add_message("All cars are on the grid.", duration=60)
+            self.announcements.add_message("Race starting soon.", duration=60)
 
     def update_countdown(self):
+        """Update logic for the countdown before the race starts."""
         self.race_started = True
         self.state = 'race'
         print(self.cars[0])
         leader_distance = self.cars[0].distance
-        average_speed = sum(car.base_max_speed for car in self.cars) / \
-                        len(self.cars)
+        average_speed = sum(car.base_max_speed for car in self.cars) / len(self.cars)
         for car in self.cars:
-            distance_diff = (leader_distance - car.distance) % \
-                            TOTAL_TRACK_LENGTH
+            distance_diff = (leader_distance - car.distance) % TOTAL_TRACK_LENGTH
             car.initial_time_offset = distance_diff / average_speed
         self.announcements.add_message("Go!", duration=60)
 
     def update_race_logic(self):
+        """Update the main race logic."""
         if self.race_started and not self.race_finished:
             if not self.safety_car_active and not self.safety_car_triggered:
                 for car in self.cars:
@@ -140,21 +176,18 @@ class Race:
                     )
                     self.safety_car_active = True
                     self.safety_car_triggered = True
-                    self.announcements.add_message("Safety Car Deployed!",
-                                                   duration=90)
+                    self.announcements.add_message("Safety Car Deployed!", duration=90)
                     self.create_safety_car()
             if self.safety_car_active:
                 self.update_safety_car()
                 # Do not sort cars during safety car period to maintain positions
             else:
-
                 # Regular sorting during race
                 self.cars.sort(
                     key=lambda car: (-car.laps_completed, -car.adjusted_distance)
                 )
                 for car in self.cars:
-                    car.update(self.race_started, self.frame_count,
-                               self.cars, self.safety_car_active)
+                    car.update(self.race_started, self.frame_count, self.cars, self.safety_car_active)
                 max_scroll_index = max(0, len(self.cars) - 3)
                 if pyxel.btnp(pyxel.KEY_UP):
                     self.leaderboard_scroll_index = max(
@@ -175,13 +208,12 @@ class Race:
                     car.reset_after_safety_car()
             if any(car.laps_completed >= MAX_LAPS for car in self.cars):
                 self.race_finished = True
-                self.announcements.add_message("Race finished!",
-                                               duration=180)
+                self.announcements.add_message("Race finished!", duration=180)
 
     def update_safety_car(self):
+        """Update the safety car and the cars under its effect."""
         if self.safety_car:
-            self.safety_car.update(self.race_started, self.frame_count,
-                                   self.cars, self.safety_car_active)
+            self.safety_car.update(self.race_started, self.frame_count, self.cars, self.safety_car_active)
         for idx, car in enumerate(self.cars):
             if not car.is_active:
                 continue
@@ -189,8 +221,7 @@ class Race:
                 car_ahead = self.safety_car
             else:
                 car_ahead = self.cars[idx - 1]
-            car.update_under_safety_car(self.frame_count, self.safety_car,
-                                        car_ahead)
+            car.update_under_safety_car(self.frame_count, self.safety_car, car_ahead)
         # Do not sort cars during safety car period to maintain positions
         max_scroll_index = max(0, len(self.cars) - 3)
         if pyxel.btnp(pyxel.KEY_UP):
@@ -201,16 +232,13 @@ class Race:
             self.leaderboard_scroll_index = min(
                 self.leaderboard_scroll_index + 1, max_scroll_index
             )
-      #  all_cars_caught_up = all(car.has_caught_safety_car or not car.is_active
-                               #  for car in self.cars)
         all_cars_caught_up = all(car.speed == SAFETY_CAR_SPEED for car in self.cars)
         if all_cars_caught_up and not self.safety_car_laps_started:
             self.safety_car_laps_started = True
             self.safety_car_start_lap = self.cars[0].laps_completed
         if self.safety_car_laps_started:
             leader_car = self.cars[0]
-            laps_under_safety_car = leader_car.laps_completed - \
-                                    self.safety_car_start_lap
+            laps_under_safety_car = leader_car.laps_completed - self.safety_car_start_lap
             print(laps_under_safety_car)
             if laps_under_safety_car >= SAFETY_CAR_DURATION_LAPS:
                 if not self.safety_car_ending_announced:
@@ -218,37 +246,83 @@ class Race:
                     self.safety_car_ending_announced = True
 
     def end_safety_car_period(self):
-        self.announcements.add_message("Safety Car Ending! Prepare for "
-                                       "Restart.", duration=90)
+        """Handle the end of the safety car period."""
+        self.announcements.add_message("Safety Car Ending! Prepare for Restart.", duration=90)
         if self.safety_car:
             self.safety_car.is_exiting = True
         for car in self.cars:
             car.is_safety_car_ending = True
 
     def handle_crashed_cars(self):
+        """Deactivate crashed cars."""
         for car in self.cars:
             if car.crashed:
                 car.is_active = False
 
+    def drawbox(self, x_box, y_box, width, height, radius, border_thickness):
+        """Draws a rounded box with a white border and black inner box."""
+        # Draw white border
+        pyxel.rect(x_box + radius, y_box, width - 2 * radius, height, 1)  # White color (1)
+        pyxel.rect(x_box, y_box + radius, width, height - 2 * radius, 1)  # White color (1)
+        pyxel.rect(x_box + radius, y_box + height - radius, width - 2 * radius, radius, 1)  # White color (1)
+
+        # Draw white rounded corners
+        pyxel.circ(x_box + radius, y_box + radius, radius, 1)  # White color (1)
+        pyxel.circ(x_box + width - radius - 1, y_box + radius, radius, 1)  # White color (1)
+        pyxel.circ(x_box + radius, y_box + height - radius - 1, radius, 1)  # White color (1)
+        pyxel.circ(x_box + width - radius - 1, y_box + height - radius - 1, radius, 1)  # White color (1)
+
+        # Draw inner black box
+        inner_x, inner_y = x_box + border_thickness, y_box + border_thickness
+        inner_width, inner_height = width - 2 * border_thickness, height - 2 * border_thickness
+        inner_radius = radius - border_thickness
+
+        pyxel.rect(inner_x + inner_radius, inner_y, inner_width - 2 * inner_radius, inner_height, 0)  # Black color (0)
+        pyxel.rect(inner_x, inner_y + inner_radius, inner_width, inner_height - 2 * inner_radius, 0)  # Black color (0)
+        pyxel.rect(inner_x + inner_radius, inner_y + inner_height - inner_radius, inner_width - 2 * inner_radius,
+                   inner_radius, 0)  # Black color (0)
+
+        # Draw black rounded corners
+        pyxel.circ(inner_x + inner_radius, inner_y + inner_radius, inner_radius, 0)  # Black color (0)
+        pyxel.circ(inner_x + inner_width - inner_radius - 1, inner_y + inner_radius, inner_radius, 0)  # Black color (0)
+        pyxel.circ(inner_x + inner_radius, inner_y + inner_height - inner_radius - 1, inner_radius, 0)  # Black color (0)
+        pyxel.circ(inner_x + inner_width - inner_radius - 1, inner_y + inner_height - inner_radius - 1,
+                   inner_radius, 0)  # Black color (0)
+
     def draw(self):
-        pyxel.cls(1)
-        self.pyuni.text(370, 480, CURRENT_VER, 0)
+        """Render the race scene."""
+        pyxel.cls(0)
+        self.pyuni.text(370, 480, CURRENT_VER, 1)  # Display version
+
+        # Draw the track
         for i in range(len(TRACK_POINTS) - 1):
             x1, y1 = TRACK_POINTS[i]
             x2, y2 = TRACK_POINTS[i + 1]
-            pyxel.line(x1, y1, x2, y2, 0)
+            pyxel.line(x1, y1, x2, y2, 1)  # Black color
+
+        # Draw start/finish line
         sx, sy = TRACK_POINTS[START_FINISH_INDEX_SMOOTHED]
         sx_next, sy_next = TRACK_POINTS[(START_FINISH_INDEX_SMOOTHED + 1)]
-        pyxel.line(sx, sy, sx_next, sy_next, 2)
+        pyxel.line(sx, sy, sx_next, sy_next, 2)  # Red color
+
+        # Draw pit lane
         if PIT_LANE_POINTS:
             for i in range(len(PIT_LANE_POINTS) - 1):
                 x1, y1 = PIT_LANE_POINTS[i]
                 x2, y2 = PIT_LANE_POINTS[i + 1]
-                pyxel.line(x1, y1, x2, y2, 13)
+                pyxel.line(x1, y1, x2, y2, 13)  # Light blue color
+            pitstop_x, pitstop_y = get_position_along_track(
+                PIT_STOP_POINT, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES
+            )
+            pyxel.rect(pitstop_x - 2, pitstop_y - 2, 4, 4, 8)  # Green color
+
+        # Draw all cars
         for car in self.cars:
             car.draw()
         if self.safety_car and self.safety_car.is_active:
             self.safety_car.draw()
+
+        # Draw race-specific UI elements
         if self.state == 'race':
             self.draw_leaderboard()
             if self.race_finished:
@@ -258,37 +332,70 @@ class Race:
         elif self.state == 'warmup_lap':
             self.pyuni.text(20, 5, "Warm-up Lap", 0)
         else:
-            self.pyuni.text(20, 5, "Lap: 1/{}".format(MAX_LAPS), 0)
+            self.pyuni.text(20, 5, f"Lap: 1/{MAX_LAPS}", 0)
         if self.safety_car_active:
             self.pyuni.text(20, 20, "Safety Car Deployed", 8)
+
+        hover_info = None  # Track only one hovered car
+        for car in self.cars:
+            if not car.is_active:
+                continue
+
+            # Get car position
+            if car.on_pitlane:
+                x, y = get_position_along_track(car.pitlane_distance, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES)
+            else:
+                x, y = get_position_along_track(car.distance, TRACK_POINTS, CUMULATIVE_DISTANCES)
+            if not hover_info and abs(pyxel.mouse_x - x) <= 10 and abs(pyxel.mouse_y - y) <= 10:
+                # Determine lap status
+                lap_status = (
+                    "Planning to pit" if car.pitting else
+                    "Racing"
+                )
+                hover_info = {
+                    'x': x,
+                    'y': y,
+                    'lap_status': lap_status,
+                    'tire_key': car.tire_type,
+                    'tire_percentage': car.tire_percentage,
+                    'name': car.driver_name  # Changed from car.car_number to driver_name
+                }
+        if hover_info:
+            x_box = hover_info['x'] - 7
+            y_box = hover_info['y'] - 92
+            width, height = 80, 80
+            radius = 5
+            border_thickness = 1
+            self.drawbox(x_box, y_box, width, height, radius, border_thickness)
+
+            pyxel.text(x_box + 5, y_box + 5, hover_info['name'], 1)  # Black color (0)
+            pyxel.text(x_box + 5, y_box + 15, hover_info['lap_status'], 1)  # Black color (0)
+            pyxel.text(x_box + 5, y_box + 25, f"Morale: Good", 1)  # Placeholder for morale
+            pyxel.text(x_box + 5, y_box + 35, f"{hover_info['tire_key'].capitalize()} {hover_info['tire_percentage']:.1f}%", 1)  # Black color (0)
+            pyxel.text(x_box + 5, y_box + 45, f"Tyre temps: ", 1)  # Placeholder for tyre temperature
         self.announcements.draw()
 
     def draw_leaderboard(self):
+        """Render the leaderboard on the screen."""
         x_offset = 20
         y_offset = 20
         self.pyuni.text(x_offset, y_offset, "Leaderboard:", 0)
-        racing_cars = [car for car in self.cars if not car.is_safety_car
-                       and car.is_active]
+        racing_cars = [car for car in self.cars if not car.is_safety_car and car.is_active]
         for idx, car in enumerate(
-            racing_cars[self.leaderboard_scroll_index:
-                        self.leaderboard_scroll_index + 3]
+                racing_cars[self.leaderboard_scroll_index:self.leaderboard_scroll_index + 3]
         ):
             global_idx = self.leaderboard_scroll_index + idx
-            gap_text = "Leader" if global_idx == 0 else \
-                       self.get_gap_text(global_idx, racing_cars)
+            gap_text = "Leader" if global_idx == 0 else self.get_gap_text(global_idx, racing_cars)
             lap_text = f"Lap: {car.laps_completed + 1}/{MAX_LAPS}"
             best_lap_text = (
-                f"Best Lap: {car.best_lap_time:.2f}s"
-                if car.best_lap_time
-                else "Best Lap: N/A"
+                f"Best Lap: {car.best_lap_time:.2f}s" if car.best_lap_time else "Best Lap: N/A"
             )
             stats_text = f"Speed: {car.speed:.2f}"
             car_stats = (
                 f"E:{car.engine_power:.2f} A:{car.aero_efficiency:.2f} "
                 f"G:{car.gearbox_quality:.2f}"
             )
-            tire_text = f"T:{car.tire_type.capitalize()} "\
-                        f"{car.tire_percentage:.1f}%"
+            tire_text = f"T:{car.tire_type.capitalize()} {car.tire_percentage:.1f}%"
             self.pyuni.text(
                 x_offset,
                 y_offset + (idx * 50) + 10,
@@ -315,12 +422,13 @@ class Race:
             )
 
     def get_gap_text(self, global_idx, racing_cars):
+        """Calculate and return the gap text for the leaderboard."""
         car = racing_cars[global_idx]
         car_ahead = racing_cars[global_idx - 1]
         if self.race_started:
             distance_gap = (
-                car_ahead.adjusted_total_distance -
-                car.adjusted_total_distance
+                    car_ahead.adjusted_total_distance -
+                    car.adjusted_total_distance
             )
             if distance_gap < 0:
                 distance_gap += TOTAL_TRACK_LENGTH * MAX_LAPS
@@ -329,6 +437,5 @@ class Race:
             gap = (distance_gap / effective_speed) / 20
             return f"+{gap:.2f}s"
         else:
-            gap = (car.initial_time_offset -
-                   car_ahead.initial_time_offset) / 5
+            gap = (car.initial_time_offset - car_ahead.initial_time_offset) / 5
             return f"+{gap:.1f}s"

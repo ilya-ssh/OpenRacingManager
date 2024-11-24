@@ -39,6 +39,8 @@ _0.0.7_ Added team selection menu
 
 _0.0.7a_ Title screen animation added
 
+_0.0.7b_ Palette fixes
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and right now only race is playable**  
 Bugs moved to issues

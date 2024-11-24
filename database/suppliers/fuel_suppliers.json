@@ -1,0 +1,389 @@
+{
+  "fuel_suppliers": [
+    {
+      "id": "fs_001",
+      "name": "FuelMaster Inc.",
+      "country": "USA",
+      "materials": ["fuel_001", "fuel_002", "fuel_003"],
+      "stat_changes": {
+        "performance": 0.1,
+        "cost_per_race": -10.0,
+        "engine_damage": -0.1
+      }
+    },
+    {
+      "id": "fs_002",
+      "name": "EcoFuel Solutions",
+      "country": "Germany",
+      "materials": ["fuel_002", "fuel_004", "fuel_005"],
+      "stat_changes": {
+        "performance": 0.05,
+        "cost_per_race": -5.0,
+        "engine_damage": -0.05
+      }
+    },
+    {
+      "id": "fs_003",
+      "name": "TurboBoost Fuels",
+      "country": "UK",
+      "materials": ["fuel_003", "fuel_006", "fuel_007"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.0
+      }
+    },
+    {
+      "id": "fs_004",
+      "name": "GreenFuel Corp.",
+      "country": "Italy",
+      "materials": ["fuel_004", "fuel_008", "fuel_009"],
+      "stat_changes": {
+        "performance": -0.05,
+        "cost_per_race": -2.0,
+        "engine_damage": -0.2
+      }
+    },
+    {
+      "id": "fs_005",
+      "name": "MaxPerformance Fuels",
+      "country": "Japan",
+      "materials": ["fuel_005", "fuel_010", "fuel_011"],
+      "stat_changes": {
+        "performance": 0.15,
+        "cost_per_race": 5.0,
+        "engine_damage": 0.1
+      }
+    },
+    {
+      "id": "fs_006",
+      "name": "NitroBoost Fuels",
+      "country": "Switzerland",
+      "materials": ["fuel_006", "fuel_012", "fuel_013"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_007",
+      "name": "ProFuel Industries",
+      "country": "Canada",
+      "materials": ["fuel_007", "fuel_014", "fuel_015"],
+      "stat_changes": {
+        "performance": 0.1,
+        "cost_per_race": -5.0,
+        "engine_damage": 0.0
+      }
+    },
+    {
+      "id": "fs_008",
+      "name": "EcoElite Fuels",
+      "country": "France",
+      "materials": ["fuel_008", "fuel_016", "fuel_017"],
+      "stat_changes": {
+        "performance": 0.0,
+        "cost_per_race": -8.0,
+        "engine_damage": -0.1
+      }
+    },
+    {
+      "id": "fs_009",
+      "name": "RaceFuel Dynamics",
+      "country": "South Korea",
+      "materials": ["fuel_009", "fuel_018", "fuel_019"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.1
+      }
+    },
+    {
+      "id": "fs_010",
+      "name": "Performance Plus Fuels",
+      "country": "Australia",
+      "materials": ["fuel_010", "fuel_020", "fuel_021"],
+      "stat_changes": {
+        "performance": 0.15,
+        "cost_per_race": 5.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_011",
+      "name": "TurboMax Fuels",
+      "country": "Netherlands",
+      "materials": ["fuel_011", "fuel_022", "fuel_023"],
+      "stat_changes": {
+        "performance": 0.25,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_012",
+      "name": "EcoPro Fuels",
+      "country": "Sweden",
+      "materials": ["fuel_012", "fuel_024", "fuel_025"],
+      "stat_changes": {
+        "performance": -0.05,
+        "cost_per_race": -10.0,
+        "engine_damage": -0.3
+      }
+    },
+    {
+      "id": "fs_013",
+      "name": "MaxBoost Elite Fuels",
+      "country": "Italy",
+      "materials": ["fuel_013", "fuel_026", "fuel_027"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_014",
+      "name": "RacePro Elite Fuels",
+      "country": "Germany",
+      "materials": ["fuel_014", "fuel_028", "fuel_029"],
+      "stat_changes": {
+        "performance": 0.1,
+        "cost_per_race": -5.0,
+        "engine_damage": 0.0
+      }
+    },
+    {
+      "id": "fs_015",
+      "name": "NitroElite Fuels",
+      "country": "Japan",
+      "materials": ["fuel_015", "fuel_030", "fuel_031"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_016",
+      "name": "ProTurbo Elite Fuels",
+      "country": "USA",
+      "materials": ["fuel_016", "fuel_032", "fuel_033"],
+      "stat_changes": {
+        "performance": 0.15,
+        "cost_per_race": 5.0,
+        "engine_damage": 0.1
+      }
+    },
+    {
+      "id": "fs_017",
+      "name": "TurboMax Pro Fuels",
+      "country": "Canada",
+      "materials": ["fuel_017", "fuel_034", "fuel_035"],
+      "stat_changes": {
+        "performance": 0.25,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_018",
+      "name": "EcoPro Elite Fuels",
+      "country": "France",
+      "materials": ["fuel_018", "fuel_019", "fuel_020"],
+      "stat_changes": {
+        "performance": 0.0,
+        "cost_per_race": -8.0,
+        "engine_damage": -0.1
+      }
+    },
+    {
+      "id": "fs_019",
+      "name": "RaceElite Max Fuels",
+      "country": "South Korea",
+      "materials": ["fuel_019", "fuel_021", "fuel_022"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.1
+      }
+    },
+    {
+      "id": "fs_020",
+      "name": "Performance Elite Max Fuels",
+      "country": "Australia",
+      "materials": ["fuel_020", "fuel_023", "fuel_024"],
+      "stat_changes": {
+        "performance": 0.15,
+        "cost_per_race": 5.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_021",
+      "name": "TurboElite Pro Max Fuels",
+      "country": "Netherlands",
+      "materials": ["fuel_021", "fuel_025", "fuel_026"],
+      "stat_changes": {
+        "performance": 0.25,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_022",
+      "name": "EcoPro Max Elite Fuels",
+      "country": "Sweden",
+      "materials": ["fuel_022", "fuel_027", "fuel_028"],
+      "stat_changes": {
+        "performance": -0.05,
+        "cost_per_race": -10.0,
+        "engine_damage": -0.3
+      }
+    },
+    {
+      "id": "fs_023",
+      "name": "MaxBoost Pro Elite Fuels",
+      "country": "Italy",
+      "materials": ["fuel_023", "fuel_029", "fuel_030"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_024",
+      "name": "RacePro Max Elite Fuels",
+      "country": "Germany",
+      "materials": ["fuel_024", "fuel_031", "fuel_032"],
+      "stat_changes": {
+        "performance": 0.1,
+        "cost_per_race": -5.0,
+        "engine_damage": 0.0
+      }
+    },
+    {
+      "id": "fs_025",
+      "name": "NitroElite Pro Max Fuels",
+      "country": "Japan",
+      "materials": ["fuel_025", "fuel_033", "fuel_034"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_026",
+      "name": "ProTurbo Elite Max Fuels",
+      "country": "USA",
+      "materials": ["fuel_026", "fuel_035", "fuel_001"],
+      "stat_changes": {
+        "performance": 0.15,
+        "cost_per_race": 5.0,
+        "engine_damage": 0.1
+      }
+    },
+    {
+      "id": "fs_027",
+      "name": "TurboMax Elite Fuels",
+      "country": "Canada",
+      "materials": ["fuel_027", "fuel_002", "fuel_003"],
+      "stat_changes": {
+        "performance": 0.25,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_028",
+      "name": "EcoPro Pro Fuels",
+      "country": "France",
+      "materials": ["fuel_028", "fuel_004", "fuel_005"],
+      "stat_changes": {
+        "performance": 0.0,
+        "cost_per_race": -8.0,
+        "engine_damage": -0.1
+      }
+    },
+    {
+      "id": "fs_029",
+      "name": "RaceElite Pro Fuels",
+      "country": "South Korea",
+      "materials": ["fuel_029", "fuel_006", "fuel_007"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.1
+      }
+    },
+    {
+      "id": "fs_030",
+      "name": "Performance Elite Pro Fuels",
+      "country": "Australia",
+      "materials": ["fuel_030", "fuel_008", "fuel_009"],
+      "stat_changes": {
+        "performance": 0.15,
+        "cost_per_race": 5.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_031",
+      "name": "TurboElite Pro Max Fuels",
+      "country": "Netherlands",
+      "materials": ["fuel_031", "fuel_010", "fuel_011"],
+      "stat_changes": {
+        "performance": 0.25,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    },
+    {
+      "id": "fs_032",
+      "name": "EcoPro Max Elite Fuels",
+      "country": "Sweden",
+      "materials": ["fuel_032", "fuel_012", "fuel_013"],
+      "stat_changes": {
+        "performance": -0.05,
+        "cost_per_race": -10.0,
+        "engine_damage": -0.3
+      }
+    },
+    {
+      "id": "fs_033",
+      "name": "MaxBoost Pro Elite Fuels",
+      "country": "Italy",
+      "materials": ["fuel_033", "fuel_014", "fuel_015"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 0.0,
+        "engine_damage": 0.2
+      }
+    },
+    {
+      "id": "fs_034",
+      "name": "RacePro Max Elite Fuels",
+      "country": "Germany",
+      "materials": ["fuel_034", "fuel_016", "fuel_017"],
+      "stat_changes": {
+        "performance": 0.1,
+        "cost_per_race": -5.0,
+        "engine_damage": 0.0
+      }
+    },
+    {
+      "id": "fs_035",
+      "name": "NitroElite Pro Max Fuels",
+      "country": "Japan",
+      "materials": ["fuel_035", "fuel_018", "fuel_019"],
+      "stat_changes": {
+        "performance": 0.2,
+        "cost_per_race": 10.0,
+        "engine_damage": 0.3
+      }
+    }
+  ]
+}

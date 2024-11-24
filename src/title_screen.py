@@ -109,24 +109,6 @@ class RoadEffect:
         self.speed = 800  # constant speed for title screen
         self.linespr = 0
 
-        # Set up colors for the road effect
-        pyxel.colors[0] = 0x000000  # black
-        pyxel.colors[1] = 0xFFFFFF  # white
-        pyxel.colors[2] = 0xD8D8FC  # lightgrey
-        pyxel.colors[3] = 0x486C00  # lightgrey
-        pyxel.colors[4] = 0x9090B4  # darkergrey
-        pyxel.colors[5] = 0xB4D8FC  # sky
-        pyxel.colors[6] = 0x90D800  # brightgreen
-        pyxel.colors[7] = 0x486C00  # swamp green
-        pyxel.colors[8] = 0x004800  # dark green
-        pyxel.colors[9] = 0x6C90B4  # blueish grey
-        pyxel.colors[10] = 0x486C90  # darker blueish grey
-        pyxel.colors[11] = 0x909000  # yellowish swamp green
-        pyxel.colors[12] = 0xFF0021  # red
-        pyxel.colors[13] = 0x9090B4  # darker red
-        pyxel.colors[14] = 0x9090B4  # dark red
-        pyxel.colors[15] = 0xefea7c
-
         # Create road lines for each segment
         self.lines = []
         N = 1600
@@ -136,7 +118,7 @@ class RoadEffect:
 
             # Change color every other 3 lines
             grass_color = light_grass if (i // 40) % 2 else dark_grass
-            rumble_color = 1 if (i // 15) % 2 else 12
+            rumble_color = 8 if (i // 15) % 2 else 7
             road_color = dark_road
             stripe_color = dark_road
 
@@ -168,7 +150,7 @@ class RoadEffect:
 
     def draw(self):
         # Draw the road effect
-        pyxel.cls(5)  # Sky color
+        pyxel.cls(6)  # Sky color
 
         lines = self.lines
         N = len(lines)
@@ -227,10 +209,10 @@ class RoadEffect:
 
 def reset_palette():
     default_colors = [
-        0x000000, 0x1D2B53, 0x7E2553, 0x008751,
-        0xAB5236, 0x5F574F, 0xC2C3C7, 0xFFF1E8,
-        0xFF004D, 0xFFA300, 0xFFEC27, 0x00E436,
-        0x29ADFF, 0x83769C, 0xFF77A8, 0xFFCCAA
+        0x000000, 0x2B335F, 0x7E2072, 0x19959C,
+        0x8B4B52, 0x395C98, 0xA9C1FF, 0xEEEEEE,
+        0xD41B6C, 0xD38441, 0xE9C35B, 0x70C6A9,
+        0x7696DE, 0xA3A3A3, 0xFF9798, 0xEDC7B0
     ]
     for i in range(16):
         pyxel.colors[i] = default_colors[i]

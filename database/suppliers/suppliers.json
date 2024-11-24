@@ -1,0 +1,2293 @@
+{
+  "suppliers": [
+    {
+      "id": "sup_001",
+      "name": "Global Metals Inc.",
+      "country": "USA",
+      "materials": [
+        "bw_001",
+        "bw_002",
+        "bw_012",
+        "bw_013",
+        "bw_014",
+        "ae_001",
+        "ae_002",
+        "ae_007",
+        "sp_001",
+        "sp_005",
+        "en_001",
+        "en_002",
+        "en_003",
+        "gb_001",
+        "gb_002",
+        "gb_008",
+        "br_001",
+        "br_003",
+        "br_005",
+        "wh_001",
+        "wh_002",
+        "wh_005",
+        "es_001",
+        "es_004"
+      ],
+      "stat_changes": {}
+    },
+    {
+      "id": "sup_002",
+      "name": "Advanced Composites Ltd.",
+      "country": "Germany",
+      "materials": [
+        "bw_003",
+        "bw_005",
+        "bw_011",
+        "ae_003",
+        "ae_005",
+        "ae_006",
+        "ae_008",
+        "sp_003",
+        "sp_004",
+        "sp_007",
+        "en_005",
+        "en_006",
+        "en_007",
+        "gb_003",
+        "gb_004",
+        "gb_006",
+        "br_002",
+        "br_004",
+        "br_006",
+        "wh_003",
+        "wh_004",
+        "wh_006",
+        "wh_007",
+        "es_002",
+        "es_005",
+        "es_008"
+      ],
+      "stat_changes": {
+        "performance": 1.2
+      }
+    },
+    {
+      "id": "sup_003",
+      "name": "Superalloy Solutions",
+      "country": "UK",
+      "materials": [
+        "bw_007",
+        "bw_008",
+        "bw_009",
+        "bw_010",
+        "bw_015",
+        "ae_004",
+        "ae_009",
+        "sp_002",
+        "sp_005",
+        "sp_008",
+        "en_004",
+        "en_008",
+        "en_009",
+        "gb_005",
+        "gb_007",
+        "gb_009",
+        "br_007",
+        "br_008",
+        "br_010",
+        "wh_008",
+        "wh_009",
+        "wh_010",
+        "wh_011",
+        "es_006",
+        "es_009"
+      ],
+      "stat_changes": {
+        "durability": 1.5
+      }
+    },
+    {
+      "id": "sup_004",
+      "name": "AeroTech Innovations",
+      "country": "Italy",
+      "materials": [
+        "bw_004",
+        "bw_006",
+        "ae_001",
+        "ae_003",
+        "ae_012",
+        "sp_001",
+        "sp_002",
+        "en_003",
+        "en_004",
+        "gb_002",
+        "gb_003",
+        "br_003",
+        "br_004",
+        "wh_001",
+        "wh_004",
+        "es_001",
+        "es_003"
+      ],
+      "stat_changes": {
+        "performance": 1.1,
+        "durability": 1.0
+      }
+    },
+    {
+      "id": "sup_005",
+      "name": "Precision Alloys Corp.",
+      "country": "Japan",
+      "materials": [
+        "bw_001",
+        "bw_012",
+        "ae_002",
+        "ae_007",
+        "sp_003",
+        "sp_006",
+        "en_001",
+        "en_005",
+        "gb_001",
+        "gb_004",
+        "br_001",
+        "br_005",
+        "wh_002",
+        "wh_005",
+        "es_002",
+        "es_004"
+      ],
+      "stat_changes": {
+        "weight_per_cm3": -0.5
+      }
+    },
+    {
+      "id": "sup_006",
+      "name": "Titanium Solutions Ltd.",
+      "country": "Switzerland",
+      "materials": [
+        "bw_004",
+        "bw_016",
+        "ae_004",
+        "ae_006",
+        "sp_002",
+        "sp_005",
+        "en_004",
+        "en_007",
+        "gb_002",
+        "gb_005",
+        "br_002",
+        "br_006",
+        "wh_004",
+        "wh_007",
+        "es_006"
+      ],
+      "stat_changes": {
+        "elasticity": 1.3
+      }
+    },
+    {
+      "id": "sup_007",
+      "name": "CarbonTech Industries",
+      "country": "USA",
+      "materials": [
+        "bw_003",
+        "bw_005",
+        "bw_011",
+        "ae_005",
+        "ae_008",
+        "ae_010",
+        "sp_003",
+        "sp_007",
+        "en_005",
+        "en_006",
+        "gb_003",
+        "gb_006",
+        "br_003",
+        "br_007",
+        "wh_003",
+        "wh_006",
+        "wh_007",
+        "es_003",
+        "es_005",
+        "pu_008",
+        "pu_009",
+        "pu_012",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "performance": 1.4,
+        "durability": 1.2
+      }
+    },
+    {
+      "id": "sup_008",
+      "name": "Precision Composites GmbH",
+      "country": "Germany",
+      "materials": [
+        "bw_005",
+        "bw_017",
+        "ae_003",
+        "ae_005",
+        "ae_007",
+        "ae_008",
+        "sp_004",
+        "sp_008",
+        "en_003",
+        "en_009",
+        "gb_003",
+        "gb_008",
+        "br_004",
+        "br_009",
+        "wh_006",
+        "wh_008",
+        "es_007",
+        "pu_007",
+        "pu_011",
+        "pu_013"
+      ],
+      "stat_changes": {
+        "cost_per_cm3": 1.5
+      }
+    },
+    {
+      "id": "sup_009",
+      "name": "UltraMaterials Inc.",
+      "country": "USA",
+      "materials": [
+        "bw_010",
+        "bw_011",
+        "bw_018",
+        "ae_012",
+        "sp_005",
+        "en_012",
+        "gb_006",
+        "gb_010",
+        "br_006",
+        "br_010",
+        "wh_009",
+        "wh_010",
+        "es_008",
+        "es_010"
+      ],
+      "stat_changes": {
+        "durability": 1.6,
+        "performance": 1.3
+      }
+    },
+    {
+      "id": "sup_010",
+      "name": "Aerospace Materials Co.",
+      "country": "UK",
+      "materials": [
+        "bw_009",
+        "bw_010",
+        "bw_016",
+        "ae_007",
+        "ae_009",
+        "sp_006",
+        "en_012",
+        "en_013",
+        "gb_007",
+        "gb_009",
+        "br_008",
+        "wh_012",
+        "es_011"
+      ],
+      "stat_changes": {
+        "elasticity": 1.2,
+        "durability": 1.4
+      }
+    },
+    {
+      "id": "sup_011",
+      "name": "NanoTech Solutions",
+      "country": "Japan",
+      "materials": [
+        "bw_005",
+        "bw_011",
+        "ae_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_007",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 1.5,
+        "cost_per_cm3": 2.0
+      }
+    },
+    {
+      "id": "sup_012",
+      "name": "Lockheed Martin Materials",
+      "country": "USA",
+      "materials": [
+        "bw_011",
+        "bw_019",
+        "ae_005",
+        "ae_008",
+        "ae_012",
+        "sp_009",
+        "en_011",
+        "en_015",
+        "gb_010",
+        "gb_012",
+        "br_008",
+        "wh_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "durability": 1.8,
+        "performance": 1.6
+      }
+    },
+    {
+      "id": "sup_013",
+      "name": "Innovative Alloys Ltd.",
+      "country": "Canada",
+      "materials": [
+        "bw_004",
+        "bw_016",
+        "bw_017",
+        "ae_004",
+        "ae_006",
+        "ae_007",
+        "sp_002",
+        "sp_010",
+        "en_004",
+        "en_007",
+        "gb_002",
+        "gb_005",
+        "gb_010",
+        "br_009",
+        "wh_010",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "elasticity": 1.4,
+        "durability": 1.3
+      }
+    },
+    {
+      "id": "sup_014",
+      "name": "Precision Engineering Corp.",
+      "country": "Germany",
+      "materials": [
+        "bw_003",
+        "bw_005",
+        "bw_011",
+        "ae_005",
+        "ae_010",
+        "sp_003",
+        "sp_007",
+        "en_005",
+        "en_006",
+        "gb_003",
+        "gb_008",
+        "br_007",
+        "wh_012"
+      ],
+      "stat_changes": {
+        "performance": 1.7,
+        "cost_per_cm3": 2.5
+      }
+    },
+    {
+      "id": "sup_015",
+      "name": "Advanced Alloy Systems",
+      "country": "Switzerland",
+      "materials": [
+        "bw_005",
+        "bw_018",
+        "ae_012",
+        "sp_010",
+        "en_009",
+        "gb_010",
+        "br_009",
+        "wh_010"
+      ],
+      "stat_changes": {
+        "durability": 1.9,
+        "elasticity": 1.1
+      }
+    },
+    {
+      "id": "sup_016",
+      "name": "CarbonFiber Technologies",
+      "country": "USA",
+      "materials": [
+        "bw_003",
+        "bw_005",
+        "ae_003",
+        "ae_005",
+        "ae_010",
+        "sp_003",
+        "sp_007",
+        "en_005",
+        "en_006",
+        "gb_003",
+        "gb_008",
+        "br_007",
+        "wh_011"
+      ],
+      "stat_changes": {
+        "performance": 1.8,
+        "durability": 1.5
+      }
+    },
+    {
+      "id": "sup_017",
+      "name": "AeroMaterials International",
+      "country": "Italy",
+      "materials": [
+        "bw_010",
+        "bw_011",
+        "ae_005",
+        "ae_008",
+        "ae_012",
+        "sp_009",
+        "en_011",
+        "en_015",
+        "gb_010",
+        "gb_012",
+        "br_008",
+        "wh_012",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "elasticity": 1.3,
+        "cost_per_cm3": 2.2
+      }
+    },
+    {
+      "id": "sup_018",
+      "name": "NanoAlloys Ltd.",
+      "country": "Japan",
+      "materials": [
+        "bw_005",
+        "bw_011",
+        "ae_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_007",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 1.9,
+        "durability": 1.7
+      }
+    },
+    {
+      "id": "sup_019",
+      "name": "Advanced Materials Group",
+      "country": "USA",
+      "materials": [
+        "bw_009",
+        "bw_010",
+        "bw_016",
+        "bw_017",
+        "ae_005",
+        "ae_010",
+        "ae_012",
+        "sp_010",
+        "en_009",
+        "gb_010",
+        "br_009",
+        "wh_010"
+      ],
+      "stat_changes": {
+        "durability": 2.0,
+        "performance": 1.9
+      }
+    },
+    {
+      "id": "sup_020",
+      "name": "Innovative Composites Inc.",
+      "country": "Germany",
+      "materials": [
+        "bw_005",
+        "bw_011",
+        "ae_005",
+        "ae_010",
+        "sp_003",
+        "sp_007",
+        "en_005",
+        "en_006",
+        "gb_003",
+        "gb_008",
+        "br_007",
+        "wh_012",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "performance": 2.0,
+        "cost_per_cm3": 2.8
+      }
+    },
+    {
+      "id": "sup_021",
+      "name": "EcoMaterials Co.",
+      "country": "France",
+      "materials": [
+        "bw_002",
+        "bw_004",
+        "ae_002",
+        "ae_006",
+        "sp_004",
+        "en_002",
+        "gb_002",
+        "br_002",
+        "wh_002",
+        "es_002",
+        "pu_002",
+        "pu_004",
+        "pu_006"
+      ],
+      "stat_changes": {
+        "durability": 1.2,
+        "performance": 1.1
+      }
+    },
+    {
+      "id": "sup_022",
+      "name": "Fusion Alloys",
+      "country": "South Korea",
+      "materials": [
+        "bw_015",
+        "ae_010",
+        "sp_009",
+        "en_014",
+        "gb_012",
+        "br_010",
+        "wh_010",
+        "es_010",
+        "pu_010",
+        "pu_013"
+      ],
+      "stat_changes": {
+        "elasticity": 1.5,
+        "durability": 1.3
+      }
+    },
+    {
+      "id": "sup_023",
+      "name": "Precision Metals Japan",
+      "country": "Japan",
+      "materials": [
+        "bw_017",
+        "ae_010",
+        "sp_010",
+        "en_012",
+        "gb_010",
+        "br_010",
+        "wh_010",
+        "es_010",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.1,
+        "durability": 1.4
+      }
+    },
+    {
+      "id": "sup_024",
+      "name": "Nordic Composites",
+      "country": "Sweden",
+      "materials": [
+        "bw_005",
+        "ae_003",
+        "sp_007",
+        "en_006",
+        "gb_008",
+        "br_007",
+        "wh_012",
+        "es_007",
+        "pu_007",
+        "pu_011"
+      ],
+      "stat_changes": {
+        "performance": 1.6,
+        "cost_per_cm3": 2.3
+      }
+    },
+    {
+      "id": "sup_025",
+      "name": "Titanium Dynamics",
+      "country": "Australia",
+      "materials": [
+        "bw_016",
+        "ae_004",
+        "sp_005",
+        "en_015",
+        "gb_010",
+        "br_009",
+        "wh_010",
+        "es_010",
+        "pu_014",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "durability": 1.7,
+        "elasticity": 1.2
+      }
+    },
+    {
+      "id": "sup_026",
+      "name": "Quantum Alloys",
+      "country": "Russia",
+      "materials": [
+        "bw_018",
+        "ae_012",
+        "sp_010",
+        "en_013",
+        "gb_012",
+        "br_010",
+        "wh_010",
+        "es_010",
+        "pu_014",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "performance": 1.8,
+        "durability": 1.5
+      }
+    },
+    {
+      "id": "sup_027",
+      "name": "SolarTech Materials",
+      "country": "China",
+      "materials": [
+        "bw_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.2,
+        "durability": 1.6
+      }
+    },
+    {
+      "id": "sup_028",
+      "name": "Zenith Composites",
+      "country": "India",
+      "materials": [
+        "bw_003",
+        "ae_005",
+        "sp_003",
+        "en_005",
+        "gb_003",
+        "br_007",
+        "wh_012",
+        "es_005",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "performance": 1.9,
+        "durability": 1.4
+      }
+    },
+    {
+      "id": "sup_029",
+      "name": "Pinnacle Alloys",
+      "country": "Brazil",
+      "materials": [
+        "bw_010",
+        "ae_012",
+        "sp_010",
+        "en_011",
+        "gb_012",
+        "br_008",
+        "wh_010",
+        "es_010",
+        "pu_014",
+        "pu_015"
+      ],
+      "stat_changes": {
+        "elasticity": 1.6,
+        "cost_per_cm3": 2.5
+      }
+    },
+    {
+      "id": "sup_030",
+      "name": "FusionTech Materials",
+      "country": "Netherlands",
+      "materials": [
+        "bw_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_007",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.3,
+        "durability": 1.8
+      }
+    },
+    {
+      "id": "sup_031",
+      "name": "Alpha Materials",
+      "country": "Norway",
+      "materials": [
+        "bw_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.4,
+        "durability": 1.9
+      }
+    },
+    {
+      "id": "sup_032",
+      "name": "Vertex Alloys",
+      "country": "Mexico",
+      "materials": [
+        "bw_017",
+        "ae_003",
+        "sp_007",
+        "en_006",
+        "gb_008",
+        "br_007",
+        "wh_012",
+        "es_007",
+        "pu_007",
+        "pu_011"
+      ],
+      "stat_changes": {
+        "performance": 1.6,
+        "cost_per_cm3": 2.4
+      }
+    },
+    {
+      "id": "sup_033",
+      "name": "Optima Composites",
+      "country": "Singapore",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_007",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.5,
+        "durability": 2.0
+      }
+    },
+    {
+      "id": "sup_034",
+      "name": "Quantum Composites",
+      "country": "Belgium",
+      "materials": [
+        "bw_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.6,
+        "durability": 2.1
+      }
+    },
+    {
+      "id": "sup_035",
+      "name": "Neptune Alloys",
+      "country": "Denmark",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.7,
+        "durability": 2.2
+      }
+    },
+    {
+      "id": "sup_036",
+      "name": "Celestial Materials",
+      "country": "New Zealand",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.8,
+        "durability": 2.3
+      }
+    },
+    {
+      "id": "sup_037",
+      "name": "Astra Alloys",
+      "country": "Finland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 2.9,
+        "durability": 2.4
+      }
+    },
+    {
+      "id": "sup_038",
+      "name": "Titanium Prime",
+      "country": "Austria",
+      "materials": [
+        "bw_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.0,
+        "durability": 2.5
+      }
+    },
+    {
+      "id": "sup_039",
+      "name": "Fusion Dynamics",
+      "country": "Spain",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.1,
+        "durability": 2.6
+      }
+    },
+    {
+      "id": "sup_040",
+      "name": "Eclipse Composites",
+      "country": "South Africa",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.2,
+        "durability": 2.7
+      }
+    },
+    {
+      "id": "sup_041",
+      "name": "Orbital Alloys",
+      "country": "Belgium",
+      "materials": [
+        "bw_005",
+        "ae_010",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.3,
+        "durability": 2.8
+      }
+    },
+    {
+      "id": "sup_042",
+      "name": "Helix Composites",
+      "country": "Netherlands",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.4,
+        "durability": 2.9
+      }
+    },
+    {
+      "id": "sup_043",
+      "name": "Stellar Alloys",
+      "country": "Sweden",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.5,
+        "durability": 3.0
+      }
+    },
+    {
+      "id": "sup_044",
+      "name": "Nova Composites",
+      "country": "Denmark",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.6,
+        "durability": 3.1
+      }
+    },
+    {
+      "id": "sup_045",
+      "name": "Momentum Alloys",
+      "country": "Italy",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.7,
+        "durability": 3.2
+      }
+    },
+    {
+      "id": "sup_046",
+      "name": "Titanium Edge",
+      "country": "Canada",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.8,
+        "durability": 3.3
+      }
+    },
+    {
+      "id": "sup_047",
+      "name": "Apex Materials",
+      "country": "Brazil",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 3.9,
+        "durability": 3.4
+      }
+    },
+    {
+      "id": "sup_048",
+      "name": "Luminary Alloys",
+      "country": "Russia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.0,
+        "durability": 3.5
+      }
+    },
+    {
+      "id": "sup_049",
+      "name": "Zenith Materials",
+      "country": "China",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.1,
+        "durability": 3.6
+      }
+    },
+    {
+      "id": "sup_050",
+      "name": "EvoComposites",
+      "country": "Singapore",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.2,
+        "durability": 3.7
+      }
+    },
+    {
+      "id": "sup_051",
+      "name": "Pinnacle Composites",
+      "country": "France",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.3,
+        "durability": 3.8
+      }
+    },
+    {
+      "id": "sup_052",
+      "name": "Quantum Dynamics",
+      "country": "South Korea",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.4,
+        "durability": 3.9
+      }
+    },
+    {
+      "id": "sup_053",
+      "name": "Titanium Precision",
+      "country": "South Africa",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.5,
+        "durability": 4.0
+      }
+    },
+    {
+      "id": "sup_054",
+      "name": "Vortex Alloys",
+      "country": "Finland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.6,
+        "durability": 4.1
+      }
+    },
+    {
+      "id": "sup_055",
+      "name": "Helios Composites",
+      "country": "Greece",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.7,
+        "durability": 4.2
+      }
+    },
+    {
+      "id": "sup_056",
+      "name": "Astra Composites",
+      "country": "Brazil",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.8,
+        "durability": 4.3
+      }
+    },
+    {
+      "id": "sup_057",
+      "name": "Nova Dynamics",
+      "country": "Norway",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 4.9,
+        "durability": 4.4
+      }
+    },
+    {
+      "id": "sup_058",
+      "name": "Eclipse Alloys",
+      "country": "Russia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.0,
+        "durability": 4.5
+      }
+    },
+    {
+      "id": "sup_059",
+      "name": "Luminary Dynamics",
+      "country": "Switzerland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.1,
+        "durability": 4.6
+      }
+    },
+    {
+      "id": "sup_060",
+      "name": "Pinnacle Dynamics",
+      "country": "China",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.2,
+        "durability": 4.7
+      }
+    },
+    {
+      "id": "sup_061",
+      "name": "EvoAlloys",
+      "country": "India",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.3,
+        "durability": 4.8
+      }
+    },
+    {
+      "id": "sup_062",
+      "name": "Vortex Dynamics",
+      "country": "Spain",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.4,
+        "durability": 4.9
+      }
+    },
+    {
+      "id": "sup_063",
+      "name": "AstraComposites",
+      "country": "South Africa",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.5,
+        "durability": 5.0
+      }
+    },
+    {
+      "id": "sup_064",
+      "name": "Helios Dynamics",
+      "country": "Finland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.6,
+        "durability": 5.1
+      }
+    },
+    {
+      "id": "sup_065",
+      "name": "Zenith Dynamics",
+      "country": "Germany",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.7,
+        "durability": 5.2
+      }
+    },
+    {
+      "id": "sup_066",
+      "name": "Neptune Alloys",
+      "country": "Canada",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.8,
+        "durability": 5.3
+      }
+    },
+    {
+      "id": "sup_067",
+      "name": "Momentum Alloys",
+      "country": "Italy",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 5.9,
+        "durability": 5.4
+      }
+    },
+    {
+      "id": "sup_068",
+      "name": "Fusion Prime",
+      "country": "Sweden",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.0,
+        "durability": 5.5
+      }
+    },
+    {
+      "id": "sup_069",
+      "name": "Celestial Alloys",
+      "country": "France",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.1,
+        "durability": 5.6
+      }
+    },
+    {
+      "id": "sup_070",
+      "name": "Orbital Dynamics",
+      "country": "Netherlands",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.2,
+        "durability": 5.7
+      }
+    },
+    {
+      "id": "sup_071",
+      "name": "Stellar Dynamics",
+      "country": "Australia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.3,
+        "durability": 5.8
+      }
+    },
+    {
+      "id": "sup_072",
+      "name": "Luminary Prime",
+      "country": "Russia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.4,
+        "durability": 5.9
+      }
+    },
+    {
+      "id": "sup_073",
+      "name": "Quantum Precision",
+      "country": "South Korea",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.5,
+        "durability": 6.0
+      }
+    },
+    {
+      "id": "sup_074",
+      "name": "Titanium Nova",
+      "country": "Singapore",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.6,
+        "durability": 6.1
+      }
+    },
+    {
+      "id": "sup_075",
+      "name": "Momentum Prime",
+      "country": "Spain",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.7,
+        "durability": 6.2
+      }
+    },
+    {
+      "id": "sup_076",
+      "name": "Astra Prime",
+      "country": "South Africa",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.8,
+        "durability": 6.3
+      }
+    },
+    {
+      "id": "sup_077",
+      "name": "Helix Prime",
+      "country": "Finland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 6.9,
+        "durability": 6.4
+      }
+    },
+    {
+      "id": "sup_078",
+      "name": "Zenith Prime",
+      "country": "Germany",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.0,
+        "durability": 6.5
+      }
+    },
+    {
+      "id": "sup_079",
+      "name": "Neptune Dynamics",
+      "country": "Canada",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.1,
+        "durability": 6.6
+      }
+    },
+    {
+      "id": "sup_080",
+      "name": "Momentum Elite",
+      "country": "Brazil",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.2,
+        "durability": 6.7
+      }
+    },
+    {
+      "id": "sup_081",
+      "name": "Luminary Elite",
+      "country": "Russia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.3,
+        "durability": 6.8
+      }
+    },
+    {
+      "id": "sup_082",
+      "name": "Quantum Elite",
+      "country": "South Korea",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.4,
+        "durability": 6.9
+      }
+    },
+    {
+      "id": "sup_083",
+      "name": "Titanium Nova Prime",
+      "country": "Singapore",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.5,
+        "durability": 7.0
+      }
+    },
+    {
+      "id": "sup_084",
+      "name": "Momentum Supreme",
+      "country": "Spain",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.6,
+        "durability": 7.1
+      }
+    },
+    {
+      "id": "sup_085",
+      "name": "Astra Supreme",
+      "country": "South Africa",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.7,
+        "durability": 7.2
+      }
+    },
+    {
+      "id": "sup_086",
+      "name": "Helix Supreme",
+      "country": "Finland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.8,
+        "durability": 7.3
+      }
+    },
+    {
+      "id": "sup_087",
+      "name": "Zenith Supreme",
+      "country": "Germany",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 7.9,
+        "durability": 7.4
+      }
+    },
+    {
+      "id": "sup_088",
+      "name": "Neptune Supreme",
+      "country": "Canada",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.0,
+        "durability": 7.5
+      }
+    },
+    {
+      "id": "sup_089",
+      "name": "Momentum Ultra",
+      "country": "Brazil",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.1,
+        "durability": 7.6
+      }
+    },
+    {
+      "id": "sup_090",
+      "name": "Luminary Ultra",
+      "country": "Russia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.2,
+        "durability": 7.7
+      }
+    },
+    {
+      "id": "sup_091",
+      "name": "Quantum Ultra",
+      "country": "South Korea",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.3,
+        "durability": 7.8
+      }
+    },
+    {
+      "id": "sup_092",
+      "name": "Titanium Apex",
+      "country": "Singapore",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.4,
+        "durability": 7.9
+      }
+    },
+    {
+      "id": "sup_093",
+      "name": "Momentum Titan",
+      "country": "Spain",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.5,
+        "durability": 8.0
+      }
+    },
+    {
+      "id": "sup_094",
+      "name": "Astra Ultra",
+      "country": "South Africa",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.6,
+        "durability": 8.1
+      }
+    },
+    {
+      "id": "sup_095",
+      "name": "Helix Ultra",
+      "country": "Finland",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.7,
+        "durability": 8.2
+      }
+    },
+    {
+      "id": "sup_096",
+      "name": "Zenith Elite",
+      "country": "Germany",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.8,
+        "durability": 8.3
+      }
+    },
+    {
+      "id": "sup_097",
+      "name": "Neptune Elite",
+      "country": "Canada",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 8.9,
+        "durability": 8.4
+      }
+    },
+    {
+      "id": "sup_098",
+      "name": "Momentum Infinity",
+      "country": "Brazil",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 9.0,
+        "durability": 8.5
+      }
+    },
+    {
+      "id": "sup_099",
+      "name": "Luminary Infinity",
+      "country": "Russia",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 9.1,
+        "durability": 8.6
+      }
+    },
+    {
+      "id": "sup_100",
+      "name": "Quantum Infinity",
+      "country": "South Korea",
+      "materials": [
+        "bw_005",
+        "ae_005",
+        "sp_007",
+        "en_010",
+        "gb_011",
+        "br_007",
+        "wh_011",
+        "es_012",
+        "pu_012",
+        "pu_013",
+        "pu_014"
+      ],
+      "stat_changes": {
+        "performance": 9.2,
+        "durability": 8.7
+      }
+    }
+  ]
+}
