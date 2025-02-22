@@ -17,6 +17,7 @@ from track import (
 from constants import CURRENT_VER, QUALIFYING_TIME, TIRE_TYPES
 from load_teams import load_teams  # Ensure this function is correctly imported
 
+
 class Qualifying:
     def __init__(self, game):
         self.game = game
@@ -26,10 +27,16 @@ class Qualifying:
         self.cars = []
         self.num_cars = 20  # Adjust as needed based on number of drivers
         self.drivers_map = self.load_drivers()  # Load drivers data
-        self.teams_data = load_teams()  # Corrected: Call load_teams() directly
+        self.teams_data = load_teams()  # Load teams data
+
+        # Sort teams alphabetically and assign each a pitbox
+        self.assign_team_pitboxes()
+
         self.create_cars()
         self.session_over = False
         self.starting_grid = []
+
+        # Set some default Pyxel colors
         pyxel.colors[0] = 0x000000  # Black
         pyxel.colors[1] = 0xFFFFFF  # White
 
@@ -47,17 +54,45 @@ class Qualifying:
             print(f"Error decoding drivers.json: {e}")
             return {}
 
+    def assign_team_pitboxes(self):
+        """
+        Sort teams alphabetically by team name and assign each team a unique pitbox location
+        along the pitlane. The pitbox coordinates are stored in the team data.
+        """
+        # Sort teams alphabetically
+        sorted_teams = sorted(self.teams_data, key=lambda t: t["team_name"])
+        self.teams_data = sorted_teams  # Overwrite teams_data so subsequent loops are in alphabetical order
+        num_teams = len(self.teams_data)
+
+        # For each team, evenly space its pitbox along the pitlane.
+        for i, team in enumerate(self.teams_data):
+            # Calculate a distance along the pitlane for the pitbox.
+            pit_distance = PIT_LANE_TOTAL_LENGTH * (i + 1) / (num_teams + 1)
+            # Convert that distance to (x, y) coordinates on the pitlane.
+            pit_x, pit_y = get_position_along_track(
+                pit_distance, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES
+            )
+            # Store the pitbox info with the team.
+            team["pitbox_distance"] = pit_distance
+            team["pitbox_coords"] = (pit_x, pit_y)
+
     def create_cars(self):
         """Create Car objects based on teams and their drivers."""
-        # Assign unique color indexes starting from 2 to avoid overriding existing Pyxel colors
+        # Assign unique palette indices to each team starting from 2.
         for i, team in enumerate(self.teams_data, start=2):
             try:
-                # Set Pyxel colors based on team data
-                pyxel.colors[i] = int(team["color"], 16)  # Convert hex color to integer
+                # Convert the hex color to an integer—but don't use this value directly for drawing.
+                # Instead, we update the Pyxel palette at index 'i'.
+                color_value = int(team["color"], 16)
             except ValueError:
                 print(f"Invalid color format for team {team['team_name']}. Using default color 0xFFFFFF.")
-                pyxel.colors[i] = 0xFFFFFF  # Default to white if color parsing fails
+                color_value = 0xFFFFFF  # Default to white if color parsing fails
 
+            pyxel.colors[i] = color_value
+            # Also store the palette index for the team.
+            team["color_index"] = i
+
+        # Create a car for each driver, passing the team’s pitbox coordinates along.
         for team_index, team in enumerate(self.teams_data):
             for driver in team["drivers"]:
                 driver_id = driver["driver_id"]
@@ -65,8 +100,10 @@ class Qualifying:
                 if driver_data:
                     driver_name = driver_data["name"]
                     driver_number = driver_data["number"]
-                    color_index = team_index + 2  # Ensure unique color index per team
+                    # Use the team's palette index as the car color.
+                    color_index = team_index + 2
                     grid_position = len(self.cars)  # Position based on the current number of cars
+                    pit_dist = team["pitbox_distance"]
                     car = Car(
                         color_index=color_index,
                         car_number=driver_number,
@@ -74,7 +111,9 @@ class Qualifying:
                         grid_position=grid_position,
                         announcements=None,
                         game=self.game,
-                        mode='qualifying'
+                        mode='qualifying',
+                        pitbox_coords=team.get("pitbox_coords"),
+                        pitbox_distance=pit_dist
                     )
                     car.qualifying_exit_delay = random.randint(0, 60 * 30 * 3)
                     self.cars.append(car)
@@ -97,76 +136,98 @@ class Qualifying:
     def drawbox(self, x_box, y_box, width, height, radius, border_thickness):
         """Draws a rounded box with a white border and black inner box."""
         # Draw white border
-        pyxel.rect(x_box + radius, y_box, width - 2 * radius, height, 1)  # White color (1)
-        pyxel.rect(x_box, y_box + radius, width, height - 2 * radius, 1)  # White color (1)
-        pyxel.rect(x_box + radius, y_box + height - radius, width - 2 * radius, radius, 1)  # White color (1)
+        pyxel.rect(x_box + radius, y_box, width - 2 * radius, height, 1)
+        pyxel.rect(x_box, y_box + radius, width, height - 2 * radius, 1)
+        pyxel.rect(x_box + radius, y_box + height - radius, width - 2 * radius, radius, 1)
 
         # Draw white rounded corners
-        pyxel.circ(x_box + radius, y_box + radius, radius, 1)  # White color (1)
-        pyxel.circ(x_box + width - radius - 1, y_box + radius, radius, 1)  # White color (1)
-        pyxel.circ(x_box + radius, y_box + height - radius - 1, radius, 1)  # White color (1)
-        pyxel.circ(x_box + width - radius - 1, y_box + height - radius - 1, radius, 1)  # White color (1)
+        pyxel.circ(x_box + radius, y_box + radius, radius, 1)
+        pyxel.circ(x_box + width - radius - 1, y_box + radius, radius, 1)
+        pyxel.circ(x_box + radius, y_box + height - radius - 1, radius, 1)
+        pyxel.circ(x_box + width - radius - 1, y_box + height - radius - 1, radius, 1)
 
         # Draw inner black box
         inner_x, inner_y = x_box + border_thickness, y_box + border_thickness
         inner_width, inner_height = width - 2 * border_thickness, height - 2 * border_thickness
         inner_radius = radius - border_thickness
 
-        pyxel.rect(inner_x + inner_radius, inner_y, inner_width - 2 * inner_radius, inner_height, 0)  # Black color (0)
-        pyxel.rect(inner_x, inner_y + inner_radius, inner_width, inner_height - 2 * inner_radius, 0)  # Black color (0)
+        pyxel.rect(inner_x + inner_radius, inner_y, inner_width - 2 * inner_radius, inner_height, 0)
+        pyxel.rect(inner_x, inner_y + inner_radius, inner_width, inner_height - 2 * inner_radius, 0)
         pyxel.rect(inner_x + inner_radius, inner_y + inner_height - inner_radius, inner_width - 2 * inner_radius,
-                   inner_radius, 0)  # Black color (0)
+                   inner_radius, 0)
 
         # Draw black rounded corners
-        pyxel.circ(inner_x + inner_radius, inner_y + inner_radius, inner_radius, 0)  # Black color (0)
-        pyxel.circ(inner_x + inner_width - inner_radius - 1, inner_y + inner_radius, inner_radius, 0)  # Black color (0)
-        pyxel.circ(inner_x + inner_radius, inner_y + inner_height - inner_radius - 1, inner_radius, 0)  # Black color (0)
+        pyxel.circ(inner_x + inner_radius, inner_y + inner_radius, inner_radius, 0)
+        pyxel.circ(inner_x + inner_width - inner_radius - 1, inner_y + inner_radius, inner_radius, 0)
+        pyxel.circ(inner_x + inner_radius, inner_y + inner_height - inner_radius - 1, inner_radius, 0)
         pyxel.circ(inner_x + inner_width - inner_radius - 1, inner_y + inner_height - inner_radius - 1,
-                   inner_radius, 0)  # Black color (0)
+                   inner_radius, 0)
+
+    def draw_pitboxes(self):
+        """
+        Draws a custom pitbox for each team at its assigned location.
+        The pitbox is drawn as a filled square using the team's palette index
+        (which refers to the proper color in Pyxel's palette) with the team name below.
+        """
+        pitbox_size = 10  # Adjust the size as needed
+        for team in self.teams_data:
+            pit_x, pit_y = team["pitbox_coords"]
+            # Center the pitbox on the (x, y) coordinate.
+            top_left_x = pit_x - pitbox_size // 2
+            top_left_y = pit_y - pitbox_size // 2
+
+            # Use the team's palette index for drawing.
+            team_color = team.get("color_index", 1)
+            pyxel.rect(top_left_x, top_left_y, pitbox_size//2, pitbox_size//2, team_color)
+            pyxel.rectb(top_left_x, top_left_y, pitbox_size//2, pitbox_size//2, 1)
+
 
     def draw(self):
-        pyxel.cls(0)  # Clear screen with white background
+        pyxel.cls(0)  # Clear screen with black background
 
-        # Draw the track and pit lane
+        # Draw the track.
         for i in range(len(TRACK_POINTS) - 1):
             x1, y1 = TRACK_POINTS[i]
             x2, y2 = TRACK_POINTS[i + 1]
-            pyxel.line(x1, y1, x2, y2, 1)  # Black color (0)
+            pyxel.line(x1, y1, x2, y2, 1)
 
-        # Draw start/finish line
+        # Draw start/finish line.
         sx, sy = TRACK_POINTS[START_FINISH_INDEX_SMOOTHED]
         sx_next, sy_next = TRACK_POINTS[(START_FINISH_INDEX_SMOOTHED + 1) % len(TRACK_POINTS)]
-        pyxel.line(sx, sy, sx_next, sy_next, 2)  # Red color (2)
+        pyxel.line(sx, sy, sx_next, sy_next, 2)
 
-        # Draw pit lane
+        # Draw pit lane.
         if PIT_LANE_POINTS:
             for i in range(len(PIT_LANE_POINTS) - 1):
                 x1, y1 = PIT_LANE_POINTS[i]
                 x2, y2 = PIT_LANE_POINTS[i + 1]
-                pyxel.line(x1, y1, x2, y2, 13)  # Light blue color (13)
+                pyxel.line(x1, y1, x2, y2, 13)
             pitstop_x, pitstop_y = get_position_along_track(
                 PIT_STOP_POINT, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES
             )
-            pyxel.rect(pitstop_x - 2, pitstop_y - 2, 4, 4, 8)  # Green color (8)
+            pyxel.rect(pitstop_x - 2, pitstop_y - 2, 4, 4, 8)
 
-        # Draw all cars first
-        hover_info = None  # Track only one hovered car
+        # Draw custom pitboxes for each team.
+        self.draw_pitboxes()
+
+        # Draw all cars.
+        hover_info = None  # Only track one hovered car.
         for car in self.cars:
             if not car.is_active:
                 continue
 
-            # Get car position
+            # Get car position.
             if car.on_pitlane:
+                # Note: Ensure that car.pitlane_distance is maintained by the Car class.
                 x, y = get_position_along_track(car.pitlane_distance, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES)
             else:
                 x, y = get_position_along_track(car.distance, TRACK_POINTS, CUMULATIVE_DISTANCES)
 
-            # Draw the car
+            # Draw the car.
             pyxel.circ(x, y, 3, car.color)
 
-            # Check if this car is hovered and store info
+            # Check for hover to display additional info.
             if not hover_info and abs(pyxel.mouse_x - x) <= 10 and abs(pyxel.mouse_y - y) <= 10:
-                # Determine lap status
                 lap_status = (
                     "In lap" if car.on_in_lap else
                     "Fast lap" if car.on_fast_lap else
@@ -179,12 +240,11 @@ class Qualifying:
                     'lap_status': lap_status,
                     'tire_key': car.tire_type,
                     'tire_percentage': car.tire_percentage,
-                    'name': car.driver_name  # Changed from car.car_number to driver_name
+                    'name': car.driver_name
                 }
 
-        # After all cars are drawn, proceed to draw the UI
-        self.pyuni.text(10, 10, 'Qualifying', 1)  # Black color (0)
-        # Draw session time and car list
+        # Draw UI elements.
+        self.pyuni.text(10, 10, 'Qualifying', 1)
         time_remaining_frames = max(0, self.session_time - self.elapsed_time)
         time_remaining_seconds = time_remaining_frames / 30
         minutes = int(time_remaining_seconds // 60)
@@ -193,19 +253,18 @@ class Qualifying:
         self.pyuni.text(10, 20, time_text, 1)
 
         y_offset = 30
-        # Sort cars based on best lap time; cars without lap time are placed at the end
         sorted_cars = sorted(
             self.cars,
             key=lambda c: c.best_lap_time if c.best_lap_time is not None else float('inf')
         )
         for i, car in enumerate(sorted_cars):
             lap_time = f"{car.best_lap_time:.2f}" if car.best_lap_time else "-"
-            text = f"{i+1} {car.driver_name}: {lap_time}"
-            self.pyuni.text(10, y_offset + i * 10, text, 1)  # Black color (0)
+            text = f"{i + 1} {car.driver_name}: {lap_time}"
+            self.pyuni.text(10, y_offset + i * 10, text, 1)
 
-        self.pyuni.text(370, 480, CURRENT_VER, 1)  # Black color (0)
+        self.pyuni.text(370, 480, CURRENT_VER, 1)
 
-        # Draw tooltip for the single hovered car last
+        # Draw tooltip for hovered car.
         if hover_info:
             x_box = hover_info['x'] - 7
             y_box = hover_info['y'] - 92
@@ -214,14 +273,14 @@ class Qualifying:
             border_thickness = 1
             self.drawbox(x_box, y_box, width, height, radius, border_thickness)
 
-            pyxel.text(x_box + 5, y_box + 5, hover_info['name'], 1)  # Black color (0)
-            pyxel.text(x_box + 5, y_box + 15, hover_info['lap_status'], 1)  # Black color (0)
+            pyxel.text(x_box + 5, y_box + 5, hover_info['name'], 1)
+            pyxel.text(x_box + 5, y_box + 15, hover_info['lap_status'], 1)
             pyxel.text(x_box + 5, y_box + 25, f"Morale: Good", 1)  # Placeholder for morale
-            pyxel.text(x_box + 5, y_box + 35, f"{hover_info['tire_key'].capitalize()} {hover_info['tire_percentage']:.1f}%", 1)  # Black color (0)
+            pyxel.text(x_box + 5, y_box + 35,
+                       f"{hover_info['tire_key'].capitalize()} {hover_info['tire_percentage']:.1f}%", 1)
             pyxel.text(x_box + 5, y_box + 45, f"Tyre temps: ", 1)  # Placeholder for tyre temperature
 
     def calculate_starting_grid(self):
         """Calculate and set the starting grid based on qualifying results."""
-        # Sort cars based on best lap time; cars without lap time are placed at the end
         self.cars.sort(key=lambda c: c.best_lap_time if c.best_lap_time is not None else float('inf'))
         self.starting_grid = [car.car_number for car in self.cars]

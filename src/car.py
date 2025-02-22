@@ -15,7 +15,7 @@ from track import (
 
 class Car:
     def __init__(self, color_index, car_number, driver_name, grid_position,
-                 announcements, game=None, mode='race', start_delay_frames=0):
+                 announcements, pitbox_coords, pitbox_distance, game=None, mode='race', start_delay_frames=0):
         self.color = color_index
         self.car_number = car_number
         self.grid_position = grid_position
@@ -26,6 +26,9 @@ class Car:
         self.crashed = False
         self.speed = 0.0
         self.previous_distance = 0.0
+        self.pitbox_coords = pitbox_coords
+        self.pitlane_distance = pitbox_distance
+        self.pitbox_distance = pitbox_distance
         self.lap_times = []
         self.best_lap_time = None
         self.current_lap_start_frame = None
@@ -54,12 +57,13 @@ class Car:
         self.qualifying_exit_delay = random.randint(0, 60 * 30 * 3)
         self.last_exit_time = 0
         self.on_pitlane = True
-        self.pitlane_distance = PIT_STOP_POINT
+       # self.pitlane_distance = PIT_STOP_POINT
         self.distance = PITLANE_ENTRANCE_DISTANCE
         self.previous_distance = self.distance
         self.laps_completed = 0
         self.tire_type = "soft"
         self.tire_percentage = 100.0
+
 
     def initialize_race_mode(self):
         self.just_crossed_pitstop_point = False
@@ -94,6 +98,7 @@ class Car:
         self.initial_time_offset = 0.0
         self.adjusted_distance = 0.0
         self.adjusted_total_distance = 0.0
+
 
         self.pitlane_distance = 0.0
         self.previous_pitlane_distance = self.pitlane_distance
@@ -238,74 +243,111 @@ class Car:
                       f"{self.gearbox_quality:.2f} | Suspension: "
                       f"{self.suspension_quality:.2f} | Brakes: "
                       f"{self.brake_performance:.2f}")
+
     def update_qualifying(self):
         if self.crashed:
             return
+
+        # 1) Car is currently in pit (parked).
         if self.in_pit:
+            # Decide if they can leave for another run
             if self.has_time_for_another_run:
+                # If enough time has passed, head out again
                 if self.game.qualifying.elapsed_time >= self.qualifying_exit_delay:
                     self.in_pit = False
                     self.on_pitlane = True
                     self.on_out_lap = True
                     self.speed = 0.0
                     self.pit_stop_done = True
-            else:
-                pass
+
+        # 2) Car is on an out‐lap
         elif self.on_out_lap:
             self.previous_distance = self.distance
             if self.on_pitlane:
                 self.update_pitlane_exit()
             else:
                 self.update_movement()
+                # If we cross start/finish, switch to fast‐lap
                 if self.crossed_start_finish_line():
                     self.on_out_lap = False
                     self.on_fast_lap = True
                     self.current_lap_start_frame = self.game.qualifying.elapsed_time
+
+        # 3) Car is on a fast‐lap
         elif self.on_fast_lap:
             self.previous_distance = self.distance
             self.update_movement()
+            # If we cross start/finish, we’ve set a lap time
             if self.crossed_start_finish_line():
                 lap_time = (self.game.qualifying.elapsed_time - self.current_lap_start_frame) / 30.0
                 self.lap_times.append(lap_time)
                 if self.best_lap_time is None or lap_time < self.best_lap_time:
                     self.best_lap_time = lap_time
+
+                # Switch to in‐lap
                 self.on_fast_lap = False
                 self.on_in_lap = True
+
+        # 4) Car is on an in‐lap
         elif self.on_in_lap:
             self.previous_distance = self.distance
             self.update_movement()
-            if self.distance >= PITLANE_ENTRANCE_DISTANCE and self.previous_distance < PITLANE_ENTRANCE_DISTANCE:
+
+            # If we pass the pitlane entrance, switch to pitlane movement
+            if (self.distance >= PITLANE_ENTRANCE_DISTANCE
+                    and self.previous_distance < PITLANE_ENTRANCE_DISTANCE):
                 self.on_pitlane = True
-                self.pitlane_distance = 0.0
+
+            # If on pit lane, run the new "entry" logic
             if self.on_pitlane:
                 self.update_pitlane_entry()
-                if self.pitlane_distance >= PIT_STOP_POINT:
-                    self.in_pit = True
-                    self.on_in_lap = False
-                    remaining_time = self.game.qualifying.session_time - self.game.qualifying.elapsed_time
-                    estimated_time_for_run = (self.best_lap_time or 60 * 30) * 2
-                    if remaining_time > estimated_time_for_run:
-                        self.qualifying_exit_delay = self.game.qualifying.elapsed_time + random.randint(60 * 5, 60 * 15)
-                        self.has_time_for_another_run = True
-                    else:
-                        self.has_time_for_another_run = False
+
+    def update_pitlane_entry(self):
+        """
+        Move the car forward on the pit lane until it reaches its own
+        'pitbox_distance'. At that point, it stops.
+        """
+        self.previous_pitlane_distance = self.pitlane_distance
+
+        # Accelerate a bit, but cap at pit‐lane speed limit
+        self.speed = min(self.speed + self.base_acceleration, PITLANE_SPEED_LIMIT)
+        self.pitlane_distance += self.speed
+
+        # Check if we've *just now* crossed our unique pit box location
+        # e.g.  previous <= pitbox_distance < current
+        print(f'self.previous_pitlane_distance {self.previous_pitlane_distance}')
+        print(f'self.pitbox_distance {self.pitbox_distance}')
+        print(f'self.pitlane_distance {self.pitlane_distance}')
+        if (self.previous_pitlane_distance <= self.pitbox_distance
+                < self.pitlane_distance):
+
+            # Stop the car
+            self.speed = 0.0
+
+            # We’re now considered “in pit”
+            self.in_pit = True
+            self.on_in_lap = False
+
+            # Decide if we still have time for another run, etc.
+            remaining_time = self.game.qualifying.session_time - self.game.qualifying.elapsed_time
+            estimated_time_for_run = (self.best_lap_time or 60 * 30) * 2
+            if remaining_time > estimated_time_for_run:
+                self.qualifying_exit_delay = self.game.qualifying.elapsed_time + random.randint(60 * 5, 60 * 15)
+                self.has_time_for_another_run = True
+            else:
+                self.has_time_for_another_run = False
 
     def update_pitlane_exit(self):
         self.previous_pitlane_distance = self.pitlane_distance
         self.speed = min(self.speed + self.base_acceleration, PITLANE_SPEED_LIMIT)
         self.pitlane_distance += self.speed
+
         if self.pitlane_distance >= PIT_LANE_TOTAL_LENGTH:
+            # We have reached the end of the pitlane, rejoin the track:
             self.on_pitlane = False
             self.distance = PITLANE_EXIT_DISTANCE
             self.pitlane_distance = 0.0
             self.speed = self.min_speed
-
-    def update_pitlane_entry(self):
-        self.previous_pitlane_distance = self.pitlane_distance
-        self.speed = min(self.speed + self.base_acceleration, PITLANE_SPEED_LIMIT)
-        self.pitlane_distance += self.speed
-        if self.pitlane_distance >= PIT_STOP_POINT:
-            self.speed = 0.0
 
     def update_movement(self):
         '''
