@@ -220,7 +220,7 @@ def reset_palette():
 class TitleScreen:
     def __init__(self, game):
         self.game = game
-        self.font_path = self.game.font_path
+        self.font_path = str(self.game.font_path)
         self.font_size = 16
         self.pyunititle = PyxelUnicode(self.font_path, self.font_size)
         self.pyuni = self.game.pyuni

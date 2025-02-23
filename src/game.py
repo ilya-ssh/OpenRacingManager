@@ -6,14 +6,15 @@ from menu import MainMenu
 from race import Race
 from qualifying import Qualifying
 from choose_team import ChooseTeam
+from pathlib import Path
 
 class Game:
     def __init__(self):
         pyxel.init(500, 500, fps=30)
         self.state = 'title_screen'
-        self.font_path = r"../fonts/PublicPixel.ttf"
+        self.font_path = Path(__file__).resolve().parent.parent / "fonts" / "PublicPixel.ttf"
         self.font_size = 8
-        self.pyuni = PyxelUnicode(self.font_path, self.font_size)
+        self.pyuni = PyxelUnicode(str(self.font_path), self.font_size)
         self.title_screen = TitleScreen(self)
         self.main_menu = MainMenu(self)
         self.qualifying = None

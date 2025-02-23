@@ -28,6 +28,9 @@ class Race:
         self.state = 'warmup_lap' if ENABLE_WARMUP_LAP else 'countdown'
         self.drivers_map = self.load_drivers()  # Load drivers data
         self.teams_data = load_teams()  # Load teams data
+
+        self.assign_team_pitboxes()
+
         self.create_cars()
 
     def load_drivers(self):
@@ -50,10 +53,14 @@ class Race:
         for i, team in enumerate(self.teams_data, start=2):
             try:
                 # Set Pyxel colors based on team data
-                pyxel.colors[i] = int(team["color"], 16)  # Convert hex color to integer
+                color_value = int(team["color"], 16)
             except ValueError:
                 print(f"Invalid color format for team {team['team_name']}. Using default color 0xFFFFFF.")
                 pyxel.colors[i] = 0xFFFFFF  # Default to white if color parsing fails
+
+            pyxel.colors[i] = color_value
+            # Also store the palette index for the team.
+            team["color_index"] = i
 
         # Initialize cars using team data
         for team_index, team in enumerate(self.teams_data):
@@ -66,6 +73,7 @@ class Race:
                     color_index = team_index + 2  # Ensure unique color index per team
                     grid_position = self.starting_grid.index(
                         driver_number) if driver_number in self.starting_grid else len(self.cars)
+                    pit_dist = team["pitbox_distance"]
 
                     car = Car(
                         color_index=color_index,
@@ -74,7 +82,9 @@ class Race:
                         grid_position=grid_position,
                         announcements=self.announcements,
                         game=self.game,
-                        mode='race'
+                        mode='race',
+                        pitbox_coords=team.get("pitbox_coords"),
+                        pitbox_distance=pit_dist
                     )
                     car.qualifying_exit_delay = random.randint(0, 60 * 30 * 3)
                     self.cars.append(car)
@@ -100,6 +110,28 @@ class Race:
         self.safety_car = None
         self.safety_car_laps_started = False
         self.safety_car_ending_announced = False
+
+    def assign_team_pitboxes(self):
+        """
+        Sort teams alphabetically by team name and assign each team a unique pitbox location
+        along the pitlane. The pitbox coordinates are stored in the team data.
+        """
+        # Sort teams alphabetically
+        sorted_teams = sorted(self.teams_data, key=lambda t: t["team_name"])
+        self.teams_data = sorted_teams  # Overwrite teams_data so subsequent loops are in alphabetical order
+        num_teams = len(self.teams_data)
+
+        # For each team, evenly space its pitbox along the pitlane.
+        for i, team in enumerate(self.teams_data):
+            # Calculate a distance along the pitlane for the pitbox.
+            pit_distance = PIT_LANE_TOTAL_LENGTH * (i + 1) / (num_teams + 1)
+            # Convert that distance to (x, y) coordinates on the pitlane.
+            pit_x, pit_y = get_position_along_track(
+                pit_distance, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES
+            )
+            # Store the pitbox info with the team.
+            team["pitbox_distance"] = pit_distance
+            team["pitbox_coords"] = (pit_x, pit_y)
 
     def create_safety_car(self):
         """Create and initialize the safety car."""
@@ -289,6 +321,24 @@ class Race:
         pyxel.circ(inner_x + inner_width - inner_radius - 1, inner_y + inner_height - inner_radius - 1,
                    inner_radius, 0)  # Black color (0)
 
+    def draw_pitboxes(self):
+        """
+        Draws a custom pitbox for each team at its assigned location.
+        The pitbox is drawn as a filled square using the team's palette index
+        (which refers to the proper color in Pyxel's palette) with the team name below.
+        """
+        pitbox_size = 10  # Adjust the size as needed
+        for team in self.teams_data:
+            pit_x, pit_y = team["pitbox_coords"]
+            # Center the pitbox on the (x, y) coordinate.
+            top_left_x = pit_x - pitbox_size // 2
+            top_left_y = pit_y - pitbox_size // 2
+
+            # Use the team's palette index for drawing.
+            team_color = team.get("color_index", 1)
+            pyxel.rect(top_left_x, top_left_y, pitbox_size//2, pitbox_size//2, team_color)
+            pyxel.rectb(top_left_x, top_left_y, pitbox_size//2, pitbox_size//2, 1)
+
     def draw(self):
         """Render the race scene."""
         pyxel.cls(0)
@@ -303,18 +353,20 @@ class Race:
         # Draw start/finish line
         sx, sy = TRACK_POINTS[START_FINISH_INDEX_SMOOTHED]
         sx_next, sy_next = TRACK_POINTS[(START_FINISH_INDEX_SMOOTHED + 1)]
-        pyxel.line(sx, sy, sx_next, sy_next, 2)  # Red color
+        pyxel.line(sx, sy, sx_next, sy_next, 2)
 
         # Draw pit lane
         if PIT_LANE_POINTS:
             for i in range(len(PIT_LANE_POINTS) - 1):
                 x1, y1 = PIT_LANE_POINTS[i]
                 x2, y2 = PIT_LANE_POINTS[i + 1]
-                pyxel.line(x1, y1, x2, y2, 13)  # Light blue color
+                pyxel.line(x1, y1, x2, y2, 13)
             pitstop_x, pitstop_y = get_position_along_track(
                 PIT_STOP_POINT, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES
             )
-            pyxel.rect(pitstop_x - 2, pitstop_y - 2, 4, 4, 8)  # Green color
+
+
+        self.draw_pitboxes()
 
         # Draw all cars
         for car in self.cars:
@@ -439,3 +491,4 @@ class Race:
         else:
             gap = (car.initial_time_offset - car_ahead.initial_time_offset) / 5
             return f"+{gap:.1f}s"
+

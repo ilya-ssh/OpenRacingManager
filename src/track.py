@@ -2,6 +2,7 @@ import json
 import math
 import numpy as np
 from scipy.interpolate import splprep, splev
+from pathlib import Path
 
 def load_track(file_path):
     with open(file_path, 'r') as file:
@@ -133,7 +134,7 @@ def get_distance_along_track(x, y, points, cumulative_distances):
     return closest_distance
 
 # Load track and compute necessary data
-track_path = r'../tracks/track.json'
+track_path = Path(__file__).resolve().parent.parent / "tracks" / "track.json"
 ORIGINAL_TRACK_POINTS, START_FINISH_INDEX, ORIGINAL_PIT_LANE_POINTS = load_track(track_path)
 
 # Extract the coordinates of the start-finish point

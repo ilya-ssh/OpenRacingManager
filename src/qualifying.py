@@ -25,11 +25,9 @@ class Qualifying:
         self.session_time = QUALIFYING_TIME * 60 * 30  # Assuming QUALIFYING_TIME is in minutes
         self.elapsed_time = 0
         self.cars = []
-        self.num_cars = 20  # Adjust as needed based on number of drivers
-        self.drivers_map = self.load_drivers()  # Load drivers data
-        self.teams_data = load_teams()  # Load teams data
+        self.drivers_map = self.load_drivers()
+        self.teams_data = load_teams()
 
-        # Sort teams alphabetically and assign each a pitbox
         self.assign_team_pitboxes()
 
         self.create_cars()
@@ -205,7 +203,6 @@ class Qualifying:
             pitstop_x, pitstop_y = get_position_along_track(
                 PIT_STOP_POINT, PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES
             )
-            pyxel.rect(pitstop_x - 2, pitstop_y - 2, 4, 4, 8)
 
         # Draw custom pitboxes for each team.
         self.draw_pitboxes()
