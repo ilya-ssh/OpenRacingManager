@@ -2,2292 +2,983 @@
   "suppliers": [
     {
       "id": "sup_001",
-      "name": "Global Metals Inc.",
-      "country": "USA",
-      "materials": [
-        "bw_001",
-        "bw_002",
-        "bw_012",
-        "bw_013",
-        "bw_014",
-        "ae_001",
-        "ae_002",
-        "ae_007",
-        "sp_001",
-        "sp_005",
-        "en_001",
-        "en_002",
-        "en_003",
-        "gb_001",
-        "gb_002",
-        "gb_008",
-        "br_001",
-        "br_003",
-        "br_005",
-        "wh_001",
-        "wh_002",
-        "wh_005",
-        "es_001",
-        "es_004"
-      ],
-      "stat_changes": {}
+      "name": "Quantum Bodyworks",
+      "country": "Italy",
+      "materials": ["bw_001", "bw_002", "bw_003", "bw_012", "bw_013"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Quantum Bodyworks specializes in robust bodywork components, delivering durability and performance for racing vehicles."
     },
     {
       "id": "sup_002",
-      "name": "Advanced Composites Ltd.",
+      "name": "Titanium Dynamics",
       "country": "Germany",
-      "materials": [
-        "bw_003",
-        "bw_005",
-        "bw_011",
-        "ae_003",
-        "ae_005",
-        "ae_006",
-        "ae_008",
-        "sp_003",
-        "sp_004",
-        "sp_007",
-        "en_005",
-        "en_006",
-        "en_007",
-        "gb_003",
-        "gb_004",
-        "gb_006",
-        "br_002",
-        "br_004",
-        "br_006",
-        "wh_003",
-        "wh_004",
-        "wh_006",
-        "wh_007",
-        "es_002",
-        "es_005",
-        "es_008"
-      ],
-      "stat_changes": {
-        "performance": 1.2
-      }
+      "materials": ["bw_004", "bw_006", "bw_008", "bw_010", "bw_014"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Titanium Dynamics focuses on premium titanium alloy components for superior bodywork strength and efficiency."
     },
     {
       "id": "sup_003",
-      "name": "Superalloy Solutions",
-      "country": "UK",
-      "materials": [
-        "bw_007",
-        "bw_008",
-        "bw_009",
-        "bw_010",
-        "bw_015",
-        "ae_004",
-        "ae_009",
-        "sp_002",
-        "sp_005",
-        "sp_008",
-        "en_004",
-        "en_008",
-        "en_009",
-        "gb_005",
-        "gb_007",
-        "gb_009",
-        "br_007",
-        "br_008",
-        "br_010",
-        "wh_008",
-        "wh_009",
-        "wh_010",
-        "wh_011",
-        "es_006",
-        "es_009"
-      ],
-      "stat_changes": {
-        "durability": 1.5
-      }
+      "name": "Carbon Elite",
+      "country": "USA",
+      "materials": ["bw_005", "bw_007", "bw_011", "bw_015"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Carbon Elite delivers advanced carbon composite materials that elevate performance and reduce vehicle weight."
     },
     {
       "id": "sup_004",
       "name": "AeroTech Innovations",
       "country": "Italy",
-      "materials": [
-        "bw_004",
-        "bw_006",
-        "ae_001",
-        "ae_003",
-        "ae_012",
-        "sp_001",
-        "sp_002",
-        "en_003",
-        "en_004",
-        "gb_002",
-        "gb_003",
-        "br_003",
-        "br_004",
-        "wh_001",
-        "wh_004",
-        "es_001",
-        "es_003"
-      ],
+      "materials": ["bw_004", "bw_006", "ae_001", "ae_003", "ae_012", "sp_001", "sp_002", "en_003", "en_004", "gb_002", "gb_003", "br_003", "br_004", "wh_001", "wh_004", "es_001", "es_003"],
       "stat_changes": {
         "performance": 1.1,
         "durability": 1.0
-      }
+      },
+      "pricemult": 1,
+      "description": "AeroTech Innovations is a versatile supplier offering cutting-edge materials across bodywork, aero, and more for high-performance racing."
     },
     {
       "id": "sup_005",
-      "name": "Precision Alloys Corp.",
+      "name": "Boron Bodyworks",
       "country": "Japan",
-      "materials": [
-        "bw_001",
-        "bw_012",
-        "ae_002",
-        "ae_007",
-        "sp_003",
-        "sp_006",
-        "en_001",
-        "en_005",
-        "gb_001",
-        "gb_004",
-        "br_001",
-        "br_005",
-        "wh_002",
-        "wh_005",
-        "es_002",
-        "es_004"
-      ],
-      "stat_changes": {
-        "weight_per_cm3": -0.5
-      }
+      "materials": ["bw_009", "bw_016", "bw_017"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Boron Bodyworks specializes in high-performance boron-based composites for advanced bodywork applications."
     },
     {
       "id": "sup_006",
-      "name": "Titanium Solutions Ltd.",
-      "country": "Switzerland",
-      "materials": [
-        "bw_004",
-        "bw_016",
-        "ae_004",
-        "ae_006",
-        "sp_002",
-        "sp_005",
-        "en_004",
-        "en_007",
-        "gb_002",
-        "gb_005",
-        "br_002",
-        "br_006",
-        "wh_004",
-        "wh_007",
-        "es_006"
-      ],
-      "stat_changes": {
-        "elasticity": 1.3
-      }
+      "name": "Alloy Precision",
+      "country": "France",
+      "materials": ["bw_018", "bw_019"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Alloy Precision provides specialized alloy components designed for enhanced strength and durability in racing bodywork."
     },
     {
       "id": "sup_007",
-      "name": "CarbonTech Industries",
+      "name": "AeroDynamics Corp",
       "country": "USA",
-      "materials": [
-        "bw_003",
-        "bw_005",
-        "bw_011",
-        "ae_005",
-        "ae_008",
-        "ae_010",
-        "sp_003",
-        "sp_007",
-        "en_005",
-        "en_006",
-        "gb_003",
-        "gb_006",
-        "br_003",
-        "br_007",
-        "wh_003",
-        "wh_006",
-        "wh_007",
-        "es_003",
-        "es_005",
-        "pu_008",
-        "pu_009",
-        "pu_012",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "performance": 1.4,
-        "durability": 1.2
-      }
+      "materials": ["ae_001", "ae_002", "ae_003"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "AeroDynamics Corp focuses on aerodynamic materials that reduce drag and improve vehicle performance."
     },
     {
       "id": "sup_008",
-      "name": "Precision Composites GmbH",
-      "country": "Germany",
-      "materials": [
-        "bw_005",
-        "bw_017",
-        "ae_003",
-        "ae_005",
-        "ae_007",
-        "ae_008",
-        "sp_004",
-        "sp_008",
-        "en_003",
-        "en_009",
-        "gb_003",
-        "gb_008",
-        "br_004",
-        "br_009",
-        "wh_006",
-        "wh_008",
-        "es_007",
-        "pu_007",
-        "pu_011",
-        "pu_013"
-      ],
-      "stat_changes": {
-        "cost_per_cm3": 1.5
-      }
+      "name": "Skyline Aero",
+      "country": "UK",
+      "materials": ["ae_004", "ae_005", "ae_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Skyline Aero delivers top-tier aerodynamic components engineered for optimal airflow and racing speed."
     },
     {
       "id": "sup_009",
-      "name": "UltraMaterials Inc.",
-      "country": "USA",
-      "materials": [
-        "bw_010",
-        "bw_011",
-        "bw_018",
-        "ae_012",
-        "sp_005",
-        "en_012",
-        "gb_006",
-        "gb_010",
-        "br_006",
-        "br_010",
-        "wh_009",
-        "wh_010",
-        "es_008",
-        "es_010"
-      ],
-      "stat_changes": {
-        "durability": 1.6,
-        "performance": 1.3
-      }
+      "name": "Velocity Wings",
+      "country": "Italy",
+      "materials": ["ae_007", "ae_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Velocity Wings offers lightweight aero solutions designed to maximize speed and maneuverability on the track."
     },
     {
       "id": "sup_010",
-      "name": "Aerospace Materials Co.",
-      "country": "UK",
-      "materials": [
-        "bw_009",
-        "bw_010",
-        "bw_016",
-        "ae_007",
-        "ae_009",
-        "sp_006",
-        "en_012",
-        "en_013",
-        "gb_007",
-        "gb_009",
-        "br_008",
-        "wh_012",
-        "es_011"
-      ],
-      "stat_changes": {
-        "elasticity": 1.2,
-        "durability": 1.4
-      }
+      "name": "Zenith AeroTech",
+      "country": "Japan",
+      "materials": ["ae_009", "ae_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Zenith AeroTech specializes in advanced aerodynamic panels and composites for superior racing performance."
     },
     {
       "id": "sup_011",
-      "name": "NanoTech Solutions",
-      "country": "Japan",
-      "materials": [
-        "bw_005",
-        "bw_011",
-        "ae_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_007",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 1.5,
-        "cost_per_cm3": 2.0
-      }
+      "name": "Stratosphere Solutions",
+      "country": "Germany",
+      "materials": ["ae_011", "ae_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Stratosphere Solutions supplies premium aero materials that enhance efficiency and reduce aerodynamic drag."
     },
     {
       "id": "sup_012",
-      "name": "Lockheed Martin Materials",
+      "name": "SpringTech Innovations",
       "country": "USA",
-      "materials": [
-        "bw_011",
-        "bw_019",
-        "ae_005",
-        "ae_008",
-        "ae_012",
-        "sp_009",
-        "en_011",
-        "en_015",
-        "gb_010",
-        "gb_012",
-        "br_008",
-        "wh_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "durability": 1.8,
-        "performance": 1.6
-      }
+      "materials": ["sp_001", "sp_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "SpringTech Innovations offers high-performance suspension components for reliable and responsive vehicle dynamics."
     },
     {
       "id": "sup_013",
-      "name": "Innovative Alloys Ltd.",
-      "country": "Canada",
-      "materials": [
-        "bw_004",
-        "bw_016",
-        "bw_017",
-        "ae_004",
-        "ae_006",
-        "ae_007",
-        "sp_002",
-        "sp_010",
-        "en_004",
-        "en_007",
-        "gb_002",
-        "gb_005",
-        "gb_010",
-        "br_009",
-        "wh_010",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "elasticity": 1.4,
-        "durability": 1.3
-      }
+      "name": "FlexiRide Systems",
+      "country": "Germany",
+      "materials": ["sp_003", "sp_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "FlexiRide Systems provides innovative suspension solutions designed to optimize handling and stability."
     },
     {
       "id": "sup_014",
-      "name": "Precision Engineering Corp.",
-      "country": "Germany",
-      "materials": [
-        "bw_003",
-        "bw_005",
-        "bw_011",
-        "ae_005",
-        "ae_010",
-        "sp_003",
-        "sp_007",
-        "en_005",
-        "en_006",
-        "gb_003",
-        "gb_008",
-        "br_007",
-        "wh_012"
-      ],
-      "stat_changes": {
-        "performance": 1.7,
-        "cost_per_cm3": 2.5
-      }
+      "name": "Suspension Masters",
+      "country": "Japan",
+      "materials": ["sp_005", "sp_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Suspension Masters delivers robust suspension components engineered for high endurance and performance."
     },
     {
       "id": "sup_015",
-      "name": "Advanced Alloy Systems",
-      "country": "Switzerland",
-      "materials": [
-        "bw_005",
-        "bw_018",
-        "ae_012",
-        "sp_010",
-        "en_009",
-        "gb_010",
-        "br_009",
-        "wh_010"
-      ],
-      "stat_changes": {
-        "durability": 1.9,
-        "elasticity": 1.1
-      }
+      "name": "Dynamic Dampers",
+      "country": "UK",
+      "materials": ["sp_007", "sp_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Dynamic Dampers specializes in precision suspension parts for enhanced stability and racing control."
     },
     {
       "id": "sup_016",
-      "name": "CarbonFiber Technologies",
-      "country": "USA",
-      "materials": [
-        "bw_003",
-        "bw_005",
-        "ae_003",
-        "ae_005",
-        "ae_010",
-        "sp_003",
-        "sp_007",
-        "en_005",
-        "en_006",
-        "gb_003",
-        "gb_008",
-        "br_007",
-        "wh_011"
-      ],
-      "stat_changes": {
-        "performance": 1.8,
-        "durability": 1.5
-      }
+      "name": "RideControl",
+      "country": "Italy",
+      "materials": ["sp_009", "sp_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "RideControl focuses on advanced suspension systems that provide superior track handling and control."
     },
     {
       "id": "sup_017",
-      "name": "AeroMaterials International",
-      "country": "Italy",
-      "materials": [
-        "bw_010",
-        "bw_011",
-        "ae_005",
-        "ae_008",
-        "ae_012",
-        "sp_009",
-        "en_011",
-        "en_015",
-        "gb_010",
-        "gb_012",
-        "br_008",
-        "wh_012",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "elasticity": 1.3,
-        "cost_per_cm3": 2.2
-      }
+      "name": "PowerHouse Engines",
+      "country": "USA",
+      "materials": ["en_001", "en_002", "en_003"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "PowerHouse Engines supplies reliable engine components designed to deliver high power output and efficiency."
     },
     {
       "id": "sup_018",
-      "name": "NanoAlloys Ltd.",
-      "country": "Japan",
-      "materials": [
-        "bw_005",
-        "bw_011",
-        "ae_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_007",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 1.9,
-        "durability": 1.7
-      }
+      "name": "TurboTech Dynamics",
+      "country": "Germany",
+      "materials": ["en_004", "en_005", "en_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "TurboTech Dynamics offers cutting-edge engine materials engineered for peak performance and rapid acceleration."
     },
     {
       "id": "sup_019",
-      "name": "Advanced Materials Group",
-      "country": "USA",
-      "materials": [
-        "bw_009",
-        "bw_010",
-        "bw_016",
-        "bw_017",
-        "ae_005",
-        "ae_010",
-        "ae_012",
-        "sp_010",
-        "en_009",
-        "gb_010",
-        "br_009",
-        "wh_010"
-      ],
-      "stat_changes": {
-        "durability": 2.0,
-        "performance": 1.9
-      }
+      "name": "NitroCore Engineering",
+      "country": "Japan",
+      "materials": ["en_007", "en_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "NitroCore Engineering specializes in high-performance engine alloys that deliver consistent power and durability."
     },
     {
       "id": "sup_020",
-      "name": "Innovative Composites Inc.",
-      "country": "Germany",
-      "materials": [
-        "bw_005",
-        "bw_011",
-        "ae_005",
-        "ae_010",
-        "sp_003",
-        "sp_007",
-        "en_005",
-        "en_006",
-        "gb_003",
-        "gb_008",
-        "br_007",
-        "wh_012",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "performance": 2.0,
-        "cost_per_cm3": 2.8
-      }
+      "name": "Fusion Motors",
+      "country": "UK",
+      "materials": ["en_009", "en_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Fusion Motors supplies innovative engine components designed to improve efficiency and overall performance."
     },
     {
       "id": "sup_021",
-      "name": "EcoMaterials Co.",
-      "country": "France",
-      "materials": [
-        "bw_002",
-        "bw_004",
-        "ae_002",
-        "ae_006",
-        "sp_004",
-        "en_002",
-        "gb_002",
-        "br_002",
-        "wh_002",
-        "es_002",
-        "pu_002",
-        "pu_004",
-        "pu_006"
-      ],
-      "stat_changes": {
-        "durability": 1.2,
-        "performance": 1.1
-      }
+      "name": "Precision Pistons",
+      "country": "Italy",
+      "materials": ["en_011", "en_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Precision Pistons delivers finely engineered engine parts crafted for optimal combustion and performance."
     },
     {
       "id": "sup_022",
-      "name": "Fusion Alloys",
-      "country": "South Korea",
-      "materials": [
-        "bw_015",
-        "ae_010",
-        "sp_009",
-        "en_014",
-        "gb_012",
-        "br_010",
-        "wh_010",
-        "es_010",
-        "pu_010",
-        "pu_013"
-      ],
-      "stat_changes": {
-        "elasticity": 1.5,
-        "durability": 1.3
-      }
+      "name": "Vortex Engines",
+      "country": "France",
+      "materials": ["en_013", "en_014"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Vortex Engines offers premium engine materials engineered to withstand extreme racing conditions."
     },
     {
       "id": "sup_023",
-      "name": "Precision Metals Japan",
-      "country": "Japan",
-      "materials": [
-        "bw_017",
-        "ae_010",
-        "sp_010",
-        "en_012",
-        "gb_010",
-        "br_010",
-        "wh_010",
-        "es_010",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.1,
-        "durability": 1.4
-      }
+      "name": "Echelon Performance",
+      "country": "Sweden",
+      "materials": ["en_015"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Echelon Performance specializes in top-tier engine components ensuring maximum reliability and performance."
     },
     {
       "id": "sup_024",
-      "name": "Nordic Composites",
-      "country": "Sweden",
-      "materials": [
-        "bw_005",
-        "ae_003",
-        "sp_007",
-        "en_006",
-        "gb_008",
-        "br_007",
-        "wh_012",
-        "es_007",
-        "pu_007",
-        "pu_011"
-      ],
-      "stat_changes": {
-        "performance": 1.6,
-        "cost_per_cm3": 2.3
-      }
+      "name": "ShiftWorks Inc.",
+      "country": "USA",
+      "materials": ["gb_001", "gb_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "ShiftWorks Inc. provides durable gearbox components for efficient power transmission in racing vehicles."
     },
     {
       "id": "sup_025",
-      "name": "Titanium Dynamics",
-      "country": "Australia",
-      "materials": [
-        "bw_016",
-        "ae_004",
-        "sp_005",
-        "en_015",
-        "gb_010",
-        "br_009",
-        "wh_010",
-        "es_010",
-        "pu_014",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "durability": 1.7,
-        "elasticity": 1.2
-      }
+      "name": "GearMaster",
+      "country": "Germany",
+      "materials": ["gb_003", "gb_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "GearMaster delivers precision-engineered gearbox parts designed for rapid and smooth gear changes."
     },
     {
       "id": "sup_026",
-      "name": "Quantum Alloys",
-      "country": "Russia",
-      "materials": [
-        "bw_018",
-        "ae_012",
-        "sp_010",
-        "en_013",
-        "gb_012",
-        "br_010",
-        "wh_010",
-        "es_010",
-        "pu_014",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "performance": 1.8,
-        "durability": 1.5
-      }
+      "name": "TorqueTech",
+      "country": "Japan",
+      "materials": ["gb_005", "gb_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "TorqueTech offers high-performance gearbox materials engineered for strength and endurance under stress."
     },
     {
       "id": "sup_027",
-      "name": "SolarTech Materials",
-      "country": "China",
-      "materials": [
-        "bw_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.2,
-        "durability": 1.6
-      }
+      "name": "Precision Gears",
+      "country": "UK",
+      "materials": ["gb_007", "gb_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Precision Gears specializes in premium gearbox components ensuring smooth and efficient power transfer."
     },
     {
       "id": "sup_028",
-      "name": "Zenith Composites",
-      "country": "India",
-      "materials": [
-        "bw_003",
-        "ae_005",
-        "sp_003",
-        "en_005",
-        "gb_003",
-        "br_007",
-        "wh_012",
-        "es_005",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "performance": 1.9,
-        "durability": 1.4
-      }
+      "name": "DynoDrive",
+      "country": "Italy",
+      "materials": ["gb_009", "gb_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "DynoDrive provides innovative gearbox solutions designed to optimize power delivery and racing performance."
     },
     {
       "id": "sup_029",
-      "name": "Pinnacle Alloys",
-      "country": "Brazil",
-      "materials": [
-        "bw_010",
-        "ae_012",
-        "sp_010",
-        "en_011",
-        "gb_012",
-        "br_008",
-        "wh_010",
-        "es_010",
-        "pu_014",
-        "pu_015"
-      ],
-      "stat_changes": {
-        "elasticity": 1.6,
-        "cost_per_cm3": 2.5
-      }
+      "name": "Racing Transmissions",
+      "country": "France",
+      "materials": ["gb_011", "gb_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Racing Transmissions supplies advanced gearbox components engineered for precision and durability."
     },
     {
       "id": "sup_030",
-      "name": "FusionTech Materials",
-      "country": "Netherlands",
-      "materials": [
-        "bw_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_007",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.3,
-        "durability": 1.8
-      }
+      "name": "BrakeForce",
+      "country": "USA",
+      "materials": ["br_001", "br_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "BrakeForce offers reliable brake components designed to ensure quick and safe deceleration on the track."
     },
     {
       "id": "sup_031",
-      "name": "Alpha Materials",
-      "country": "Norway",
-      "materials": [
-        "bw_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.4,
-        "durability": 1.9
-      }
+      "name": "StopTech",
+      "country": "Germany",
+      "materials": ["br_003", "br_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "StopTech delivers advanced braking materials engineered for optimal heat dissipation and performance."
     },
     {
       "id": "sup_032",
-      "name": "Vertex Alloys",
-      "country": "Mexico",
-      "materials": [
-        "bw_017",
-        "ae_003",
-        "sp_007",
-        "en_006",
-        "gb_008",
-        "br_007",
-        "wh_012",
-        "es_007",
-        "pu_007",
-        "pu_011"
-      ],
-      "stat_changes": {
-        "performance": 1.6,
-        "cost_per_cm3": 2.4
-      }
+      "name": "Deceleration Dynamics",
+      "country": "Japan",
+      "materials": ["br_005", "br_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Deceleration Dynamics specializes in high-performance brake systems ensuring maximum safety and efficiency."
     },
     {
       "id": "sup_033",
-      "name": "Optima Composites",
-      "country": "Singapore",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_007",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.5,
-        "durability": 2.0
-      }
+      "name": "RapidStop Systems",
+      "country": "UK",
+      "materials": ["br_007", "br_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "RapidStop Systems supplies premium braking components designed for rapid deceleration under extreme conditions."
     },
     {
       "id": "sup_034",
-      "name": "Quantum Composites",
-      "country": "Belgium",
-      "materials": [
-        "bw_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.6,
-        "durability": 2.1
-      }
+      "name": "SureBrake Innovations",
+      "country": "Italy",
+      "materials": ["br_009", "br_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "SureBrake Innovations provides advanced brake technologies that deliver consistent and powerful stopping performance."
     },
     {
       "id": "sup_035",
-      "name": "Neptune Alloys",
-      "country": "Denmark",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.7,
-        "durability": 2.2
-      }
+      "name": "WheelWorks",
+      "country": "USA",
+      "materials": ["wh_001", "wh_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "WheelWorks offers durable wheel components crafted for superior handling and reliable performance."
     },
     {
       "id": "sup_036",
-      "name": "Celestial Materials",
-      "country": "New Zealand",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.8,
-        "durability": 2.3
-      }
+      "name": "SpinMaster Wheels",
+      "country": "Germany",
+      "materials": ["wh_003", "wh_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "SpinMaster Wheels delivers lightweight and robust wheel solutions engineered for high-speed racing."
     },
     {
       "id": "sup_037",
-      "name": "Astra Alloys",
-      "country": "Finland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 2.9,
-        "durability": 2.4
-      }
+      "name": "Revolution Rims",
+      "country": "Japan",
+      "materials": ["wh_005", "wh_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Revolution Rims specializes in innovative wheel designs that enhance vehicle dynamics and style."
     },
     {
       "id": "sup_038",
-      "name": "Titanium Prime",
-      "country": "Austria",
-      "materials": [
-        "bw_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.0,
-        "durability": 2.5
-      }
+      "name": "Apex Wheels",
+      "country": "UK",
+      "materials": ["wh_007", "wh_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Apex Wheels supplies top-tier wheels engineered for optimal performance and cutting-edge design."
     },
     {
       "id": "sup_039",
-      "name": "Fusion Dynamics",
-      "country": "Spain",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.1,
-        "durability": 2.6
-      }
+      "name": "Velocity Rides",
+      "country": "Italy",
+      "materials": ["wh_009", "wh_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Velocity Rides provides advanced wheel components for enhanced grip and responsive handling on the track."
     },
     {
       "id": "sup_040",
-      "name": "Eclipse Composites",
-      "country": "South Africa",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.2,
-        "durability": 2.7
-      }
+      "name": "Fusion Wheels",
+      "country": "France",
+      "materials": ["wh_011", "wh_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Fusion Wheels offers state-of-the-art wheel designs combining durability, speed, and innovative engineering."
     },
     {
       "id": "sup_041",
-      "name": "Orbital Alloys",
-      "country": "Belgium",
-      "materials": [
-        "bw_005",
-        "ae_010",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.3,
-        "durability": 2.8
-      }
+      "name": "ElectroLink",
+      "country": "USA",
+      "materials": ["es_001", "es_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "ElectroLink supplies reliable electrical components ensuring efficient power distribution in racing vehicles."
     },
     {
       "id": "sup_042",
-      "name": "Helix Composites",
-      "country": "Netherlands",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.4,
-        "durability": 2.9
-      }
+      "name": "CircuitWorks",
+      "country": "Germany",
+      "materials": ["es_003", "es_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "CircuitWorks offers innovative electrical materials engineered for high-performance and precision circuitry."
     },
     {
       "id": "sup_043",
-      "name": "Stellar Alloys",
-      "country": "Sweden",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.5,
-        "durability": 3.0
-      }
+      "name": "SparkTech",
+      "country": "Japan",
+      "materials": ["es_005", "es_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "SparkTech delivers premium electrical components designed for reliability and rapid performance."
     },
     {
       "id": "sup_044",
-      "name": "Nova Composites",
-      "country": "Denmark",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.6,
-        "durability": 3.1
-      }
+      "name": "WattWorks",
+      "country": "UK",
+      "materials": ["es_007", "es_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "WattWorks specializes in advanced electrical systems that enhance power efficiency and performance."
     },
     {
       "id": "sup_045",
-      "name": "Momentum Alloys",
+      "name": "Current Innovations",
       "country": "Italy",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.7,
-        "durability": 3.2
-      }
+      "materials": ["es_009", "es_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Current Innovations provides state-of-the-art electrical components for modern, high-performance racing vehicles."
     },
     {
       "id": "sup_046",
-      "name": "Titanium Edge",
-      "country": "Canada",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 3.8,
-        "durability": 3.3
-      }
+      "name": "PowerGrid Systems",
+      "country": "France",
+      "materials": ["es_011", "es_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "PowerGrid Systems delivers innovative electrical solutions engineered for durability and peak performance."
     },
     {
       "id": "sup_047",
-      "name": "Apex Materials",
-      "country": "Brazil",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Lockheed Performance",
+      "country": "USA",
+      "materials": ["bw_005", "ae_005", "en_006", "gb_007", "br_007", "wh_007", "es_008"],
       "stat_changes": {
-        "performance": 3.9,
-        "durability": 3.4
-      }
+        "performance": 1.2,
+        "durability": 1.1
+      },
+      "pricemult": 1.7,
+      "description": "Lockheed Performance, inspired by military-grade technology, offers premium components for top-tier racing performance."
     },
     {
       "id": "sup_048",
-      "name": "Luminary Alloys",
-      "country": "Russia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "MilSpec Materials",
+      "country": "USA",
+      "materials": ["bw_011", "ae_012", "sp_005", "en_007", "gb_005", "br_005", "wh_005", "es_007"],
       "stat_changes": {
-        "performance": 4.0,
-        "durability": 3.5
-      }
+        "performance": 1.15,
+        "durability": 1.05
+      },
+      "pricemult": 1.6,
+      "description": "MilSpec Materials provides military-inspired precision parts designed for extreme performance in racing."
     },
     {
       "id": "sup_049",
-      "name": "Zenith Materials",
-      "country": "China",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 4.1,
-        "durability": 3.6
-      }
+      "name": "Quantum Racing Solutions",
+      "country": "Germany",
+      "materials": ["bw_003", "ae_002", "sp_004", "en_010", "gb_004", "br_004", "wh_002", "es_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Quantum Racing Solutions offers innovative, high-performance materials for every aspect of the racing vehicle."
     },
     {
       "id": "sup_050",
-      "name": "EvoComposites",
-      "country": "Singapore",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Vertex Engineering",
+      "country": "Japan",
+      "materials": ["bw_002", "ae_008", "sp_007", "en_011", "gb_009", "br_009", "wh_009", "es_009"],
       "stat_changes": {
-        "performance": 4.2,
-        "durability": 3.7
-      }
+        "performance": 1.05,
+        "durability": 1.0
+      },
+      "pricemult": 1.1,
+      "description": "Vertex Engineering specializes in precision-engineered parts to boost engine and chassis performance."
     },
     {
       "id": "sup_051",
-      "name": "Pinnacle Composites",
-      "country": "France",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Zenith Motorsports",
+      "country": "UK",
+      "materials": ["bw_017", "ae_010", "sp_003", "en_012", "gb_003", "br_010", "wh_010", "es_010"],
       "stat_changes": {
-        "performance": 4.3,
-        "durability": 3.8
-      }
+        "performance": 1.1,
+        "durability": 1.0
+      },
+      "pricemult": 1.3,
+      "description": "Zenith Motorsports delivers high-quality components that enhance overall racing performance with precision."
     },
     {
       "id": "sup_052",
-      "name": "Quantum Dynamics",
-      "country": "South Korea",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 4.4,
-        "durability": 3.9
-      }
+      "name": "Nova Racing Parts",
+      "country": "Italy",
+      "materials": ["bw_006", "ae_001", "sp_008", "en_013", "gb_002", "br_002", "wh_004", "es_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Nova Racing Parts provides reliable and cost-effective components for competitive racing environments."
     },
     {
       "id": "sup_053",
-      "name": "Titanium Precision",
-      "country": "South Africa",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Eclipse Engineering",
+      "country": "France",
+      "materials": ["bw_004", "ae_007", "sp_010", "en_014", "gb_006", "br_006", "wh_006", "es_012"],
       "stat_changes": {
-        "performance": 4.5,
-        "durability": 4.0
-      }
+        "performance": 1.2,
+        "durability": 1.1
+      },
+      "pricemult": 1.5,
+      "description": "Eclipse Engineering offers advanced materials engineered for superior engine and chassis performance under extreme conditions."
     },
     {
       "id": "sup_054",
-      "name": "Vortex Alloys",
-      "country": "Finland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 4.6,
-        "durability": 4.1
-      }
+      "name": "Pinnacle Performance",
+      "country": "Sweden",
+      "materials": ["bw_008", "ae_009", "sp_001", "en_015", "gb_008", "br_008", "wh_008", "es_005"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Pinnacle Performance specializes in premium racing components that deliver peak performance and reliability."
     },
     {
       "id": "sup_055",
-      "name": "Helios Composites",
-      "country": "Greece",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Racing Dynamics",
+      "country": "USA",
+      "materials": ["bw_009", "ae_003", "sp_002", "en_005", "gb_010", "br_003", "wh_011", "es_011"],
       "stat_changes": {
-        "performance": 4.7,
-        "durability": 4.2
-      }
+        "performance": 1.05,
+        "durability": 1.0
+      },
+      "pricemult": 1.2,
+      "description": "Racing Dynamics provides a balanced range of high-performance materials designed for competitive racing."
     },
     {
       "id": "sup_056",
-      "name": "Astra Composites",
-      "country": "Brazil",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 4.8,
-        "durability": 4.3
-      }
+      "name": "Synergy Motors",
+      "country": "Germany",
+      "materials": ["bw_012", "ae_012", "sp_009", "en_001", "gb_011", "br_001", "wh_012", "es_007"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Synergy Motors offers reliable and efficient components tailored for high-speed racing applications."
     },
     {
       "id": "sup_057",
-      "name": "Nova Dynamics",
-      "country": "Norway",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Titanium Tech",
+      "country": "Japan",
+      "materials": ["bw_014", "ae_004", "sp_005", "en_002", "gb_012", "br_010", "wh_007", "es_003"],
       "stat_changes": {
-        "performance": 4.9,
-        "durability": 4.4
-      }
+        "performance": 1.1,
+        "durability": 1.05
+      },
+      "pricemult": 1.4,
+      "description": "Titanium Tech provides premium titanium-based components engineered for optimal strength and performance."
     },
     {
       "id": "sup_058",
-      "name": "Eclipse Alloys",
-      "country": "Russia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 5.0,
-        "durability": 4.5
-      }
+      "name": "Fusion Fabricators",
+      "country": "UK",
+      "materials": ["bw_015", "ae_006", "sp_006", "en_004", "gb_005", "br_005", "wh_003", "es_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Fusion Fabricators supplies innovative materials that blend quality and performance for top-tier racing."
     },
     {
       "id": "sup_059",
-      "name": "Luminary Dynamics",
-      "country": "Switzerland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Vanguard Materials",
+      "country": "Italy",
+      "materials": ["bw_016", "ae_011", "sp_007", "en_008", "gb_007", "br_007", "wh_005", "es_008"],
       "stat_changes": {
-        "performance": 5.1,
-        "durability": 4.6
-      }
+        "performance": 1.2,
+        "durability": 1.0
+      },
+      "pricemult": 1.6,
+      "description": "Vanguard Materials delivers high-quality components engineered for peak performance on the track."
     },
     {
       "id": "sup_060",
-      "name": "Pinnacle Dynamics",
-      "country": "China",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 5.2,
-        "durability": 4.7
-      }
+      "name": "Hyperion Engineering",
+      "country": "France",
+      "materials": ["bw_019", "ae_005", "sp_008", "en_010", "gb_003", "br_008", "wh_002", "es_009"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Hyperion Engineering provides cutting-edge materials designed for efficiency and speed in high-performance racing."
     },
     {
       "id": "sup_061",
-      "name": "EvoAlloys",
-      "country": "India",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Elite Auto Components",
+      "country": "USA",
+      "materials": ["bw_001", "ae_002", "sp_004", "en_006", "gb_004", "br_002", "wh_004", "es_001"],
       "stat_changes": {
-        "performance": 5.3,
-        "durability": 4.8
-      }
+        "performance": 1.05,
+        "durability": 1.05
+      },
+      "pricemult": 1.2,
+      "description": "Elite Auto Components offers a comprehensive range of high-quality parts for enhanced racing performance."
     },
     {
       "id": "sup_062",
-      "name": "Vortex Dynamics",
-      "country": "Spain",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 5.4,
-        "durability": 4.9
-      }
+      "name": "Precision Parts Inc.",
+      "country": "Germany",
+      "materials": ["bw_002", "ae_008", "sp_010", "en_007", "gb_009", "br_004", "wh_009", "es_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Precision Parts Inc. specializes in precision manufacturing of racing components, ensuring reliability and peak performance."
     },
     {
       "id": "sup_063",
-      "name": "AstraComposites",
-      "country": "South Africa",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "RaceLine Supplies",
+      "country": "Japan",
+      "materials": ["bw_003", "ae_009", "sp_001", "en_008", "gb_002", "br_001", "wh_010", "es_011"],
       "stat_changes": {
-        "performance": 5.5,
-        "durability": 5.0
-      }
+        "performance": 1.1,
+        "durability": 1.0
+      },
+      "pricemult": 1.3,
+      "description": "RaceLine Supplies delivers innovative and reliable components tailored for high-speed competition."
     },
     {
       "id": "sup_064",
-      "name": "Helios Dynamics",
-      "country": "Finland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 5.6,
-        "durability": 5.1
-      }
+      "name": "Momentum Materials",
+      "country": "UK",
+      "materials": ["bw_005", "ae_007", "sp_006", "en_005", "gb_006", "br_003", "wh_007", "es_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Momentum Materials offers a balanced mix of premium materials for all aspects of high-performance racing."
     },
     {
       "id": "sup_065",
-      "name": "Zenith Dynamics",
-      "country": "Germany",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "PaceSetters",
+      "country": "Italy",
+      "materials": ["bw_004", "ae_011", "sp_002", "en_009", "gb_005", "br_004", "wh_003", "es_002"],
       "stat_changes": {
-        "performance": 5.7,
-        "durability": 5.2
-      }
+        "performance": 1.1,
+        "durability": 1.05
+      },
+      "pricemult": 1.1,
+      "description": "PaceSetters provides innovative and reliable components designed to set the pace in competitive racing."
     },
     {
       "id": "sup_066",
-      "name": "Neptune Alloys",
-      "country": "Canada",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 5.8,
-        "durability": 5.3
-      }
+      "name": "StratoSpeed",
+      "country": "France",
+      "materials": ["bw_007", "ae_003", "sp_005", "en_003", "gb_007", "br_005", "wh_006", "es_003"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "StratoSpeed delivers dynamic components engineered for speed and durability in high-intensity racing."
     },
     {
       "id": "sup_067",
-      "name": "Momentum Alloys",
-      "country": "Italy",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Revo Racing Tech",
+      "country": "Sweden",
+      "materials": ["bw_008", "ae_010", "sp_008", "en_012", "gb_008", "br_002", "wh_008", "es_004"],
       "stat_changes": {
-        "performance": 5.9,
-        "durability": 5.4
-      }
+        "performance": 1.15,
+        "durability": 1.1
+      },
+      "pricemult": 1.3,
+      "description": "Revo Racing Tech specializes in advanced materials designed to revolutionize racing performance."
     },
     {
       "id": "sup_068",
-      "name": "Fusion Prime",
-      "country": "Sweden",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 6.0,
-        "durability": 5.5
-      }
+      "name": "NexGen Auto",
+      "country": "USA",
+      "materials": ["bw_010", "ae_012", "sp_009", "en_014", "gb_010", "br_007", "wh_009", "es_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "NexGen Auto delivers next-generation components engineered for high-performance and innovative racing solutions."
     },
     {
       "id": "sup_069",
-      "name": "Celestial Alloys",
-      "country": "France",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Apex Racing Industries",
+      "country": "Germany",
+      "materials": ["bw_011", "ae_001", "sp_003", "en_015", "gb_011", "br_006", "wh_011", "es_007"],
       "stat_changes": {
-        "performance": 6.1,
-        "durability": 5.6
-      }
+        "performance": 1.2,
+        "durability": 1.15
+      },
+      "pricemult": 1.5,
+      "description": "Apex Racing Industries provides top-tier components engineered for competitive performance and reliability."
     },
     {
       "id": "sup_070",
-      "name": "Orbital Dynamics",
-      "country": "Netherlands",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 6.2,
-        "durability": 5.7
-      }
+      "name": "Velocity Vanguard",
+      "country": "Japan",
+      "materials": ["bw_013", "ae_002", "sp_004", "en_002", "gb_012", "br_008", "wh_012", "es_008"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Velocity Vanguard offers premium components combining innovation and reliability for elite racing performance."
     },
     {
       "id": "sup_071",
-      "name": "Stellar Dynamics",
-      "country": "Australia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 6.3,
-        "durability": 5.8
-      }
+      "name": "TurboFusion Components",
+      "country": "USA",
+      "materials": ["bw_002", "ae_002", "sp_003", "en_002", "gb_001", "br_001", "wh_002", "es_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "TurboFusion Components delivers integrated solutions for racing vehicles, combining lightweight and durable materials."
     },
     {
       "id": "sup_072",
-      "name": "Luminary Prime",
-      "country": "Russia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "AeroEdge Technologies",
+      "country": "Germany",
+      "materials": ["ae_004", "ae_010", "en_004", "en_007"],
       "stat_changes": {
-        "performance": 6.4,
-        "durability": 5.9
-      }
+        "performance": 1.05,
+        "durability": 1.0
+      },
+      "pricemult": 1.1,
+      "description": "AeroEdge Technologies specializes in aerodynamic components that boost racing performance."
     },
     {
       "id": "sup_073",
-      "name": "Quantum Precision",
-      "country": "South Korea",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 6.5,
-        "durability": 6.0
-      }
+      "name": "Velocity Innovations",
+      "country": "Japan",
+      "materials": ["wh_003", "wh_008", "gb_005", "gb_007"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Velocity Innovations offers cutting-edge components to enhance vehicle stability and speed."
     },
     {
       "id": "sup_074",
-      "name": "Titanium Nova",
-      "country": "Singapore",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Precision Auto Works",
+      "country": "UK",
+      "materials": ["en_005", "en_009", "sp_004", "sp_007"],
       "stat_changes": {
-        "performance": 6.6,
-        "durability": 6.1
-      }
+        "durability": 1.05
+      },
+      "pricemult": 1.2,
+      "description": "Precision Auto Works delivers precision-engineered parts to maximize engine efficiency and suspension performance."
     },
     {
       "id": "sup_075",
-      "name": "Momentum Prime",
-      "country": "Spain",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "RacerX Industries",
+      "country": "USA",
+      "materials": ["bw_010", "ae_005", "sp_006", "en_011", "gb_010", "br_003", "wh_005", "es_003"],
       "stat_changes": {
-        "performance": 6.7,
-        "durability": 6.2
-      }
+        "performance": 1.1
+      },
+      "pricemult": 1.3,
+      "description": "RacerX Industries is known for innovative solutions that push the boundaries of racing technology."
     },
     {
       "id": "sup_076",
-      "name": "Astra Prime",
-      "country": "South Africa",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 6.8,
-        "durability": 6.3
-      }
+      "name": "Pinnacle Auto Systems",
+      "country": "Sweden",
+      "materials": ["sp_008", "br_007", "gb_008", "en_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Pinnacle Auto Systems delivers robust and reliable parts for high-performance auto systems."
     },
     {
       "id": "sup_077",
-      "name": "Helix Prime",
-      "country": "Finland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Summit Racing Labs",
+      "country": "France",
+      "materials": ["bw_012", "bw_019", "es_007", "es_010"],
       "stat_changes": {
-        "performance": 6.9,
-        "durability": 6.4
-      }
+        "durability": 1.05
+      },
+      "pricemult": 1.1,
+      "description": "Summit Racing Labs focuses on high-tech materials that offer superior durability and efficiency."
     },
     {
       "id": "sup_078",
-      "name": "Zenith Prime",
+      "name": "Elite Gear Solutions",
       "country": "Germany",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 7.0,
-        "durability": 6.5
-      }
+      "materials": ["gb_002", "gb_011", "en_006", "en_013", "br_004", "wh_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Elite Gear Solutions provides premium gearbox and engine components for competitive racing."
     },
     {
       "id": "sup_079",
-      "name": "Neptune Dynamics",
-      "country": "Canada",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "HyperDrive Components",
+      "country": "USA",
+      "materials": ["ae_012", "en_014", "sp_010", "wh_006", "es_012"],
       "stat_changes": {
-        "performance": 7.1,
-        "durability": 6.6
-      }
+        "performance": 1.1,
+        "durability": 1.05
+      },
+      "pricemult": 1.4,
+      "description": "HyperDrive Components supplies high-performance parts designed for extreme racing conditions."
     },
     {
       "id": "sup_080",
-      "name": "Momentum Elite",
-      "country": "Brazil",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 7.2,
-        "durability": 6.7
-      }
+      "name": "Quantum Speedworks",
+      "country": "Japan",
+      "materials": ["bw_003", "bw_007", "ae_003", "sp_002", "en_007", "gb_003", "br_001", "wh_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Quantum Speedworks specializes in fast-reacting materials that enhance overall vehicle speed and control."
     },
     {
       "id": "sup_081",
-      "name": "Luminary Elite",
-      "country": "Russia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Apex Motorsport Supplies",
+      "country": "UK",
+      "materials": ["bw_008", "ae_008", "sp_005", "en_010", "gb_004", "br_008", "wh_007", "es_005"],
       "stat_changes": {
-        "performance": 7.3,
-        "durability": 6.8
-      }
+        "performance": 1.05
+      },
+      "pricemult": 1.2,
+      "description": "Apex Motorsport Supplies provides top-of-the-line components designed for elite motorsport performance."
     },
     {
       "id": "sup_082",
-      "name": "Quantum Elite",
-      "country": "South Korea",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 7.4,
-        "durability": 6.9
-      }
+      "name": "RevLine Engineering",
+      "country": "Germany",
+      "materials": ["bw_015", "ae_011", "sp_010", "en_012", "gb_006", "br_010", "wh_012", "es_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "RevLine Engineering delivers innovative engineering solutions for improved performance and reliability."
     },
     {
       "id": "sup_083",
-      "name": "Titanium Nova Prime",
-      "country": "Singapore",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Nova AeroTech",
+      "country": "France",
+      "materials": ["ae_001", "ae_005", "ae_009", "wh_008", "es_009"],
       "stat_changes": {
-        "performance": 7.5,
-        "durability": 7.0
-      }
+        "performance": 1.1
+      },
+      "pricemult": 1.3,
+      "description": "Nova AeroTech focuses on advanced aerodynamic and wheel components that boost vehicle efficiency."
     },
     {
       "id": "sup_084",
-      "name": "Momentum Supreme",
-      "country": "Spain",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 7.6,
-        "durability": 7.1
-      }
+      "name": "Zenith Racing Dynamics",
+      "country": "USA",
+      "materials": ["en_002", "en_003", "sp_004", "gb_007", "br_002", "wh_011", "es_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Zenith Racing Dynamics provides balanced components for enhanced engine dynamics and handling."
     },
     {
       "id": "sup_085",
-      "name": "Astra Supreme",
-      "country": "South Africa",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Fusion PowerParts",
+      "country": "UK",
+      "materials": ["bw_004", "en_004", "gb_002", "br_003", "wh_012", "es_003"],
       "stat_changes": {
-        "performance": 7.7,
-        "durability": 7.2
-      }
+        "durability": 1.1
+      },
+      "pricemult": 1.2,
+      "description": "Fusion PowerParts offers innovative parts that blend power and durability for high-performance racing."
     },
     {
       "id": "sup_086",
-      "name": "Helix Supreme",
-      "country": "Finland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 7.8,
-        "durability": 7.3
-      }
+      "name": "Prime Dynamics",
+      "country": "Sweden",
+      "materials": ["bw_006", "ae_006", "sp_006", "en_006", "gb_005", "br_005", "wh_005", "es_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Prime Dynamics delivers well-rounded components engineered for maximum dynamic performance on the track."
     },
     {
       "id": "sup_087",
-      "name": "Zenith Supreme",
-      "country": "Germany",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Matrix Motorsport",
+      "country": "Japan",
+      "materials": ["bw_009", "ae_012", "sp_007", "en_009", "gb_010", "br_007", "wh_009", "es_007"],
       "stat_changes": {
-        "performance": 7.9,
-        "durability": 7.4
-      }
+        "performance": 1.1,
+        "durability": 1.05
+      },
+      "pricemult": 1.3,
+      "description": "Matrix Motorsport provides advanced materials and components designed for competitive motorsport engineering."
     },
     {
       "id": "sup_088",
-      "name": "Neptune Supreme",
-      "country": "Canada",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 8.0,
-        "durability": 7.5
-      }
+      "name": "Edge Performance",
+      "country": "USA",
+      "materials": ["bw_010", "ae_002", "sp_008", "en_011", "gb_011", "br_009", "wh_010", "es_010"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Edge Performance delivers high-quality components focused on enhancing the competitive edge of racing vehicles."
     },
     {
       "id": "sup_089",
-      "name": "Momentum Ultra",
-      "country": "Brazil",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Optimum Auto Engineering",
+      "country": "Germany",
+      "materials": ["bw_007", "ae_007", "sp_009", "en_008", "gb_008", "br_004", "wh_004", "es_011"],
       "stat_changes": {
-        "performance": 8.1,
-        "durability": 7.6
-      }
+        "durability": 1.05
+      },
+      "pricemult": 1.1,
+      "description": "Optimum Auto Engineering provides precision-engineered parts that optimize performance and reliability."
     },
     {
       "id": "sup_090",
-      "name": "Luminary Ultra",
-      "country": "Russia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 8.2,
-        "durability": 7.7
-      }
+      "name": "Synergy Speedworks",
+      "country": "UK",
+      "materials": ["bw_002", "ae_003", "sp_002", "en_005", "gb_002", "br_002", "wh_002", "es_002"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Synergy Speedworks integrates multiple high-performance components to deliver synchronized racing excellence."
     },
     {
       "id": "sup_091",
-      "name": "Quantum Ultra",
-      "country": "South Korea",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Velocity Precision",
+      "country": "USA",
+      "materials": ["bw_008", "ae_008", "sp_008", "en_008", "gb_008", "br_008", "wh_008", "es_008"],
       "stat_changes": {
-        "performance": 8.3,
-        "durability": 7.8
-      }
+        "performance": 1.05
+      },
+      "pricemult": 1.2,
+      "description": "Velocity Precision specializes in accurate, high-performance components engineered for precision racing."
     },
     {
       "id": "sup_092",
-      "name": "Titanium Apex",
-      "country": "Singapore",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 8.4,
-        "durability": 7.9
-      }
+      "name": "UltraRace Components",
+      "country": "Japan",
+      "materials": ["bw_003", "ae_003", "sp_003", "en_003", "gb_003", "br_003", "wh_003", "es_003"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "UltraRace Components provides a complete suite of high-performance parts designed for ultra-fast racing."
     },
     {
       "id": "sup_093",
-      "name": "Momentum Titan",
-      "country": "Spain",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Alpha Racing Systems",
+      "country": "France",
+      "materials": ["bw_011", "ae_011", "sp_010", "en_012", "gb_004", "br_004", "wh_012", "es_004"],
       "stat_changes": {
-        "performance": 8.5,
-        "durability": 8.0
-      }
+        "performance": 1.1,
+        "durability": 1.1
+      },
+      "pricemult": 1.4,
+      "description": "Alpha Racing Systems offers high-caliber components that combine power and resilience for top-tier racing performance."
     },
     {
       "id": "sup_094",
-      "name": "Astra Ultra",
-      "country": "South Africa",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 8.6,
-        "durability": 8.1
-      }
+      "name": "Omega Performance",
+      "country": "Sweden",
+      "materials": ["bw_013", "ae_012", "sp_001", "en_015", "gb_010", "br_010", "wh_005", "es_012"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Omega Performance delivers balanced and efficient components designed for consistent performance on the racetrack."
     },
     {
       "id": "sup_095",
-      "name": "Helix Ultra",
-      "country": "Finland",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 8.7,
-        "durability": 8.2
-      }
+      "name": "Racer's Choice",
+      "country": "USA",
+      "materials": ["bw_004", "ae_004", "sp_004", "en_004", "gb_004", "br_004", "wh_004", "es_004"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "Racer's Choice offers a complete range of reliable components, making it the go-to supplier for competitive racers."
     },
     {
       "id": "sup_096",
-      "name": "Zenith Elite",
+      "name": "EvoGear Technologies",
       "country": "Germany",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "materials": ["bw_005", "ae_005", "sp_005", "en_005", "gb_005", "br_005", "wh_005", "es_005"],
       "stat_changes": {
-        "performance": 8.8,
-        "durability": 8.3
-      }
+        "performance": 1.05,
+        "durability": 1.05
+      },
+      "pricemult": 1.2,
+      "description": "EvoGear Technologies specializes in evolving gear systems and components to meet modern racing demands."
     },
     {
       "id": "sup_097",
-      "name": "Neptune Elite",
-      "country": "Canada",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 8.9,
-        "durability": 8.4
-      }
+      "name": "NextGen Racing Components",
+      "country": "Japan",
+      "materials": ["bw_006", "ae_006", "sp_006", "en_006", "gb_006", "br_006", "wh_006", "es_006"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "NextGen Racing Components offers forward-thinking solutions designed to keep your race car ahead of the competition."
     },
     {
       "id": "sup_098",
-      "name": "Momentum Infinity",
-      "country": "Brazil",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
-      "stat_changes": {
-        "performance": 9.0,
-        "durability": 8.5
-      }
+      "name": "DriveForce Industries",
+      "country": "USA",
+      "materials": ["bw_007", "ae_007", "sp_007", "en_007", "gb_007", "br_007", "wh_007", "es_007"],
+      "stat_changes": {},
+      "pricemult": 1,
+      "description": "DriveForce Industries provides robust and reliable components that drive racing performance to the next level."
     },
     {
       "id": "sup_099",
-      "name": "Luminary Infinity",
-      "country": "Russia",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Circuit Edge",
+      "country": "UK",
+      "materials": ["bw_008", "ae_008", "sp_008", "en_008", "gb_008", "br_008", "wh_008", "es_008"],
       "stat_changes": {
-        "performance": 9.1,
-        "durability": 8.6
-      }
+        "performance": 1.05
+      },
+      "pricemult": 1.2,
+      "description": "Circuit Edge offers innovative components that deliver an edge in competitive racing circuits."
     },
     {
       "id": "sup_100",
-      "name": "Quantum Infinity",
-      "country": "South Korea",
-      "materials": [
-        "bw_005",
-        "ae_005",
-        "sp_007",
-        "en_010",
-        "gb_011",
-        "br_007",
-        "wh_011",
-        "es_012",
-        "pu_012",
-        "pu_013",
-        "pu_014"
-      ],
+      "name": "Ion Performance",
+      "country": "Germany",
+      "materials": ["bw_009", "ae_009", "sp_009", "en_009", "gb_009", "br_009", "wh_009", "es_009"],
       "stat_changes": {
-        "performance": 9.2,
-        "durability": 8.7
-      }
+        "performance": 1.1,
+        "durability": 1.05
+      },
+      "pricemult": 1.3,
+      "description": "Ion Performance provides high-energy, cutting-edge components engineered to enhance every aspect of racing performance."
     }
   ]
 }
+
+

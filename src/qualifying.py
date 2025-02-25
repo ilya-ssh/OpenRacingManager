@@ -127,7 +127,7 @@ class Qualifying:
                 self.game.start_race(self.starting_grid)
             else:
                 for car in self.cars:
-                    car.update_qualifying()
+                    car.update_qualifying(self.cars)
         else:
             pass  # Session is over; no further updates needed
 

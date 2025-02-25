@@ -145,6 +145,7 @@ class Race:
             game=self.game,
             mode='race'
         )
+
         self.safety_car.is_safety_car = True
         self.safety_car.speed = SAFETY_CAR_SPEED
         self.safety_car.distance = PITLANE_EXIT_DISTANCE
@@ -244,6 +245,9 @@ class Race:
 
     def update_safety_car(self):
         """Update the safety car and the cars under its effect."""
+        self.cars.sort(
+            key=lambda c: (-c.laps_completed, -c.adjusted_distance)
+        )
         if self.safety_car:
             self.safety_car.update(self.race_started, self.frame_count, self.cars, self.safety_car_active)
         for idx, car in enumerate(self.cars):
@@ -428,50 +432,33 @@ class Race:
         self.announcements.draw()
 
     def draw_leaderboard(self):
-        """Render the leaderboard on the screen."""
+        """Render the leaderboard on the screen in a compact two-line format per racer."""
         x_offset = 20
         y_offset = 20
-        self.pyuni.text(x_offset, y_offset, "Leaderboard:", 0)
+        self.pyuni.text(x_offset, y_offset, "Leaderboard:", 1)
         racing_cars = [car for car in self.cars if not car.is_safety_car and car.is_active]
+        # Starting Y position for the first racer (just below the header)
+        racer_start_y = y_offset + 20
+
         for idx, car in enumerate(
-                racing_cars[self.leaderboard_scroll_index:self.leaderboard_scroll_index + 3]
+                racing_cars[self.leaderboard_scroll_index:self.leaderboard_scroll_index + 8]
         ):
             global_idx = self.leaderboard_scroll_index + idx
             gap_text = "Leader" if global_idx == 0 else self.get_gap_text(global_idx, racing_cars)
-            lap_text = f"Lap: {car.laps_completed + 1}/{MAX_LAPS}"
-            best_lap_text = (
-                f"Best Lap: {car.best_lap_time:.2f}s" if car.best_lap_time else "Best Lap: N/A"
-            )
+            lap_text = f"Lap: {car.laps_completed}/{MAX_LAPS}"
+            best_lap_text = f"Best Lap: {car.best_lap_time:.2f}s" if car.best_lap_time else "Best Lap: N/A"
             stats_text = f"Speed: {car.speed:.2f}"
-            car_stats = (
-                f"E:{car.engine_power:.2f} A:{car.aero_efficiency:.2f} "
-                f"G:{car.gearbox_quality:.2f}"
-            )
+            car_stats = f"E:{car.engine_power:.2f} A:{car.aero_efficiency:.2f} G:{car.gearbox_quality:.2f}"
             tire_text = f"T:{car.tire_type.capitalize()} {car.tire_percentage:.1f}%"
-            self.pyuni.text(
-                x_offset,
-                y_offset + (idx * 50) + 10,
-                f"{global_idx + 1}. Car {car.car_number} {gap_text}",
-                car.color,
-            )
-            self.pyuni.text(
-                x_offset,
-                y_offset + (idx * 50) + 20,
-                f"{lap_text} | {best_lap_text}",
-                car.color,
-            )
-            self.pyuni.text(
-                x_offset,
-                y_offset + (idx * 50) + 30,
-                f"{stats_text}",
-                car.color,
-            )
-            self.pyuni.text(
-                x_offset,
-                y_offset + (idx * 50) + 40,
-                f"{car_stats} | {tire_text}",
-                car.color,
-            )
+
+            # Combine all info into two compact lines with no extra spacing between racers.
+            line1 = f"{global_idx + 1}. Car {car.car_number} {gap_text} | {lap_text} | {best_lap_text}"
+            line2 = f"{stats_text} | {car_stats} | {tire_text}"
+
+            # Each racer block is 20 pixels high (two lines of 10 pixels each)
+            current_y = racer_start_y + idx * 20
+            self.pyuni.text(x_offset, current_y, line1, car.color)
+            self.pyuni.text(x_offset, current_y + 10, line2, car.color)
 
     def get_gap_text(self, global_idx, racing_cars):
         """Calculate and return the gap text for the leaderboard."""
