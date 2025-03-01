@@ -55,7 +55,7 @@ def compute_desired_speeds(angle_diffs, max_speed, min_speed):
     desired_speeds = []
     for angle_diff in angle_diffs:
         # Larger angle_diff leads to lower desired speed
-        speed = max_speed - (max_speed - min_speed) * (angle_diff / math.pi)
+        speed = max_speed - (max_speed - min_speed) * (angle_diff * 2.5 / math.pi)
         desired_speeds.append(max(min_speed, speed))
     return desired_speeds
 
@@ -161,7 +161,7 @@ START_FINISH_INDEX_SMOOTHED = find_closest_point_index(start_finish_point, TRACK
 
 ANGLE_DIFFS = compute_angle_differences(TRACK_POINTS)
 MAX_SPEED = 0.7  # Adjust as needed
-MIN_SPEED = 0.001  # Adjust as needed
+MIN_SPEED = 0.0001  # Adjust as needed
 DESIRED_SPEEDS = compute_desired_speeds(ANGLE_DIFFS, MAX_SPEED, MIN_SPEED)
 DESIRED_SPEEDS_LIST = list(zip(CUMULATIVE_DISTANCES[:-1], DESIRED_SPEEDS))
 

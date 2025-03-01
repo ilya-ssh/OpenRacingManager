@@ -1,5 +1,6 @@
 import random
 import pyxel
+import math
 from constants import (
     TIRE_TYPES, PITLANE_SPEED_LIMIT,  OVERTAKE_CHANCE, CRASH_CHANCE,
     SAFETY_CAR_SPEED, SAFETY_CAR_GAP_DISTANCE, SAFETY_CAR_CATCH_UP_SPEED,
@@ -33,11 +34,11 @@ class Car:
         self.best_lap_time = None
         self.current_lap_start_frame = None
         self.is_active = True
-        self.engine_power = random.uniform(1.0, 1.2)
-        self.aero_efficiency = random.uniform(1.0, 1.2)
-        self.gearbox_quality = random.uniform(1.0, 1.2)
-        self.suspension_quality = random.uniform(0.8, 1.2)
-        self.brake_performance = random.uniform(1.0, 1.2)
+        self.engine_power = random.uniform(1.2, 1.2)
+        self.aero_efficiency = random.uniform(1.2, 1.2)
+        self.gearbox_quality = random.uniform(0.008, 0.008)
+        self.suspension_quality = random.uniform(1.2, 1.2)
+        self.brake_performance = random.uniform(200, 210)
         self.base_max_speed = 1.0
         self.base_acceleration = 0.007
         self.braking_intensity = 3.0 * self.brake_performance
@@ -437,6 +438,28 @@ class Car:
             weight_factor = self.get_weight_factor()
             effective_acceleration = self.base_acceleration * self.gearbox_quality * weight_factor
 
+            # Use the new corner classification to adjust max speed.
+            corner_type = self.get_corner_type(offset=10.0)
+            if corner_type == "slow":
+                # Slow corners rely more on braking and suspension.
+                multiplier = (self.brake_performance / 210.0) * self.suspension_quality
+            elif corner_type == "medium":
+                # Medium corners use a mix of braking and aero.
+                multiplier = (self.aero_efficiency + (self.brake_performance / 210.0)) / 2.0
+            elif corner_type == "fast":
+                # Fast corners are mostly influenced by aero.
+                multiplier = self.aero_efficiency
+            else:
+                multiplier = self.engine_power
+
+            max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
+            max_speed *= multiplier
+            max_speed = max(max_speed, self.min_max_speed)
+            self.speed = min(self.speed, max_speed)
+            self.speed = max(self.speed, self.min_speed)
+
+            # Second adjustment (if needed) using similar logic:
+            effective_acceleration = self.base_acceleration * self.gearbox_quality
             if self.speed < self.target_speed:
                 self.speed += effective_acceleration
                 self.speed = min(self.speed, self.target_speed)
@@ -447,11 +470,8 @@ class Car:
                 self.speed = max(self.speed, self.target_speed)
 
             max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
-            is_corner = self.is_in_corner()
-            if is_corner:
-                max_speed *= self.aero_efficiency
-            else:
-                max_speed *= self.engine_power
+            # Recompute corner type if needed; here we use the same multiplier:
+            max_speed *= multiplier
             max_speed = max(max_speed, self.min_max_speed)
             self.speed = min(self.speed, max_speed)
             self.speed = max(self.speed, self.min_speed)
@@ -488,12 +508,12 @@ class Car:
             if self.just_changed_tires:
                 self.announcements.add_message(f"Car {self.car_number} changed to {self.tire_type.capitalize()} tires.")
                 self.just_changed_tires = False
-            if DEBUG_MODE:
-                print(
-                    f"Car {self.car_number} - Lap: {self.laps_completed} |"
-                    f" Tire: {self.tire_type.capitalize()} Fuel: {self.fuel_level:.1f}L"
-                    f" {self.tire_percentage:.1f}% | Speed: {self.speed:.2f}"
-                )
+            #if DEBUG_MODE:
+              #  print(
+              #      f"Car {self.car_number} - Lap: {self.laps_completed} |"
+              #      f" Tire: {self.tire_type.capitalize()} Fuel: {self.fuel_level:.1f}L"
+              #      f" {self.tire_percentage:.1f}% | Speed: {self.speed:.2f}"
+              #  )
 
     def to_pitlane(self, current_frame):
         current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
@@ -565,7 +585,7 @@ class Car:
     def update_safety_car_behavior(self):
         self.previous_distance = self.distance
         if self.is_exiting and self.is_safety_car:
-            print(self.car_number)
+            #print(self.car_number)
             self.speed += self.base_acceleration * 0.5
             self.speed = min(self.speed, SAFETY_CAR_SPEED * 2)
             self.distance += self.speed
@@ -642,23 +662,7 @@ class Car:
                         self.announcements.add_message(f"Car {self.car_number} has crashed!")
                         break
 
-    def attempt_overtake(self, cars, safety_car_active):
-        if safety_car_active or self.is_under_safety_car:
-            return
-        for other_car in cars:
-            if other_car.car_number == self.car_number or other_car.crashed or not other_car.is_active:
-                continue
-            distance_diff = (other_car.distance - self.distance) % TOTAL_TRACK_LENGTH
-            if 0 < distance_diff < 5:
-                if random.random() < OVERTAKE_CHANCE:
-                    pass
-                else:
-                    if random.random() < CRASH_CHANCE:
-                        self.crashed = True
-                        self.speed = 0.0
-                        self.is_active = False
-                        self.announcements.add_message(f"Car {self.car_number} has crashed!")
-                        break
+    # Duplicate attempt_overtake removed
 
     # -------------------- Qualifying Functions --------------------
 
@@ -777,12 +781,20 @@ class Car:
             braking_force = (self.braking_intensity * speed_diff) * 0.1
             self.speed -= braking_force
             self.speed = max(self.speed, self.target_speed)
-        max_speed = self.base_max_speed * (self.tire_percentage / 100)
-        is_corner = self.is_in_corner()
-        if is_corner:
-            max_speed *= self.aero_efficiency
+
+        # --- New corner-based adjustment ---
+        corner_type = self.get_corner_type(offset=10.0, threshold_degrees=15)
+        if corner_type == "slow":
+            multiplier = (self.brake_performance / 210.0) * self.suspension_quality
+        elif corner_type == "medium":
+            multiplier = (self.aero_efficiency + (self.brake_performance / 210.0)) / 2.0
+        elif corner_type == "fast":
+            multiplier = self.aero_efficiency
         else:
-            max_speed *= self.engine_power
+            multiplier = self.engine_power
+
+        max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
+        max_speed *= multiplier
         max_speed = max(max_speed, self.min_max_speed)
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
@@ -796,11 +808,7 @@ class Car:
             self.speed -= braking_force
             self.speed = max(self.speed, self.target_speed)
         max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
-        is_corner = self.is_in_corner()
-        if is_corner:
-            max_speed *= self.aero_efficiency
-        else:
-            max_speed *= self.engine_power
+        max_speed *= multiplier
         max_speed = max(max_speed, self.min_max_speed)
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
@@ -840,35 +848,57 @@ class Car:
                                          position - start_finish_distance + TOTAL_TRACK_LENGTH
                                  ) % TOTAL_TRACK_LENGTH
         self.adjusted_total_distance = self.laps_completed * TOTAL_TRACK_LENGTH + self.adjusted_distance
-        if DEBUG_MODE:
-            print(
-                f"DEBUG: Car {self.car_number} - Laps: {self.laps_completed}, raw distance: {self.distance:.2f}, adjusted distance: {self.adjusted_distance:.2f}, total adjusted: {self.adjusted_total_distance:.2f}")
+        #if DEBUG_MODE:
+            #print(
+            #    f"DEBUG: Car {self.car_number} - Laps: {self.laps_completed}, raw distance: {self.distance:.2f}, adjusted distance: {self.adjusted_distance:.2f}, total adjusted: {self.adjusted_total_distance:.2f}")
 
-    def is_in_corner(self):
-        current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
-        for i in range(len(DESIRED_SPEEDS_LIST) - 1):
-            dist1, base_speed1 = DESIRED_SPEEDS_LIST[i]
-            dist2, base_speed2 = DESIRED_SPEEDS_LIST[i + 1]
-            if dist1 <= current_lap_distance <= dist2:
-                avg_base_speed = (base_speed1 + base_speed2) / 2
-                if avg_base_speed < self.base_max_speed * 0.9:
-                    return True
-                else:
-                    return False
-        return False
+    def get_corner_type(self, offset=5.0, threshold_degrees=15):
+        """
+        Determines the type of corner based on the local turning angle.
+        Returns:
+          - "none" if nearly straight,
+          - "fast" for slight curves (primarily aero-driven),
+          - "medium" for moderate curves (mix of braking and aero),
+          - "slow" for sharp turns (heavily influenced by braking and suspension).
+        """
+        current_pos = get_position_along_track(self.distance, TRACK_POINTS, CUMULATIVE_DISTANCES)
+        prev_pos = get_position_along_track(self.distance - offset, TRACK_POINTS, CUMULATIVE_DISTANCES)
+        next_pos = get_position_along_track(self.distance + offset, TRACK_POINTS, CUMULATIVE_DISTANCES)
 
-    def is_in_corner(self):
-        current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
-        for i in range(len(DESIRED_SPEEDS_LIST) - 1):
-            dist1, base_speed1 = DESIRED_SPEEDS_LIST[i]
-            dist2, base_speed2 = DESIRED_SPEEDS_LIST[i + 1]
-            if dist1 <= current_lap_distance <= dist2:
-                avg_base_speed = (base_speed1 + base_speed2) / 2
-                if avg_base_speed < self.base_max_speed * 0.9:
-                    return True
-                else:
-                    return False
-        return False
+        # Compute vectors from the previous to current, and current to next.
+        vec1 = (current_pos[0] - prev_pos[0], current_pos[1] - prev_pos[1])
+        vec2 = (next_pos[0] - current_pos[0], next_pos[1] - current_pos[1])
+
+        # Calculate the magnitudes
+        mag1 = math.hypot(*vec1)
+        mag2 = math.hypot(*vec2)
+
+        # Protect against division by zero
+        if mag1 == 0 or mag2 == 0:
+            return "none"
+        dot = vec1[0] * vec2[0] + vec1[1] * vec2[1]
+        cos_theta = dot / (mag1 * mag2)
+        # Clamp cos_theta to valid range for acos.
+        cos_theta = max(-1.0, min(1.0, cos_theta))
+        angle = math.acos(cos_theta)
+        angle_deg = math.degrees(angle)
+        if angle_deg < 1:
+            if self.driver_name == "Marco Bellini":
+                print('none')
+            return "none"
+        elif angle_deg < 3:
+            if self.driver_name == "Marco Bellini":
+                print('fast')
+            return "fast"
+        elif angle_deg < 5:
+            if self.driver_name == "Marco Bellini":
+                print('medium')
+            return "medium"
+        else:
+            if self.driver_name == "Marco Bellini":
+                print('slow')
+                print(angle_deg)
+            return "slow"
 
     def reset_after_safety_car(self):
         self.is_under_safety_car = False
