@@ -13,6 +13,7 @@ from track import (
     PIT_STOP_POINT, PIT_LANE_TOTAL_LENGTH, CUMULATIVE_DISTANCES,
     START_FINISH_INDEX_SMOOTHED,
 )
+from announcements import Announcements
 
 class Car:
     def __init__(self, color_index, car_number, driver_name, grid_position,
@@ -34,11 +35,11 @@ class Car:
         self.best_lap_time = None
         self.current_lap_start_frame = None
         self.is_active = True
-        self.engine_power = random.uniform(1.2, 1.2)
-        self.aero_efficiency = random.uniform(1.2, 1.2)
-        self.gearbox_quality = random.uniform(0.008, 0.008)
-        self.suspension_quality = random.uniform(1.2, 1.2)
-        self.brake_performance = random.uniform(200, 210)
+        self.engine_power = random.uniform(1.0, 1.2)
+        self.aero_efficiency = random.uniform(1.0, 1.2)
+        self.gearbox_quality = random.uniform(0.780, 0.800)
+        self.suspension_quality = random.uniform(1.0, 1.2)
+        self.brake_performance = random.uniform(208, 210)
         self.base_max_speed = 1.0
         self.base_acceleration = 0.007
         self.braking_intensity = 3.0 * self.brake_performance
@@ -64,8 +65,7 @@ class Car:
         # Mode-based init
         if self.mode == 'qualifying':
             self.initialize_qualifying_mode()
-            # Use only the minimum fuel needed for a flying lap
-            self.fuel_level = 40.0  # liters – tweak this value as needed
+            self.fuel_level = 40.0  # Use only minimal fuel in qualifying
         elif self.mode == 'race':
             self.initialize_race_mode()
             # Start with a full tank in race mode
@@ -89,7 +89,26 @@ class Car:
         elif self.mode == 'race':
             self.update_race(race_started, current_frame, cars, safety_car_active)
 
-    # -------------------- Race Functions --------------------
+    # --- NEW: Random Event Method ---
+    def check_random_events(self):
+        # Define the chance of events (adjust these values as desired)
+        flatspot_chance = 0.0000005   # 0.5% chance per update
+        mistake_chance = 0.00001     # 1% chance per update
+        # Flatspot event: reduce tire health by a random percentage (5% to 15%)
+        if random.random() < flatspot_chance:
+            reduction = random.uniform(5, 15)
+            self.tire_percentage = max(1, self.tire_percentage - reduction)
+            self.announcements.add_message(
+                f"Car {self.car_number} flatspotted its tires (-{reduction:.0f}%)!", duration=30
+            )
+        # Mistake event: reduce speed for this update (simulate lost time)
+        if self.get_corner_type != 'none':
+            if random.random() < mistake_chance:
+                slowdown_factor = random.uniform(0.2, 0.5)
+                self.speed *= slowdown_factor
+                self.announcements.add_message(
+                    f"Car {self.car_number} made a mistake and lost speed!", duration=30
+                )
 
     def initialize_race_mode(self):
         # -------------------------
@@ -108,7 +127,7 @@ class Car:
 
         self.start_delay_frames = 0
         self.warmup_started = False
-        spacing_factor = 1.0
+        spacing_factor = 2.0
         start_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
         self.grid_distance = (start_distance - (0.5 + self.grid_position * spacing_factor)) % TOTAL_TRACK_LENGTH
         self.distance = self.grid_distance
@@ -152,66 +171,60 @@ class Car:
         self.first_lap_completed = False
 
     def apply_slipstream(self, cars):
-        """
-        Checks if we're close behind another car and applies a slipstream boost if so.
-        If we overtake that car, we keep the boost for additional frames.
-        """
-        # If we already have some slipstream time, count it down
+        # If we already have some slipstream time, count it down.
         if self.slipstream_timer > 0:
             self.slipstream_timer -= 1
         else:
             self.slipstream_target = None  # no active slipstream once timer hits 0
 
-        # If we are under safety car or not active, no slipstream
+        # No slipstream if under safety car or not active.
         if self.is_under_safety_car or not self.is_active:
             return
 
-        # 1) Identify the nearest active car in front (distance_diff in (0, SLIPSTREAM_DISTANCE))
-        #    We'll keep track of the smallest positive distance
+        # 1) Identify the nearest active car in front (within SLIPSTREAM_DISTANCE)
         best_distance = float('inf')
         best_car = None
 
         for other_car in cars:
             if (
-                    other_car is not self
-                    and other_car.is_active
-                    and not other_car.is_under_safety_car
-                    and not other_car.crashed
+                    other_car is not self and other_car.is_active and
+                    not other_car.is_under_safety_car and not other_car.crashed
             ):
                 distance_diff = (other_car.distance - self.distance) % TOTAL_TRACK_LENGTH
-
-                # This means other_car is ahead if distance_diff > 0
                 if 0 < distance_diff < best_distance:
                     best_distance = distance_diff
                     best_car = other_car
 
-        # 2) Check if we are within slipstream distance to that "best_car"
+        # 2) Check if we are within slipstream distance.
         if best_car and best_distance < SLIPSTREAM_DISTANCE:
-            # We are in the slipstream zone!
-            # Refresh the timer to at least SLIPSTREAM_BASE_FRAMES
             if self.slipstream_timer < SLIPSTREAM_BASE_FRAMES:
                 self.slipstream_timer = SLIPSTREAM_BASE_FRAMES
                 self.slipstream_target = best_car
-        else:
-            # No slipstream if we haven't already got some leftover slipstream timer
-            # (But we won't forcibly kill slipstream_timer if we previously had it)
-            pass
 
-        # 3) If we do have an active slipstream target, check for overtake:
+        # 3) If we have an active target, check for overtake.
         if self.slipstream_target:
             distance_to_target = (self.slipstream_target.distance - self.distance) % TOTAL_TRACK_LENGTH
-            # If we pass them (distance_to_target becomes negative or 0), keep slipstream for extra frames
             if distance_to_target <= 0:
-                # e.g. set slipstream_timer to a guaranteed minimum
                 if self.slipstream_timer < SLIPSTREAM_OVERTAKE_FRAMES:
                     self.slipstream_timer = SLIPSTREAM_OVERTAKE_FRAMES
 
         # 4) Finally, if slipstream_timer > 0, apply the speed boost
-        #    One easy way is simply to multiply your speed by SLIPSTREAM_SPEED_BOOST
         if self.slipstream_timer > 0:
-            # You could either multiply your final speed or multiply target_speed or acceleration
-            # For example, multiply acceleration:
-            self.speed *= SLIPSTREAM_SPEED_BOOST
+            # Scale the slipstream boost based on the current speed:
+            #   - Below 0.3: no boost (0%)
+            #   - At 1.0 or above: full boost (100%)
+            #   - Between 0.3 and 1.0: interpolate linearly.
+            min_speed = 0.3
+            full_boost_speed = 0.8
+            if self.speed < min_speed:
+                boost_multiplier = 1.0  # no boost at low speeds
+            else:
+                t = (self.speed - min_speed) / (full_boost_speed - min_speed)
+                t = max(0, min(1, t))
+                # If SLIPSTREAM_SPEED_BOOST is, say, 1.2, then at full boost speed:
+                # boost_multiplier = 1.0 + 1 * (SLIPSTREAM_SPEED_BOOST - 1.0)
+                boost_multiplier = 1.0 + t * (SLIPSTREAM_SPEED_BOOST - 1.0)
+            self.speed *= boost_multiplier
 
     def plan_optimal_strategy(
             self,
@@ -397,117 +410,151 @@ class Car:
             self.is_active = False
             return
 
+        # NEW: Check for random events (flatspots or mistakes)
+
+
+        # Safety car special handling
         if self.is_safety_car:
             self.update_safety_car_behavior()
             return
         if not race_started or self.crashed:
             return
+
         self.previous_distance = self.distance
         self.previous_pitlane_distance = self.pitlane_distance
+
+        # ----- Tire Wear Update -----
         wear_rate = TIRE_TYPES[self.tire_type]["wear_rate"] / self.suspension_quality
         if self.tire_percentage < TIRE_TYPES[self.tire_type]["threshold"]:
             wear_rate *= 2
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
         self.tire_percentage = max(self.tire_percentage, 1)
+
+        # Flag for pitting when tires are too worn
         if not self.pitting and not self.on_pitlane and self.tire_percentage <= PIT_STOP_THRESHOLD:
             self.pitting = True
+
+        # ----- Advanced Safety Car Pitting Strategy -----
         if safety_car_active or self.is_under_safety_car:
-            self.update_adjusted_distance()
-            if self.crossed_start_finish_line():
-                self.laps_completed += 1
-            return
-        else:
-            self.apply_slipstream(cars)
-            self.attempt_overtake(cars, safety_car_active)
-
-            if self.pitting and not self.on_pitlane:
-                self.to_pitlane(current_frame)
-            elif self.on_pitlane:
-                self.in_pitlane(current_frame)
-            else:
-                self.target_speed = get_desired_speed_at_distance(
-                    self.distance % TOTAL_TRACK_LENGTH,
-                    DESIRED_SPEEDS_LIST,
-                    TOTAL_TRACK_LENGTH,
-                    self
-                )
-                self.target_speed *= (self.tire_percentage / 100)
-                self.target_speed = max(self.target_speed, self.min_speed)
-
-            # ----- Weight-Adjusted Acceleration -----
-            weight_factor = self.get_weight_factor()
-            effective_acceleration = self.base_acceleration * self.gearbox_quality * weight_factor
-
-            # Use the new corner classification to adjust max speed.
-            corner_type = self.get_corner_type(offset=10.0)
-            if corner_type == "slow":
-                # Slow corners rely more on braking and suspension.
-                multiplier = (self.brake_performance / 210.0) * self.suspension_quality
-            elif corner_type == "medium":
-                # Medium corners use a mix of braking and aero.
-                multiplier = (self.aero_efficiency + (self.brake_performance / 210.0)) / 2.0
-            elif corner_type == "fast":
-                # Fast corners are mostly influenced by aero.
-                multiplier = self.aero_efficiency
-            else:
-                multiplier = self.engine_power
-
-            max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
-            max_speed *= multiplier
-            max_speed = max(max_speed, self.min_max_speed)
-            self.speed = min(self.speed, max_speed)
-            self.speed = max(self.speed, self.min_speed)
-
-            # Second adjustment (if needed) using similar logic:
-            effective_acceleration = self.base_acceleration * self.gearbox_quality
-            if self.speed < self.target_speed:
-                self.speed += effective_acceleration
-                self.speed = min(self.speed, self.target_speed)
-            elif self.speed > self.target_speed:
-                speed_diff = self.speed - self.target_speed
-                braking_force = (self.braking_intensity * speed_diff) * 0.1
-                self.speed -= braking_force
-                self.speed = max(self.speed, self.target_speed)
-
-            max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
-            # Recompute corner type if needed; here we use the same multiplier:
-            max_speed *= multiplier
-            max_speed = max(max_speed, self.min_max_speed)
-            self.speed = min(self.speed, max_speed)
-            self.speed = max(self.speed, self.min_speed)
-
-            if not self.on_pitlane:
-                self.distance += self.speed
-                current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
-                previous_lap_distance = self.previous_distance % TOTAL_TRACK_LENGTH
-                start_finish_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
-                crossed_line = False
-                if previous_lap_distance <= start_finish_distance < current_lap_distance:
-                    crossed_line = True
-                elif current_lap_distance < previous_lap_distance:
-                    if previous_lap_distance <= start_finish_distance or start_finish_distance < current_lap_distance:
-                        crossed_line = True
-                if crossed_line and not self.just_crossed_start:
+            if self.pitting and self.speed != SAFETY_CAR_SPEED:
+                if not self.on_pitlane:
+                    self.to_pitlane(current_frame)
+                elif self.on_pitlane:
+                    self.in_pitlane(current_frame)
+                self.update_adjusted_distance()
+                if self.crossed_start_finish_line():
                     self.laps_completed += 1
-                    if self.lap_start_frame is not None and self.first_lap_completed:
-                        lap_time = (current_frame - self.lap_start_frame) / 30.0
-                        self.lap_times.append(lap_time)
-                        if self.best_lap_time is None or lap_time < self.best_lap_time:
-                            self.best_lap_time = lap_time
-                    else:
-                        self.first_lap_completed = True
-                    self.lap_start_frame = current_frame
-                    self.just_crossed_start = True
+                return
+            else:
+                self.update_adjusted_distance()
+                if self.crossed_start_finish_line():
+                    self.laps_completed += 1
+                return
+
+        # ----- Normal Race Update (when no Safety Car is active) -----
+        self.apply_slipstream(cars)
+        self.attempt_overtake(cars, safety_car_active)
+
+        if self.pitting and not self.on_pitlane:
+            self.to_pitlane(current_frame)
+        elif self.on_pitlane:
+            self.in_pitlane(current_frame)
+        else:
+            # Get the ideal target speed based on track position.
+            base_target_speed = get_desired_speed_at_distance(
+                self.distance % TOTAL_TRACK_LENGTH,
+                DESIRED_SPEEDS_LIST,
+                TOTAL_TRACK_LENGTH,
+                self
+            )
+            # --- New Tire Effect Logic ---
+            # Instead of directly scaling by self.tire_percentage/100,
+            # we compute a tire factor that is only mildly penalizing when the tire health is above the threshold.
+            tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
+            if self.tire_percentage >= tire_threshold:
+                # When tires are in good shape, only a slight penalty is applied.
+                # For example, if tire health is 100%, factor = 1.0;
+                # if tire health is at the threshold, factor = 0.98.
+                tire_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+            else:
+                # When below threshold, apply full penalty.
+                tire_factor = self.tire_percentage / tire_threshold * 0.98
+            self.target_speed = base_target_speed * tire_factor
+            self.target_speed = max(self.target_speed, self.min_speed)
+
+        # ----- Weight-Adjusted Acceleration and Speed Adjustments -----
+        weight_factor = self.get_weight_factor()
+        effective_acceleration = self.base_acceleration * self.gearbox_quality * weight_factor
+
+        corner_type = self.get_corner_type(offset=10.0)
+        if corner_type == "slow":
+            multiplier = (self.brake_performance / 210.0) * self.suspension_quality
+        elif corner_type == "medium":
+            multiplier = (self.aero_efficiency + (self.brake_performance / 210.0)) / 2.0
+        elif corner_type == "fast":
+            multiplier = self.aero_efficiency
+        else:
+            multiplier = self.engine_power
+
+        max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
+        max_speed *= multiplier
+        max_speed = max(max_speed, self.min_max_speed)
+        self.speed = min(self.speed, max_speed)
+        self.speed = max(self.speed, self.min_speed)
+
+        effective_acceleration = self.base_acceleration * self.gearbox_quality
+        if self.speed < self.target_speed:
+            self.speed += effective_acceleration
+            self.speed = min(self.speed, self.target_speed)
+        elif self.speed > self.target_speed:
+            speed_diff = self.speed - self.target_speed
+            braking_force = (self.braking_intensity * speed_diff) * 0.1
+            self.speed -= braking_force
+            self.speed = max(self.speed, self.target_speed)
+
+        max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
+        max_speed *= multiplier
+        max_speed = max(max_speed, self.min_max_speed)
+        self.speed = min(self.speed, max_speed)
+        self.speed = max(self.speed, self.min_speed)
+        if not self.on_pitlane and not safety_car_active:
+            self.check_random_events()
+
+        # ----- Update Position and Lap Count -----
+        if not self.on_pitlane:
+            self.distance += self.speed
+            current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
+            previous_lap_distance = self.previous_distance % TOTAL_TRACK_LENGTH
+            start_finish_distance = CUMULATIVE_DISTANCES[START_FINISH_INDEX_SMOOTHED]
+            crossed_line = False
+            if previous_lap_distance <= start_finish_distance < current_lap_distance:
+                crossed_line = True
+            elif current_lap_distance < previous_lap_distance:
+                if previous_lap_distance <= start_finish_distance or start_finish_distance < current_lap_distance:
+                    crossed_line = True
+            if crossed_line and not self.just_crossed_start:
+                self.laps_completed += 1
+                if self.lap_start_frame is not None and self.first_lap_completed:
+                    lap_time = (current_frame - self.lap_start_frame) / 30.0
+                    self.lap_times.append(lap_time)
+                    if self.best_lap_time is None or lap_time < self.best_lap_time:
+                        self.best_lap_time = lap_time
                 else:
-                    if abs(current_lap_distance - start_finish_distance) > 1:
-                        self.just_crossed_start = False
-            self.update_adjusted_distance()
-            if self.just_entered_pit:
-                self.announcements.add_message(f"Car {self.car_number} entered the pit lane.")
-                self.just_entered_pit = False
-            if self.just_changed_tires:
-                self.announcements.add_message(f"Car {self.car_number} changed to {self.tire_type.capitalize()} tires.")
-                self.just_changed_tires = False
+                    self.first_lap_completed = True
+                self.lap_start_frame = current_frame
+                self.just_crossed_start = True
+            else:
+                if abs(current_lap_distance - start_finish_distance) > 1:
+                    self.just_crossed_start = False
+        self.update_adjusted_distance()
+
+        if self.just_entered_pit:
+            self.announcements.add_message(f"Car {self.car_number} entered the pit lane.")
+            self.just_entered_pit = False
+        if self.just_changed_tires:
+            self.announcements.add_message(f"Car {self.car_number} changed to {self.tire_type.capitalize()} tires.")
+            self.just_changed_tires = False
+
             #if DEBUG_MODE:
               #  print(
               #      f"Car {self.car_number} - Lap: {self.laps_completed} |"
@@ -608,7 +655,7 @@ class Car:
         self.previous_distance = self.distance
         desired_gap = SAFETY_CAR_GAP_DISTANCE
         if self.is_safety_car_ending and not self.is_safety_car:
-            self.speed = SAFETY_CAR_SPEED
+            self.speed = SAFETY_CAR_SPEED * 1.2
         if car_ahead and car_ahead.is_active and car_ahead != safety_car:
             distance_to_car_ahead = (car_ahead.distance - self.distance) % TOTAL_TRACK_LENGTH
             gap_error = distance_to_car_ahead - desired_gap
@@ -751,7 +798,7 @@ class Car:
             self.speed = self.min_speed
 
     def update_movement(self, cars):
-	# ----- Fuel Consumption for Qualifying -----
+        # ----- Fuel Consumption for Qualifying -----
         fuel_consumed = self.fuel_consumption_coefficient * self.speed * self.fuel_consumption_multiplier
         self.fuel_level = max(0, self.fuel_level - fuel_consumed)
         if self.fuel_level <= 0:
@@ -763,14 +810,22 @@ class Car:
             wear_rate *= 2
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
         self.tire_percentage = max(self.tire_percentage, 1)
-        self.target_speed = get_desired_speed_at_distance(
+
+        base_target_speed = get_desired_speed_at_distance(
             self.distance % TOTAL_TRACK_LENGTH,
             DESIRED_SPEEDS_LIST,
             TOTAL_TRACK_LENGTH,
             self
         )
-        self.target_speed *= (self.tire_percentage / 100)
+        # --- New Tire Effect Logic for Qualifying ---
+        tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
+        if self.tire_percentage >= tire_threshold:
+            tire_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+        else:
+            tire_factor = self.tire_percentage / tire_threshold * 0.98
+        self.target_speed = base_target_speed * tire_factor
         self.target_speed = max(self.target_speed, self.min_speed)
+
         weight_factor = self.get_weight_factor()
         effective_acceleration = self.base_acceleration * self.gearbox_quality * weight_factor
         if self.speed < self.target_speed:
@@ -782,7 +837,7 @@ class Car:
             self.speed -= braking_force
             self.speed = max(self.speed, self.target_speed)
 
-        # --- New corner-based adjustment ---
+        # --- New corner-based adjustment (unchanged) ---
         corner_type = self.get_corner_type(offset=10.0, threshold_degrees=15)
         if corner_type == "slow":
             multiplier = (self.brake_performance / 210.0) * self.suspension_quality
@@ -807,12 +862,15 @@ class Car:
             braking_force = (self.braking_intensity * speed_diff) * 0.1
             self.speed -= braking_force
             self.speed = max(self.speed, self.target_speed)
+
         max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
         max_speed *= multiplier
         max_speed = max(max_speed, self.min_max_speed)
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
         self.distance += self.speed
+
+        self.check_random_events()
 
         self.apply_slipstream(cars)
         if self.on_out_lap or self.on_in_lap:
@@ -886,11 +944,11 @@ class Car:
             if self.driver_name == "Marco Bellini":
                 print('none')
             return "none"
-        elif angle_deg < 3:
+        elif angle_deg < 4:
             if self.driver_name == "Marco Bellini":
                 print('fast')
             return "fast"
-        elif angle_deg < 5:
+        elif angle_deg < 13:
             if self.driver_name == "Marco Bellini":
                 print('medium')
             return "medium"

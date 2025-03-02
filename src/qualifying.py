@@ -16,6 +16,7 @@ from track import (
 )
 from constants import CURRENT_VER, QUALIFYING_TIME, TIRE_TYPES
 from load_teams import load_teams  # Ensure this function is correctly imported
+from announcements import Announcements
 
 
 class Qualifying:
@@ -27,6 +28,7 @@ class Qualifying:
         self.cars = []
         self.drivers_map = self.load_drivers()
         self.teams_data = load_teams()
+        self.announcements = Announcements(self.pyuni)
 
         self.assign_team_pitboxes()
 
@@ -107,7 +109,7 @@ class Qualifying:
                         car_number=driver_number,
                         driver_name=driver_name,  # Ensure Car class can accept driver_name
                         grid_position=grid_position,
-                        announcements=None,
+                        announcements=self.announcements,
                         game=self.game,
                         mode='qualifying',
                         pitbox_coords=team.get("pitbox_coords"),
@@ -128,6 +130,7 @@ class Qualifying:
             else:
                 for car in self.cars:
                     car.update_qualifying(self.cars)
+            self.announcements.update()
         else:
             pass  # Session is over; no further updates needed
 
@@ -276,6 +279,7 @@ class Qualifying:
             pyxel.text(x_box + 5, y_box + 35,
                        f"{hover_info['tire_key'].capitalize()} {hover_info['tire_percentage']:.1f}%", 1)
             pyxel.text(x_box + 5, y_box + 45, f"Tyre temps: ", 1)  # Placeholder for tyre temperature
+        self.announcements.draw()
 
     def calculate_starting_grid(self):
         """Calculate and set the starting grid based on qualifying results."""

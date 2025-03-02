@@ -143,7 +143,9 @@ class Race:
             grid_position=0,
             announcements=self.announcements,
             game=self.game,
-            mode='race'
+            mode='race',
+            pitbox_coords=PIT_STOP_POINT,
+            pitbox_distance=PITLANE_EXIT_DISTANCE
         )
 
         self.safety_car.is_safety_car = True
@@ -268,7 +270,8 @@ class Race:
             self.leaderboard_scroll_index = min(
                 self.leaderboard_scroll_index + 1, max_scroll_index
             )
-        all_cars_caught_up = all(car.speed == SAFETY_CAR_SPEED for car in self.cars)
+
+        all_cars_caught_up = all(car.speed == SAFETY_CAR_SPEED for car in self.cars if car.is_active)
         if all_cars_caught_up and not self.safety_car_laps_started:
             self.safety_car_laps_started = True
             self.safety_car_start_lap = self.cars[0].laps_completed
