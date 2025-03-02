@@ -4,7 +4,8 @@ import math
 from constants import (
     TIRE_TYPES, PITLANE_SPEED_LIMIT,  OVERTAKE_CHANCE, CRASH_CHANCE,
     SAFETY_CAR_SPEED, SAFETY_CAR_GAP_DISTANCE, SAFETY_CAR_CATCH_UP_SPEED,
-    PIT_STOP_THRESHOLD, PIT_STOP_DURATION, MAX_LAPS, DEBUG_MODE, SLIPSTREAM_DISTANCE, SLIPSTREAM_OVERTAKE_FRAMES, SLIPSTREAM_BASE_FRAMES,SLIPSTREAM_SPEED_BOOST
+    PIT_STOP_THRESHOLD, PIT_STOP_DURATION, MAX_LAPS, DEBUG_MODE, SLIPSTREAM_DISTANCE, SLIPSTREAM_OVERTAKE_FRAMES, SLIPSTREAM_BASE_FRAMES,SLIPSTREAM_SPEED_BOOST,
+    MISTAKE_CHANCE
 )
 from track import (
     get_desired_speed_at_distance, get_position_along_track,
@@ -17,7 +18,16 @@ from announcements import Announcements
 
 class Car:
     def __init__(self, color_index, car_number, driver_name, grid_position,
-                 announcements, pitbox_coords=PITLANE_ENTRANCE_DISTANCE, pitbox_distance=PITLANE_EXIT_DISTANCE, game=None, mode='race', start_delay_frames=0):
+                 announcements, pitbox_coords=PITLANE_ENTRANCE_DISTANCE,
+                 pitbox_distance=PITLANE_EXIT_DISTANCE, game=None, mode='race', start_delay_frames=0):
+        # Starting tire is set initially (will not be overwritten by a strategy plan)
+        if grid_position < 10:
+            self.tire_type = "soft"
+        elif 10 <= grid_position < 15:
+            self.tire_type = random.choice(["soft", "medium"])
+        else:
+            self.tire_type = "hard"  # or "medium-hard" if defined in TIRE_TYPES
+        self.tire_percentage = 100.0
         self.color = color_index
         self.car_number = car_number
         self.grid_position = grid_position
@@ -35,11 +45,13 @@ class Car:
         self.best_lap_time = None
         self.current_lap_start_frame = None
         self.is_active = True
-        self.engine_power = random.uniform(1.0, 1.2)
-        self.aero_efficiency = random.uniform(1.0, 1.2)
-        self.gearbox_quality = random.uniform(0.780, 0.800)
-        self.suspension_quality = random.uniform(1.0, 1.2)
-        self.brake_performance = random.uniform(208, 210)
+        self.engine_power = random.uniform(1.0, 1.0)
+        # Store the base engine power separately so it can be reset each update.
+        self.base_engine_power = self.engine_power
+        self.aero_efficiency = random.uniform(1.2, 1.2)
+        self.gearbox_quality = random.uniform(0.800, 0.800)
+        self.suspension_quality = random.uniform(1.2, 1.2)
+        self.brake_performance = random.uniform(210, 210)
         self.base_max_speed = 1.0
         self.base_acceleration = 0.007
         self.braking_intensity = 3.0 * self.brake_performance
@@ -50,6 +62,7 @@ class Car:
         self.is_exiting = False
         self.has_caught_safety_car = False
         self.is_safety_car_ending = False
+        self.slipstream_cooldown = 0
 
         # Fuel system
         self.base_weight = 800.0
@@ -62,7 +75,13 @@ class Car:
         self.slipstream_timer = 0
         self.slipstream_target = None
 
-        # Mode-based init
+        # Dynamic strategy: pitting flag and desire will be used later.
+        self.pitting = False
+        self.on_pitlane = False
+        self.just_entered_pit = False
+        self.just_changed_tires = False
+
+        # Mode-based initialization
         if self.mode == 'qualifying':
             self.initialize_qualifying_mode()
             self.fuel_level = 40.0  # Use only minimal fuel in qualifying
@@ -80,6 +99,26 @@ class Car:
         nominal_weight = self.base_weight + self.fuel_capacity * self.fuel_density
         current_weight = self.base_weight + self.fuel_level * self.fuel_density
         return nominal_weight / current_weight
+
+    def calculate_pit_desire(self, safety_car_active):
+        """
+        Modified pit desire: start increasing pit desire once tire health falls below 90%.
+        Ramps from 0.0 to 0.5 between 90% and 80%, then from 0.5 to 1.0 as health falls further.
+        A bonus of 0.3 is added under safety car if the car hasn't caught up.
+        """
+        T = TIRE_TYPES[self.tire_type]["threshold"]
+
+        if self.tire_percentage >= 90:
+            base_desire = 0.0
+        elif self.tire_percentage <= (T - 2):
+            base_desire = 1.0
+        else:
+            # Linear interpolation: at tire_percentage==90 => 0; at tire_percentage==(T-2) => 1.
+            base_desire = (90 - self.tire_percentage) / (90 - (T - 2))
+        print(safety_car_active)
+        if safety_car_active and self.speed != SAFETY_CAR_SPEED:
+            base_desire = base_desire + 0.9
+        return base_desire
 
     def update(self, race_started, current_frame, cars, safety_car_active):
         if not self.is_active:
@@ -102,7 +141,7 @@ class Car:
                 f"Car {self.car_number} flatspotted its tires (-{reduction:.0f}%)!", duration=30
             )
         # Mistake event: reduce speed for this update (simulate lost time)
-        if self.get_corner_type != 'none':
+        if self.get_corner_type() != 'none':
             if random.random() < mistake_chance:
                 slowdown_factor = random.uniform(0.2, 0.5)
                 self.speed *= slowdown_factor
@@ -111,12 +150,7 @@ class Car:
                 )
 
     def initialize_race_mode(self):
-        # -------------------------
-        # Basic setup (unchanged)
-        # -------------------------
-        strategies = ["aggressive", "normal", "cautious"]
-        self.strategy_type = random.choice(strategies)
-        self.just_crossed_pitstop_point = False
+        # Basic setup; grid-based tire choice is already set in __init__
         self.lap_start_frame = None
         self.just_crossed_start = False
         self.laps_completed = 0
@@ -146,180 +180,67 @@ class Car:
         self.previous_pitlane_distance = self.pitlane_distance
 
         # Plan the entire race so it always includes at least 1 pit stop & 2 compounds
-        laps_remaining = MAX_LAPS
-        best_time, strategy_plan = self.plan_optimal_strategy(
-            laps_left=laps_remaining,
-            start_tire_pct=100.0,
-            strategy=self.strategy_type,
-            used_compounds=set(),  # none used at the start
-            pitstops=0
-        )
-
-        # If for some reason no plan found => fallback
-        if best_time == float('inf') or not strategy_plan:
-            # fallback: 2-stint forced
-            strategy_plan = [
-                {"tire": "soft", "laps": laps_remaining // 2},
-                {"tire": "medium", "laps": laps_remaining - laps_remaining // 2},
-            ]
-
-        # The first stint's tire determines initial tire
-        first_tire = strategy_plan[0]["tire"]
-        self.tire_type = first_tire
-        self.tire_percentage = 100.0
-
         self.first_lap_completed = False
 
     def apply_slipstream(self, cars):
-        # If we already have some slipstream time, count it down.
+        # If the car is under cooldown, skip applying slipstream.
+        if self.slipstream_cooldown > 0:
+            return
+
+        # Reset the flag at the beginning of the update cycle.
+        self.slipstream_applied = False
+
+        # Decrease slipstream timer if active.
         if self.slipstream_timer > 0:
             self.slipstream_timer -= 1
         else:
-            self.slipstream_target = None  # no active slipstream once timer hits 0
+            self.slipstream_target = None
 
-        # No slipstream if under safety car or not active.
         if self.is_under_safety_car or not self.is_active:
             return
 
-        # 1) Identify the nearest active car in front (within SLIPSTREAM_DISTANCE)
         best_distance = float('inf')
         best_car = None
 
+        # Identify the nearest car ahead.
         for other_car in cars:
-            if (
-                    other_car is not self and other_car.is_active and
-                    not other_car.is_under_safety_car and not other_car.crashed
-            ):
+            if (other_car is not self and other_car.is_active and
+                    not other_car.is_under_safety_car and not other_car.crashed):
                 distance_diff = (other_car.distance - self.distance) % TOTAL_TRACK_LENGTH
                 if 0 < distance_diff < best_distance:
                     best_distance = distance_diff
                     best_car = other_car
 
-        # 2) Check if we are within slipstream distance.
+        effective_aero_efficiency = self.aero_efficiency
+
         if best_car and best_distance < SLIPSTREAM_DISTANCE:
             if self.slipstream_timer < SLIPSTREAM_BASE_FRAMES:
                 self.slipstream_timer = SLIPSTREAM_BASE_FRAMES
                 self.slipstream_target = best_car
 
-        # 3) If we have an active target, check for overtake.
-        if self.slipstream_target:
-            distance_to_target = (self.slipstream_target.distance - self.distance) % TOTAL_TRACK_LENGTH
-            if distance_to_target <= 0:
-                if self.slipstream_timer < SLIPSTREAM_OVERTAKE_FRAMES:
-                    self.slipstream_timer = SLIPSTREAM_OVERTAKE_FRAMES
+            # Apply dirty air penalty if in a corner with a medium gap.
+            DIRTY_AIR_LOWER_THRESHOLD = 2.0
+            DIRTY_AIR_UPPER_THRESHOLD = 4.0
+            DIRTY_AIR_PENALTY = 0.9
 
-        # 4) Finally, if slipstream_timer > 0, apply the speed boost
-        if self.slipstream_timer > 0:
-            # Scale the slipstream boost based on the current speed:
-            #   - Below 0.3: no boost (0%)
-            #   - At 1.0 or above: full boost (100%)
-            #   - Between 0.3 and 1.0: interpolate linearly.
+            corner_type = self.get_corner_type(offset=10.0)
+            if corner_type in ("medium", "slow") and (
+                    DIRTY_AIR_LOWER_THRESHOLD < best_distance < DIRTY_AIR_UPPER_THRESHOLD):
+                effective_aero_efficiency *= DIRTY_AIR_PENALTY
+
+        # Apply slipstream boost only once.
+        if self.slipstream_timer > 0 and not self.slipstream_applied:
             min_speed = 0.3
             full_boost_speed = 0.8
             if self.speed < min_speed:
-                boost_multiplier = 1.0  # no boost at low speeds
+                boost_multiplier = 1.0
             else:
                 t = (self.speed - min_speed) / (full_boost_speed - min_speed)
                 t = max(0, min(1, t))
-                # If SLIPSTREAM_SPEED_BOOST is, say, 1.2, then at full boost speed:
-                # boost_multiplier = 1.0 + 1 * (SLIPSTREAM_SPEED_BOOST - 1.0)
                 boost_multiplier = 1.0 + t * (SLIPSTREAM_SPEED_BOOST - 1.0)
-            self.speed *= boost_multiplier
+            self.engine_power *= boost_multiplier
+            self.slipstream_applied = True
 
-    def plan_optimal_strategy(
-            self,
-            laps_left,
-            start_tire_pct=100.0,
-            strategy="normal",
-            used_compounds=None,
-            pitstops=0,
-            memo=None
-    ):
-        """
-        Returns (best_time, plan) for running `laps_left` starting from
-        `start_tire_pct` tire condition, must have >=1 pitstop & >=2 compounds.
-
-        Constraints:
-          - At least 1 pit stop total
-          - At least 2 different tire compounds used
-        """
-        if used_compounds is None:
-            used_compounds = set()
-        if memo is None:
-            memo = {}
-
-        # If we’ve completed all laps, check constraints
-        if laps_left <= 0:
-            # Must have >=1 pitstop & >=2 compounds
-            if pitstops >= 1 and len(used_compounds) >= 2:
-                return (0.0, [])
-            else:
-                return (float('inf'), [])
-
-        # Memo key
-        memo_key = (laps_left, round(start_tire_pct, 1), strategy, frozenset(used_compounds), pitstops)
-        if memo_key in memo:
-            return memo[memo_key]
-
-        best_time = float('inf')
-        best_plan = []
-
-        # Pit-lane travel + stationary
-        pit_lane_travel_time = (PIT_LANE_TOTAL_LENGTH / PITLANE_SPEED_LIMIT)
-        stationary_pit_time = PIT_STOP_DURATION / 30.0
-        total_pit_time_penalty = pit_lane_travel_time + stationary_pit_time
-
-        # Try each tire compound
-        for tire_key in TIRE_TYPES:
-            # This stint starts on tire_key; add it to used_compounds
-            new_used_compounds = used_compounds | {tire_key}
-
-            # How many laps can we safely run on this tire before dropping under threshold
-            safe_laps = self.laps_until_threshold(tire_key, start_tire_pct, strategy=strategy)
-            if safe_laps <= 0:
-                continue
-
-            # If we can finish the race on this tire (safe_laps >= laps_left)
-            # then we see if that solution meets constraints
-            if safe_laps >= laps_left:
-                # We do these laps *without another pit stop*
-                stint_time = self.estimate_stint_time(laps_left, tire_key, start_tire_pct, strategy)
-
-                # After finishing, see if we meet constraints:
-                # pitstops remains the same, used_compounds is new_used_compounds
-                # Only if pitstops >=1 and len(...) >=2 do we consider it valid.
-                # But we must actually check at the base case, so let’s call a sub-check:
-                # We'll effectively do laps_left => 0, so we check the base condition:
-                # We'll do a small "fake" recursion with laps_left-laps_left=0
-                # BUT we can short-circuit: if we don't meet constraints, it’s infinite.
-                final_pitstops = pitstops
-                final_used = new_used_compounds
-                if final_pitstops >= 1 and len(final_used) >= 2:
-                    if stint_time < best_time:
-                        best_time = stint_time
-                        best_plan = [{"tire": tire_key, "laps": laps_left}]
-            else:
-                # We can't finish the race on this stint alone; we must pit afterwards
-                # 1) Time to do 'safe_laps' on this tire
-                stint_time = self.estimate_stint_time(safe_laps, tire_key, start_tire_pct, strategy)
-
-                # 2) Then pit => next stint starts at 100% tire
-                next_time, next_plan = self.plan_optimal_strategy(
-                    laps_left - safe_laps,
-                    100.0,
-                    strategy,
-                    new_used_compounds,
-                    pitstops + 1,  # we made a pit stop
-                    memo
-                )
-
-                total_time_here = stint_time + total_pit_time_penalty + next_time
-                if total_time_here < best_time:
-                    best_time = total_time_here
-                    best_plan = [{"tire": tire_key, "laps": safe_laps}] + next_plan
-
-        memo[memo_key] = (best_time, best_plan)
-        return memo[memo_key]
 
     # -------------------- HELPER METHODS --------------------
     def estimate_stint_time(self, laps_to_run, tire_key, start_tire_pct=100.0, strategy="normal"):
@@ -410,8 +331,6 @@ class Car:
             self.is_active = False
             return
 
-        # NEW: Check for random events (flatspots or mistakes)
-
 
         # Safety car special handling
         if self.is_safety_car:
@@ -422,6 +341,8 @@ class Car:
 
         self.previous_distance = self.distance
         self.previous_pitlane_distance = self.pitlane_distance
+        if self.slipstream_cooldown > 0:
+            self.slipstream_cooldown -= 1
 
         # ----- Tire Wear Update -----
         wear_rate = TIRE_TYPES[self.tire_type]["wear_rate"] / self.suspension_quality
@@ -430,28 +351,11 @@ class Car:
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
         self.tire_percentage = max(self.tire_percentage, 1)
 
-        # Flag for pitting when tires are too worn
-        if not self.pitting and not self.on_pitlane and self.tire_percentage <= PIT_STOP_THRESHOLD:
+        # Determine pit desire based solely on tire health (and safety car bonus)
+        pit_desire = self.calculate_pit_desire(safety_car_active)
+        if pit_desire >= 1.0:
             self.pitting = True
-
-        # ----- Advanced Safety Car Pitting Strategy -----
-        if safety_car_active or self.is_under_safety_car:
-            if self.pitting and self.speed != SAFETY_CAR_SPEED:
-                if not self.on_pitlane:
-                    self.to_pitlane(current_frame)
-                elif self.on_pitlane:
-                    self.in_pitlane(current_frame)
-                self.update_adjusted_distance()
-                if self.crossed_start_finish_line():
-                    self.laps_completed += 1
-                return
-            else:
-                self.update_adjusted_distance()
-                if self.crossed_start_finish_line():
-                    self.laps_completed += 1
-                return
-
-        # ----- Normal Race Update (when no Safety Car is active) -----
+        self.engine_power = self.base_engine_power  # Reset engine power
         self.apply_slipstream(cars)
         self.attempt_overtake(cars, safety_car_active)
 
@@ -472,13 +376,11 @@ class Car:
             # we compute a tire factor that is only mildly penalizing when the tire health is above the threshold.
             tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
             if self.tire_percentage >= tire_threshold:
-                # When tires are in good shape, only a slight penalty is applied.
-                # For example, if tire health is 100%, factor = 1.0;
-                # if tire health is at the threshold, factor = 0.98.
                 tire_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+            elif self.tire_percentage >= tire_threshold - 5:
+                tire_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
             else:
-                # When below threshold, apply full penalty.
-                tire_factor = self.tire_percentage / tire_threshold * 0.98
+                tire_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
             self.target_speed = base_target_speed * tire_factor
             self.target_speed = max(self.target_speed, self.min_speed)
 
@@ -492,9 +394,9 @@ class Car:
         elif corner_type == "medium":
             multiplier = (self.aero_efficiency + (self.brake_performance / 210.0)) / 2.0
         elif corner_type == "fast":
-            multiplier = self.aero_efficiency
+            multiplier = self.aero_efficiency + self.engine_power
         else:
-            multiplier = self.engine_power
+            multiplier = self.engine_power * 1.5
 
         max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
         max_speed *= multiplier
@@ -597,25 +499,10 @@ class Car:
                     # ----- Refuel During Pit Stop -----
                     self.fuel_level = self.fuel_capacity
                     self.announcements.add_message(f"Car {self.car_number} refueled!")
-                    # Recompute strategy for remaining laps, with our strategy type
-                    laps_remaining = MAX_LAPS - self.laps_completed
-                    best_time, strategy_plan = self.plan_optimal_strategy(
-                        laps_left=laps_remaining,
-                        start_tire_pct=100.0,
-                        strategy=self.strategy_type,
-                        used_compounds=set(),  # new strategy from here on
-                        pitstops=1  # we've definitely made at least one pit now
-                    )
-                    if strategy_plan:
-                        next_tire = strategy_plan[0]["tire"]
-                        self.tire_type = next_tire
-                        self.tire_percentage = 100.0
-                        self.just_changed_tires = True
-                    else:
-                        # fallback
-                        self.tire_type = random.choice(list(TIRE_TYPES.keys()))
-                        self.tire_percentage = 100.0
-
+                    # After pitting, choose a random tire compound and reset tire health.
+                    self.tire_type = random.choice(list(TIRE_TYPES.keys()))
+                    self.tire_percentage = 100.0
+                    self.just_changed_tires = True
         else:
             # After pit stop, accelerate to exit
             self.previous_pitlane_distance = self.pitlane_distance
@@ -643,15 +530,19 @@ class Car:
             self.distance += self.speed
             self.distance %= TOTAL_TRACK_LENGTH
 
-    def update_under_safety_car(self, current_frame, safety_car, car_ahead=None):
+    def update_under_safety_car(self, current_frame, safety_car, cars, car_ahead=None):
         if self.crashed or not self.is_active:
             return
+        pit_desire = self.calculate_pit_desire(True)
+        if pit_desire >= 1.0:
+            self.pitting = True
         if self.pitting and not self.on_pitlane:
             self.to_pitlane(current_frame)
         if self.on_pitlane:
             self.in_pitlane(current_frame)
             print(f"in pitlane", self.car_number, self.speed)
             return
+        self.attempt_overtake(cars, True)
         self.previous_distance = self.distance
         desired_gap = SAFETY_CAR_GAP_DISTANCE
         if self.is_safety_car_ending and not self.is_safety_car:
@@ -692,24 +583,35 @@ class Car:
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
 
     def attempt_overtake(self, cars, safety_car_active):
-        if safety_car_active or self.is_under_safety_car:
-            return
         for other_car in cars:
             if other_car.car_number == self.car_number or other_car.crashed or not other_car.is_active:
                 continue
+
+            # If a safety car is active and the candidate car is not in the pitlane, skip overtaking.
+            if safety_car_active and not other_car.on_pitlane:
+                continue
+
             distance_diff = (other_car.distance - self.distance) % TOTAL_TRACK_LENGTH
             if 0 < distance_diff < 5:
-                if random.random() < OVERTAKE_CHANCE:
-                    pass
+                # If the car ahead is in the pitlane, increase the chance to overtake.
+                if other_car.on_pitlane and self.calculate_pit_desire(safety_car_active) < 1:
+                    self.distance = self.distance + 0.1
                 else:
-                    if random.random() < CRASH_CHANCE:
-                        self.crashed = True
-                        self.speed = 0.0
-                        self.is_active = False
-                        self.announcements.add_message(f"Car {self.car_number} has crashed!")
-                        break
-
-    # Duplicate attempt_overtake removed
+                    if random.random() < OVERTAKE_CHANCE:
+                        self.distance = (other_car.distance + 1) % TOTAL_TRACK_LENGTH
+                        other_car.slipstream_cooldown = 60
+                    else:
+                        if random.random() < CRASH_CHANCE:
+                            self.crashed = True
+                            self.speed = 0.0
+                            self.is_active = False
+                            self.announcements.add_message(f"Car {self.car_number} has crashed!")
+                            break
+                        if random.random() < MISTAKE_CHANCE:
+                            self.speed *= 0.9
+                            self.announcements.add_message(
+                                f"Car {self.car_number} made a mistake and lost speed!"
+                            )
 
     # -------------------- Qualifying Functions --------------------
 
@@ -799,6 +701,8 @@ class Car:
 
     def update_movement(self, cars):
         # ----- Fuel Consumption for Qualifying -----
+        if self.slipstream_cooldown > 0:
+            self.slipstream_cooldown -= 1
         fuel_consumed = self.fuel_consumption_coefficient * self.speed * self.fuel_consumption_multiplier
         self.fuel_level = max(0, self.fuel_level - fuel_consumed)
         if self.fuel_level <= 0:
@@ -821,8 +725,10 @@ class Car:
         tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
         if self.tire_percentage >= tire_threshold:
             tire_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+        elif self.tire_percentage >= tire_threshold - 5:
+            tire_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
         else:
-            tire_factor = self.tire_percentage / tire_threshold * 0.98
+            tire_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
         self.target_speed = base_target_speed * tire_factor
         self.target_speed = max(self.target_speed, self.min_speed)
 

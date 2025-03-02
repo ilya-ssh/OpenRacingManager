@@ -32,7 +32,7 @@ class TrackBuilder:
             "max_laps": self.max_laps,
             "pit_lane_points": self.pit_lane_points
         }
-        with open("track.json", "w") as file:
+        with open("../tracks/track.json", "w") as file:
             json.dump(track_data, file, indent=4)
         print("Track saved to track.json")
 

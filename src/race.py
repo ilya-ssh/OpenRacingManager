@@ -22,6 +22,12 @@ class Race:
         self.countdown = 90
         self.race_started = False
         self.race_finished = False
+        self.safety_car_active = False
+        self.safety_car_lap_counter = 0
+        self.safety_car_triggered = False
+        self.safety_car = None
+        self.safety_car_laps_started = False
+        self.safety_car_ending_announced = False
         self.leaderboard_scroll_index = 0
         self.announcements = Announcements(self.pyuni)
         self.cars = []
@@ -104,12 +110,7 @@ class Race:
             self.announcements.add_message("Race starting soon.", duration=90)
 
         # Initialize safety car variables
-        self.safety_car_active = False
-        self.safety_car_lap_counter = 0
-        self.safety_car_triggered = False
-        self.safety_car = None
-        self.safety_car_laps_started = False
-        self.safety_car_ending_announced = False
+
 
     def assign_team_pitboxes(self):
         """
@@ -259,7 +260,7 @@ class Race:
                 car_ahead = self.safety_car
             else:
                 car_ahead = self.cars[idx - 1]
-            car.update_under_safety_car(self.frame_count, self.safety_car, car_ahead)
+            car.update_under_safety_car(self.frame_count, self.safety_car, self.cars, car_ahead)
         # Do not sort cars during safety car period to maintain positions
         max_scroll_index = max(0, len(self.cars) - 3)
         if pyxel.btnp(pyxel.KEY_UP):
@@ -442,6 +443,7 @@ class Race:
         racing_cars = [car for car in self.cars if not car.is_safety_car and car.is_active]
         # Starting Y position for the first racer (just below the header)
         racer_start_y = y_offset + 20
+        safety_car_active = self.safety_car_active
 
         for idx, car in enumerate(
                 racing_cars[self.leaderboard_scroll_index:self.leaderboard_scroll_index + 8]
@@ -452,7 +454,7 @@ class Race:
             best_lap_text = f"Best Lap: {car.best_lap_time:.2f}s" if car.best_lap_time else "Best Lap: N/A"
             stats_text = f"Speed: {car.speed:.2f}"
             car_stats = f"E:{car.engine_power:.2f} A:{car.aero_efficiency:.2f} G:{car.gearbox_quality:.2f}"
-            tire_text = f"T:{car.tire_type.capitalize()} {car.tire_percentage:.1f}%"
+            tire_text = f"T:{car.tire_type.capitalize()} {car.tire_percentage:.1f}% PD: {car.calculate_pit_desire(safety_car_active)}"
 
             # Combine all info into two compact lines with no extra spacing between racers.
             line1 = f"{global_idx + 1}. Car {car.car_number} {gap_text} | {lap_text} | {best_lap_text}"
