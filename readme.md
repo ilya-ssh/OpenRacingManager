@@ -41,6 +41,8 @@ _0.0.7a_ Title screen animation added
 
 _0.0.7b_ Palette fixes
 
+_0.0.9_ Minor fixes,tires reworked, add tyre temps, added fuel, added corner detection, added more sophisticated pace calculation based on track position. Overall pace reworked. Reworked pitting logic. Cars can now pit under safetycar.  Once again fixed safetycar but not fully. Added slipstream, added "dirty" air. + a lot of other stuff that  I've forgot
+
 ## Major bugs
 **TLDR The game is in pre-alpha state and right now only race is playable**  
 Bugs moved to issues

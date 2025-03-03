@@ -2,9 +2,10 @@ import random
 import pyxel
 import math
 from constants import (
-    TIRE_TYPES, PITLANE_SPEED_LIMIT,  OVERTAKE_CHANCE, CRASH_CHANCE,
+    TIRE_TYPES, PITLANE_SPEED_LIMIT, OVERTAKE_CHANCE, CRASH_CHANCE,
     SAFETY_CAR_SPEED, SAFETY_CAR_GAP_DISTANCE, SAFETY_CAR_CATCH_UP_SPEED,
-    PIT_STOP_THRESHOLD, PIT_STOP_DURATION, MAX_LAPS, DEBUG_MODE, SLIPSTREAM_DISTANCE, SLIPSTREAM_OVERTAKE_FRAMES, SLIPSTREAM_BASE_FRAMES,SLIPSTREAM_SPEED_BOOST,
+    PIT_STOP_THRESHOLD, PIT_STOP_DURATION, MAX_LAPS, DEBUG_MODE, SLIPSTREAM_DISTANCE, SLIPSTREAM_OVERTAKE_FRAMES,
+    SLIPSTREAM_BASE_FRAMES, SLIPSTREAM_SPEED_BOOST,
     MISTAKE_CHANCE
 )
 from track import (
@@ -15,6 +16,7 @@ from track import (
     START_FINISH_INDEX_SMOOTHED,
 )
 from announcements import Announcements
+
 
 class Car:
     def __init__(self, color_index, car_number, driver_name, grid_position,
@@ -28,6 +30,15 @@ class Car:
         else:
             self.tire_type = "hard"  # or "medium-hard" if defined in TIRE_TYPES
         self.tire_percentage = 100.0
+
+        # --- New: Tire Temperature Attributes ---
+        self.ambient_temperature = 20.0  # starting ambient temperature
+        self.tire_temperature = self.ambient_temperature * 4
+        # Load optimal temperature and heating rate from the tire compound definition:
+        self.optimal_tire_temperature = TIRE_TYPES[self.tire_type].get("optimal_temp", 100.0)
+        self.tire_temp_gain = TIRE_TYPES[self.tire_type].get("temp_gain", 0.1)
+        self.previous_speed = 0.0  # for detecting acceleration/braking
+
         self.color = color_index
         self.car_number = car_number
         self.grid_position = grid_position
@@ -49,6 +60,7 @@ class Car:
         # Store the base engine power separately so it can be reset each update.
         self.base_engine_power = self.engine_power
         self.aero_efficiency = random.uniform(1.2, 1.2)
+        self.base_aero_efficiency = self.aero_efficiency
         self.gearbox_quality = random.uniform(0.800, 0.800)
         self.suspension_quality = random.uniform(1.2, 1.2)
         self.brake_performance = random.uniform(210, 210)
@@ -115,7 +127,6 @@ class Car:
         else:
             # Linear interpolation: at tire_percentage==90 => 0; at tire_percentage==(T-2) => 1.
             base_desire = (90 - self.tire_percentage) / (90 - (T - 2))
-        print(safety_car_active)
         if safety_car_active and self.speed != SAFETY_CAR_SPEED:
             base_desire = base_desire + 0.9
         return base_desire
@@ -128,15 +139,85 @@ class Car:
         elif self.mode == 'race':
             self.update_race(race_started, current_frame, cars, safety_car_active)
 
+    # --- NEW: Advanced Tire Temperature Update ---
+    def update_tire_temperature(self):
+        """
+        Advanced tire temperature model.
+
+        The tire temperature T evolves according to:
+
+             dT/dt = Q_total - (T - T_ambient)/tau_cool,
+
+        where:
+          - Q_total = Q_base + Q_corner + Q_brake is the net heating rate (°C per frame)
+          - Q_base is the base heating proportional to v^2.
+          - Q_corner is extra heating in a turn (using a corner multiplier).
+          - Q_brake is additional heating during deceleration.
+          - (T - T_ambient)/tau_cool is the cooling term (Newton’s law of cooling)
+
+        We assume a discrete time step dt = 1 (frame) and choose constants
+        so that the tire temperature evolves slowly (tires do not cool down rapidly).
+        """
+        dt = 1.0  # time step (in frames)
+
+        # Effective constants (tunable parameters)
+        k_base = self.tire_temp_gain * 0.05  # base heating factor (°C/(speed^2) per frame)
+        k_brake = 0.02  # braking heating factor (°C/(speed*deceleration) per frame)
+
+        # Cooling time constant (frames); large tau means slow cooling.
+        tau_cool = 80.0
+
+        # --- Base Heating ---
+        # Frictional losses scale roughly with the square of the speed.
+        v_offset = 2.5  # a small offset ensuring minimal heating even at low speeds
+        Q_base = k_base * ((self.speed + v_offset) ** 2)
+
+        # --- Corner Heating ---
+        # Determine the corner type to adjust friction heating.
+        corner = self.get_corner_type(offset=10.0)
+        if corner == "slow":
+            corner_multiplier = 4.8
+        elif corner == "medium":
+            corner_multiplier = 3.3
+        elif corner == "fast":
+            corner_multiplier = 1.0
+        else:  # nearly straight
+            corner_multiplier = 0.4
+        # Extra heating due to turning friction
+        Q_corner = k_base * (corner_multiplier - 1.0) * (self.speed ** 2)
+
+        # --- Braking Heating ---
+        # If the car is decelerating, a portion of the lost kinetic energy is converted to heat.
+        acceleration = self.speed - self.previous_speed  # Δv over dt
+        Q_brake = k_brake * (-acceleration) * self.speed if acceleration < 0 else 0.0
+
+        # Total heat input (°C per frame)
+        Q_total = Q_base + Q_corner + Q_brake
+
+        # --- Cooling Effect ---
+        # Use Newton’s law of cooling with a long time constant.
+        Q_cool = (self.tire_temperature - self.ambient_temperature) / tau_cool
+
+        # --- Net Temperature Change ---
+        delta_temp = dt * (Q_total - Q_cool)
+
+        # Update tire temperature
+        self.tire_temperature += delta_temp
+
+        # Save the current speed for the next update
+        self.previous_speed = self.speed
+
+
     # --- NEW: Random Event Method ---
     def check_random_events(self):
         # Define the chance of events (adjust these values as desired)
-        flatspot_chance = 0.0000005   # 0.5% chance per update
-        mistake_chance = 0.00001     # 1% chance per update
+        flatspot_chance = 0.00000005  # 0.5% chance per update
+        mistake_chance = 0.0000001  # 1% chance per update
         # Flatspot event: reduce tire health by a random percentage (5% to 15%)
         if random.random() < flatspot_chance:
             reduction = random.uniform(5, 15)
             self.tire_percentage = max(1, self.tire_percentage - reduction)
+            self.tire_temperature += random.uniform(70, 100)
             self.announcements.add_message(
                 f"Car {self.car_number} flatspotted its tires (-{reduction:.0f}%)!", duration=30
             )
@@ -211,22 +292,20 @@ class Car:
                     best_distance = distance_diff
                     best_car = other_car
 
-        effective_aero_efficiency = self.aero_efficiency
-
         if best_car and best_distance < SLIPSTREAM_DISTANCE:
             if self.slipstream_timer < SLIPSTREAM_BASE_FRAMES:
                 self.slipstream_timer = SLIPSTREAM_BASE_FRAMES
                 self.slipstream_target = best_car
 
             # Apply dirty air penalty if in a corner with a medium gap.
-            DIRTY_AIR_LOWER_THRESHOLD = 2.0
-            DIRTY_AIR_UPPER_THRESHOLD = 4.0
-            DIRTY_AIR_PENALTY = 0.9
+            DIRTY_AIR_LOWER_THRESHOLD = 0.2
+            DIRTY_AIR_UPPER_THRESHOLD = 5.0
+            DIRTY_AIR_PENALTY = 0.85
 
             corner_type = self.get_corner_type(offset=10.0)
             if corner_type in ("medium", "slow") and (
                     DIRTY_AIR_LOWER_THRESHOLD < best_distance < DIRTY_AIR_UPPER_THRESHOLD):
-                effective_aero_efficiency *= DIRTY_AIR_PENALTY
+                self.aero_efficiency *= DIRTY_AIR_PENALTY
 
         # Apply slipstream boost only once.
         if self.slipstream_timer > 0 and not self.slipstream_applied:
@@ -241,61 +320,7 @@ class Car:
             self.engine_power *= boost_multiplier
             self.slipstream_applied = True
 
-
     # -------------------- HELPER METHODS --------------------
-    def estimate_stint_time(self, laps_to_run, tire_key, start_tire_pct=100.0, strategy="normal"):
-        base_lap_time = 50.0 / self.engine_power
-        base_lap_time *= (1.0 / self.aero_efficiency)
-
-        base_wear_rate = TIRE_TYPES[tire_key]["wear_rate"] / self.suspension_quality
-        base_grip = TIRE_TYPES[tire_key]["initial_grip"]
-        threshold = TIRE_TYPES[tire_key]["threshold"]
-
-        if strategy == "aggressive":
-            grip_factor = 1.15
-            wear_factor = 1.2
-        elif strategy == "cautious":
-            grip_factor = 0.95
-            wear_factor = 0.8
-        else:
-            grip_factor = 1.0
-            wear_factor = 1.0
-
-        wear_rate = base_wear_rate * wear_factor
-        initial_grip = base_grip * grip_factor
-
-        total_time = 0.0
-        temp_tire_pct = start_tire_pct
-        for _ in range(laps_to_run):
-            degrade_factor = 1.0 + ((100.0 - temp_tire_pct) / 100.0) * 0.4
-            if temp_tire_pct < threshold:
-                degrade_factor *= 1.2
-            lap_time = (base_lap_time / initial_grip) * degrade_factor
-            total_time += lap_time
-            temp_tire_pct -= wear_rate
-            if temp_tire_pct < 1.0:
-                temp_tire_pct = 1.0
-
-        return total_time
-
-    def laps_until_threshold(self, tire_key, start_tire_pct=100.0, strategy="normal"):
-        base_wear_rate = TIRE_TYPES[tire_key]["wear_rate"] / self.suspension_quality
-        if strategy == "aggressive":
-            wear_factor = 1.2
-        elif strategy == "cautious":
-            wear_factor = 0.8
-        else:
-            wear_factor = 1.0
-
-        wear_rate = base_wear_rate * wear_factor
-        temp_pct = start_tire_pct
-        laps = 0
-        while temp_pct > PIT_STOP_THRESHOLD and laps < 999:
-            temp_pct -= wear_rate
-            laps += 1
-            if temp_pct < 1.0:
-                break
-        return laps
 
     def update_warmup(self, current_frame):
         if not self.warmup_started:
@@ -331,7 +356,6 @@ class Car:
             self.is_active = False
             return
 
-
         # Safety car special handling
         if self.is_safety_car:
             self.update_safety_car_behavior()
@@ -351,11 +375,15 @@ class Car:
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
         self.tire_percentage = max(self.tire_percentage, 1)
 
+        # ----- Update Tire Temperature with Advanced Model -----
+        self.update_tire_temperature()
+
         # Determine pit desire based solely on tire health (and safety car bonus)
         pit_desire = self.calculate_pit_desire(safety_car_active)
         if pit_desire >= 1.0:
             self.pitting = True
         self.engine_power = self.base_engine_power  # Reset engine power
+        self.aero_efficiency = self.base_aero_efficiency
         self.apply_slipstream(cars)
         self.attempt_overtake(cars, safety_car_active)
 
@@ -371,17 +399,24 @@ class Car:
                 TOTAL_TRACK_LENGTH,
                 self
             )
-            # --- New Tire Effect Logic ---
-            # Instead of directly scaling by self.tire_percentage/100,
-            # we compute a tire factor that is only mildly penalizing when the tire health is above the threshold.
+            # --- Advanced Tire Grip Effect ---
+            # Use a Gaussian curve for grip: maximum at optimal temperature.
+            temp_deviation = self.tire_temperature - self.optimal_tire_temperature
+            sigma = 50.0  # increased sigma for a broader performance curve
+            temp_factor = math.exp(- (temp_deviation ** 2) / (2 * (sigma ** 2)))
+            # Combine with wear factor (computed similarly as before)
             tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
             if self.tire_percentage >= tire_threshold:
-                tire_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+                tire_wear_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
             elif self.tire_percentage >= tire_threshold - 5:
-                tire_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
+                tire_wear_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
             else:
-                tire_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
-            self.target_speed = base_target_speed * tire_factor
+                tire_wear_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
+            # Combine wear and temperature effects.
+            final_tire_factor = tire_wear_factor * temp_factor * TIRE_TYPES[self.tire_type]["grip"]
+            if self.driver_name == "Marco Bellini":
+                print(final_tire_factor)
+            self.target_speed = base_target_speed * final_tire_factor
             self.target_speed = max(self.target_speed, self.min_speed)
 
         # ----- Weight-Adjusted Acceleration and Speed Adjustments -----
@@ -457,12 +492,12 @@ class Car:
             self.announcements.add_message(f"Car {self.car_number} changed to {self.tire_type.capitalize()} tires.")
             self.just_changed_tires = False
 
-            #if DEBUG_MODE:
-              #  print(
-              #      f"Car {self.car_number} - Lap: {self.laps_completed} |"
-              #      f" Tire: {self.tire_type.capitalize()} Fuel: {self.fuel_level:.1f}L"
-              #      f" {self.tire_percentage:.1f}% | Speed: {self.speed:.2f}"
-              #  )
+            # if DEBUG_MODE:
+            #  print(
+            #      f"Car {self.car_number} - Lap: {self.laps_completed} |"
+            #      f" Tire: {self.tire_type.capitalize()} Fuel: {self.fuel_level:.1f}L"
+            #      f" {self.tire_percentage:.1f}% | Speed: {self.speed:.2f}"
+            #  )
 
     def to_pitlane(self, current_frame):
         current_lap_distance = self.distance % TOTAL_TRACK_LENGTH
@@ -503,8 +538,13 @@ class Car:
                     self.tire_type = random.choice(list(TIRE_TYPES.keys()))
                     self.tire_percentage = 100.0
                     self.just_changed_tires = True
+                    # Reset tire temperature attributes for the new compound.
+                    self.optimal_tire_temperature = TIRE_TYPES[self.tire_type].get("optimal_temp", 100.0)
+                    self.tire_temp_gain = TIRE_TYPES[self.tire_type].get("temp_gain", 0.1)
+                    self.tire_temperature = self.ambient_temperature
         else:
             # After pit stop, accelerate to exit
+
             self.previous_pitlane_distance = self.pitlane_distance
             self.speed = min(self.speed + self.base_acceleration, PITLANE_SPEED_LIMIT)
             self.pitlane_distance += self.speed
@@ -515,11 +555,12 @@ class Car:
                 self.pitlane_distance = 0.0
                 self.speed = PITLANE_SPEED_LIMIT
                 self.distance = PITLANE_EXIT_DISTANCE
+                self.laps_completed += 1
 
     def update_safety_car_behavior(self):
         self.previous_distance = self.distance
         if self.is_exiting and self.is_safety_car:
-            #print(self.car_number)
+            # print(self.car_number)
             self.speed += self.base_acceleration * 0.5
             self.speed = min(self.speed, SAFETY_CAR_SPEED * 2)
             self.distance += self.speed
@@ -561,9 +602,9 @@ class Car:
         else:
             distance_to_safety_car = (safety_car.distance - self.distance) % TOTAL_TRACK_LENGTH
             print(distance_to_safety_car)
-            if distance_to_safety_car > SAFETY_CAR_GAP_DISTANCE*10 and not safety_car.is_exiting:
+            if distance_to_safety_car > SAFETY_CAR_GAP_DISTANCE * 10 and not safety_car.is_exiting:
                 safety_car.speed = SAFETY_CAR_SPEED * 0.1
-            elif distance_to_safety_car < SAFETY_CAR_GAP_DISTANCE*10 and not safety_car.is_exiting:
+            elif distance_to_safety_car < SAFETY_CAR_GAP_DISTANCE * 10 and not safety_car.is_exiting:
                 safety_car.speed = SAFETY_CAR_SPEED
             print(distance_to_safety_car)
             gap_error = distance_to_safety_car - desired_gap
@@ -595,7 +636,7 @@ class Car:
             if 0 < distance_diff < 5:
                 # If the car ahead is in the pitlane, increase the chance to overtake.
                 if other_car.on_pitlane and self.calculate_pit_desire(safety_car_active) < 1:
-                    self.distance = self.distance + 0.1
+                    self.distance = (self.distance + 1) % TOTAL_TRACK_LENGTH
                 else:
                     if random.random() < OVERTAKE_CHANCE:
                         self.distance = (other_car.distance + 1) % TOTAL_TRACK_LENGTH
@@ -722,14 +763,22 @@ class Car:
             self
         )
         # --- New Tire Effect Logic for Qualifying ---
+        temp_deviation = self.tire_temperature - self.optimal_tire_temperature
+        sigma = 50.0  # increased sigma for a broader performance curve
+        temp_factor = math.exp(- (temp_deviation ** 2) / (2 * (sigma ** 2)))
+        # Combine with wear factor (computed similarly as before)
         tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
         if self.tire_percentage >= tire_threshold:
-            tire_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+            tire_wear_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
         elif self.tire_percentage >= tire_threshold - 5:
-            tire_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
+            tire_wear_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
         else:
-            tire_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
-        self.target_speed = base_target_speed * tire_factor
+            tire_wear_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
+        # Combine wear and temperature effects.
+        final_tire_factor = tire_wear_factor * temp_factor * TIRE_TYPES[self.tire_type]["grip"]
+        if self.driver_name == "Marco Bellini":
+            print(final_tire_factor)
+        self.target_speed = base_target_speed * final_tire_factor
         self.target_speed = max(self.target_speed, self.min_speed)
 
         weight_factor = self.get_weight_factor()
@@ -778,6 +827,9 @@ class Car:
 
         self.check_random_events()
 
+        self.aero_efficiency = self.base_aero_efficiency
+        self.engine_power = self.base_engine_power
+
         self.apply_slipstream(cars)
         if self.on_out_lap or self.on_in_lap:
             self.speed = self.speed * 0.98
@@ -812,9 +864,9 @@ class Car:
                                          position - start_finish_distance + TOTAL_TRACK_LENGTH
                                  ) % TOTAL_TRACK_LENGTH
         self.adjusted_total_distance = self.laps_completed * TOTAL_TRACK_LENGTH + self.adjusted_distance
-        #if DEBUG_MODE:
-            #print(
-            #    f"DEBUG: Car {self.car_number} - Laps: {self.laps_completed}, raw distance: {self.distance:.2f}, adjusted distance: {self.adjusted_distance:.2f}, total adjusted: {self.adjusted_total_distance:.2f}")
+        # if DEBUG_MODE:
+        # print(
+        #    f"DEBUG: Car {self.car_number} - Laps: {self.laps_completed}, raw distance: {self.distance:.2f}, adjusted distance: {self.adjusted_distance:.2f}, total adjusted: {self.adjusted_total_distance:.2f}")
 
     def get_corner_type(self, offset=5.0, threshold_degrees=15):
         """
@@ -847,21 +899,12 @@ class Car:
         angle = math.acos(cos_theta)
         angle_deg = math.degrees(angle)
         if angle_deg < 1:
-            if self.driver_name == "Marco Bellini":
-                print('none')
             return "none"
         elif angle_deg < 4:
-            if self.driver_name == "Marco Bellini":
-                print('fast')
             return "fast"
         elif angle_deg < 13:
-            if self.driver_name == "Marco Bellini":
-                print('medium')
             return "medium"
         else:
-            if self.driver_name == "Marco Bellini":
-                print('slow')
-                print(angle_deg)
             return "slow"
 
     def reset_after_safety_car(self):

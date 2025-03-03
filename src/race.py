@@ -251,6 +251,7 @@ class Race:
         self.cars.sort(
             key=lambda c: (-c.laps_completed, -c.adjusted_distance)
         )
+
         if self.safety_car:
             self.safety_car.update(self.race_started, self.frame_count, self.cars, self.safety_car_active)
         for idx, car in enumerate(self.cars):
@@ -262,6 +263,9 @@ class Race:
                 car_ahead = self.cars[idx - 1]
             car.update_under_safety_car(self.frame_count, self.safety_car, self.cars, car_ahead)
         # Do not sort cars during safety car period to maintain positions
+        self.cars.sort(
+            key=lambda car: (-car.laps_completed, -car.adjusted_distance)
+        )
         max_scroll_index = max(0, len(self.cars) - 3)
         if pyxel.btnp(pyxel.KEY_UP):
             self.leaderboard_scroll_index = max(
@@ -457,7 +461,7 @@ class Race:
             tire_text = f"T:{car.tire_type.capitalize()} {car.tire_percentage:.1f}% PD: {car.calculate_pit_desire(safety_car_active)}"
 
             # Combine all info into two compact lines with no extra spacing between racers.
-            line1 = f"{global_idx + 1}. Car {car.car_number} {gap_text} | {lap_text} | {best_lap_text}"
+            line1 = f"{global_idx + 1}.{car.driver_name} {gap_text} | {lap_text} | {best_lap_text} | {car.tire_temperature}"
             line2 = f"{stats_text} | {car_stats} | {tire_text}"
 
             # Each racer block is 20 pixels high (two lines of 10 pixels each)
