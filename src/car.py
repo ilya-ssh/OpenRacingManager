@@ -439,7 +439,7 @@ class Car:
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
 
-        effective_acceleration = self.base_acceleration * self.gearbox_quality
+
         if self.speed < self.target_speed:
             self.speed += effective_acceleration
             self.speed = min(self.speed, self.target_speed)

@@ -278,7 +278,7 @@ class Qualifying:
             pyxel.text(x_box + 5, y_box + 25, f"Morale: Good", 1)  # Placeholder for morale
             pyxel.text(x_box + 5, y_box + 35,
                        f"{hover_info['tire_key'].capitalize()} {hover_info['tire_percentage']:.1f}%", 1)
-            pyxel.text(x_box + 5, y_box + 45, f"Tyre temps: ", 1)  # Placeholder for tyre temperature
+            pyxel.text(x_box + 5, y_box + 45, f"Tyre temps: {car.tire_temperature}", 1)  # Placeholder for tyre temperature
         self.announcements.draw()
 
     def calculate_starting_grid(self):
