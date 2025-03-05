@@ -11,7 +11,7 @@ Currently, we want to stick with very simplistic visual style, almost reminiscen
 Feel free to contribute to the project, but first contact main developer.
 
 ## Changelog
-### Current version - Pre-alpha 0.0.3
+### Current version - Pre-alpha 0.0.9
 _0.0.1_ Basic race engine introduced, no interpolation in the corners, basic grid. Speed based on the length of a segment.
 
 _0.0.1t_ Trackbuilder introduced.

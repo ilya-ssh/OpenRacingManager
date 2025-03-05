@@ -35,7 +35,7 @@ class Car:
         self.ambient_temperature = 20.0  # starting ambient temperature
         self.tire_temperature = self.ambient_temperature * 4
         # Load optimal temperature and heating rate from the tire compound definition:
-        self.optimal_tire_temperature = TIRE_TYPES[self.tire_type].get("optimal_temp", 100.0)
+        self.optimal_tire_temperature = TIRE_TYPES[self.tire_type].get("optimal_temp", 90.0)
         self.tire_temp_gain = TIRE_TYPES[self.tire_type].get("temp_gain", 0.1)
         self.previous_speed = 0.0  # for detecting acceleration/braking
 
@@ -439,7 +439,7 @@ class Car:
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
 
-        effective_acceleration = self.base_acceleration * self.gearbox_quality
+
         if self.speed < self.target_speed:
             self.speed += effective_acceleration
             self.speed = min(self.speed, self.target_speed)
