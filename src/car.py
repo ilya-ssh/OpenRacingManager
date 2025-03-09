@@ -22,7 +22,7 @@ from track import (
 from announcements import Announcements
 
 # Global process pool used by all cars for prediction tasks
-PREDICTION_PROCESS_POOL = concurrent.futures.ProcessPoolExecutor(max_workers=4)
+PREDICTION_PROCESS_POOL = concurrent.futures.ProcessPoolExecutor(max_workers=6)
 
 
 def prediction_worker(car, target_laps, frame_delay):
