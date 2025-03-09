@@ -63,31 +63,52 @@ def get_position_along_track(distance, points, cumulative_distances):
     total_length = cumulative_distances[-1]
     if total_length == 0:
         return points[0]
-    distance = distance % total_length  # Wrap around
-    for i in range(len(cumulative_distances) - 1):
-        if cumulative_distances[i] <= distance <= cumulative_distances[i + 1]:
-            t = (distance - cumulative_distances[i]) / (cumulative_distances[i + 1] - cumulative_distances[i])
-            x1, y1 = points[i]
-            x2, y2 = points[i + 1]
-            x = x1 + (x2 - x1) * t
-            y = y1 + (y2 - y1) * t
-            return x, y
-    return points[-1]
 
-def get_desired_speed_at_distance(distance, desired_speeds_list, total_length, car):
-    distance = distance % total_length
-    for i in range(len(desired_speeds_list) - 1):
-        dist1, base_speed1 = desired_speeds_list[i]
-        dist2, base_speed2 = desired_speeds_list[i + 1]
-        if dist1 <= distance <= dist2:
-            t = (distance - dist1) / (dist2 - dist1)
-            # Base speed interpolation
-            base_speed = base_speed1 + (base_speed2 - base_speed1) * t
-            # Adjust base speed based on car's aero efficiency
-            adjusted_speed = base_speed * car.aero_efficiency * car.engine_power
-            return adjusted_speed
-    # If distance exceeds the last point, return the last speed adjusted for the car
-    return desired_speeds_list[-1][1]
+    distance %= total_length
+
+    # Find the segment using binary search
+    idx = np.searchsorted(cumulative_distances, distance, side='right') - 1
+
+    # Clamp
+    idx = max(0, min(idx, len(points) - 2))
+
+    dist1 = cumulative_distances[idx]
+    dist2 = cumulative_distances[idx + 1]
+    (x1, y1) = points[idx]
+    (x2, y2) = points[idx + 1]
+
+    seg_len = dist2 - dist1
+    if seg_len == 0:
+        return (x1, y1)
+
+    t = (distance - dist1) / seg_len
+    x = x1 + (x2 - x1) * t
+    y = y1 + (y2 - y1) * t
+    return (x, y)
+
+def get_desired_speed_at_distance(distance, distances_array, speeds_array, total_length, car):
+    distance %= total_length
+    # Find which segment we are in:
+    idx = np.searchsorted(distances_array, distance, side='right') - 1
+
+    # Clamp idx to valid range
+    idx = max(0, min(idx, len(distances_array) - 2))
+
+    dist1 = distances_array[idx]
+    dist2 = distances_array[idx + 1]
+    s1 = speeds_array[idx]
+    s2 = speeds_array[idx + 1]
+
+    seg_len = dist2 - dist1
+    if seg_len == 0:
+        # If two points have the same distance, just take s1
+        base_speed = s1
+    else:
+        t = (distance - dist1) / seg_len
+        base_speed = s1 + (s2 - s1) * t
+
+    # Same final adjustment for the car
+    return base_speed * car.aero_efficiency * car.engine_power
 
 def smooth_track(points, num_points=200, per=False):
     # Remove duplicate points
@@ -164,6 +185,8 @@ MAX_SPEED = 0.7  # Adjust as needed
 MIN_SPEED = 0.0001  # Adjust as needed
 DESIRED_SPEEDS = compute_desired_speeds(ANGLE_DIFFS, MAX_SPEED, MIN_SPEED)
 DESIRED_SPEEDS_LIST = list(zip(CUMULATIVE_DISTANCES[:-1], DESIRED_SPEEDS))
+DISTANCES_ARRAY = np.array([d for d, _ in DESIRED_SPEEDS_LIST], dtype=np.float64)
+SPEEDS_ARRAY    = np.array([s for _, s in DESIRED_SPEEDS_LIST], dtype=np.float64)
 
 # Process pitlane points
 if ORIGINAL_PIT_LANE_POINTS:

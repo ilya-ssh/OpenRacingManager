@@ -13,7 +13,7 @@ from constants import (
     MISTAKE_CHANCE
 )
 from track import (
-    get_desired_speed_at_distance, get_position_along_track,
+    get_desired_speed_at_distance, get_position_along_track, DISTANCES_ARRAY, SPEEDS_ARRAY,
     PIT_LANE_POINTS, PIT_LANE_CUMULATIVE_DISTANCES, TRACK_POINTS, PITLANE_ENTRANCE_DISTANCE,
     PITLANE_EXIT_DISTANCE, TOTAL_TRACK_LENGTH, DESIRED_SPEEDS_LIST,
     PIT_STOP_POINT, PIT_LANE_TOTAL_LENGTH, CUMULATIVE_DISTANCES,
@@ -170,7 +170,7 @@ class Car:
         current_time = time.time()
         # Schedule new prediction only if 15 seconds have elapsed since the last update.
         if self.prediction_future is None and (current_time - self.prediction_timestamp) > 15:
-            self.schedule_async_prediction(target_laps=40)
+            self.schedule_async_prediction(target_laps=20)
         else:
             self.check_async_prediction_done()
 
@@ -421,7 +421,8 @@ class Car:
     def update_speed(self):
         base_target_speed = get_desired_speed_at_distance(
             self.distance % TOTAL_TRACK_LENGTH,
-            DESIRED_SPEEDS_LIST,
+            DISTANCES_ARRAY,
+            SPEEDS_ARRAY,
             TOTAL_TRACK_LENGTH,
             self
         )
