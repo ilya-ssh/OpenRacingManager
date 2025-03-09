@@ -1,7 +1,7 @@
 # constants.py
 DEBUG_MODE = True
 MAX_LAPS = 50
-QUALIFYING_TIME = 5
+QUALIFYING_TIME = 0.05
 ENABLE_WARMUP_LAP = False
 SAFETY_CAR_DEPLOY_CHANCE = 0.0001
 SAFETY_CAR_SPEED = 0.2
@@ -20,7 +20,7 @@ TIRE_TYPES = {
     "soft":   {"wear_rate": 0.009,  "grip": 1.10, "threshold": 30, "temp_gain": 1.5,  "optimal_temp": 90}
 }
 GAME_TITLE = "OpenRacingManager"
-CURRENT_VER = "Pre-alpha 0.0.9"
+CURRENT_VER = "Pre-alpha 0.0.10"
 PIT_STOP_THRESHOLD = 50.0
 PITLANE_SPEED_LIMIT = 0.25
 PIT_STOP_DURATION = 60

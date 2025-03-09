@@ -1,6 +1,10 @@
 import random
 import pyxel
 import math
+import threading
+import time
+import copy
+import concurrent.futures
 from constants import (
     TIRE_TYPES, PITLANE_SPEED_LIMIT, OVERTAKE_CHANCE, CRASH_CHANCE,
     SAFETY_CAR_SPEED, SAFETY_CAR_GAP_DISTANCE, SAFETY_CAR_CATCH_UP_SPEED,
@@ -17,7 +21,12 @@ from track import (
 )
 from announcements import Announcements
 
+# Global process pool used by all cars for prediction tasks
+PREDICTION_PROCESS_POOL = concurrent.futures.ProcessPoolExecutor(max_workers=4)
 
+
+def prediction_worker(car, target_laps, frame_delay):
+    return car.simulate_prediction(target_laps, frame_delay)
 class Car:
     def __init__(self, color_index, car_number, driver_name, grid_position,
                  announcements, pitbox_coords=PITLANE_ENTRANCE_DISTANCE,
@@ -102,22 +111,50 @@ class Car:
             # Start with a full tank in race mode
             self.fuel_level = self.fuel_capacity
 
-    def get_weight_factor(self):
+        # Instance attributes for asynchronous prediction
+        self.prediction_future = None
+        self.prediction_timestamp = 0
+        self.prediction_result = None
+        self.prediction_printed = False
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        # Exclude unpicklable attributes (e.g. objects with thread locks)
+        state['announcements'] = None
+        state['game'] = None
+        state['prediction_future'] = None
+        return state
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+
+    def schedule_async_prediction(self, target_laps=10):
         """
         Compute a multiplier based on the current total weight.
         A full tank gives a “nominal” weight; as fuel is burned, the car becomes lighter,
         so effective acceleration and top speed are slightly higher.
         """
-        nominal_weight = self.base_weight + self.fuel_capacity * self.fuel_density
-        current_weight = self.base_weight + self.fuel_level * self.fuel_density
-        return nominal_weight / current_weight
+        # Submit the prediction work to the process pool
+
+        self.prediction_future = PREDICTION_PROCESS_POOL.submit(prediction_worker, self, target_laps, 0)
+        self.prediction_timestamp = time.time()
+        self.prediction_result = None
+        self.prediction_printed = False  # Reset the flag for the new prediction
+
+    def check_async_prediction_done(self):
+        """
+        Check if the background simulation for this car is complete.
+        """
+        if self.prediction_future and self.prediction_future.done():
+            try:
+                self.prediction_result = self.prediction_future.result()
+            except Exception as e:
+                print(f"Background simulation error for car {self.car_number}:", e)
+                self.prediction_result = None
+            self.prediction_future = None
+        return self.prediction_result
 
     def calculate_pit_desire(self, safety_car_active):
-        """
-        Modified pit desire: start increasing pit desire once tire health falls below 90%.
-        Ramps from 0.0 to 0.5 between 90% and 80%, then from 0.5 to 1.0 as health falls further.
-        A bonus of 0.3 is added under safety car if the car hasn't caught up.
-        """
         T = TIRE_TYPES[self.tire_type]["threshold"]
 
         if self.tire_percentage >= 90:
@@ -125,10 +162,32 @@ class Car:
         elif self.tire_percentage <= (T - 2):
             base_desire = 1.0
         else:
-            # Linear interpolation: at tire_percentage==90 => 0; at tire_percentage==(T-2) => 1.
             base_desire = (90 - self.tire_percentage) / (90 - (T - 2))
         if safety_car_active and self.speed != SAFETY_CAR_SPEED:
-            base_desire = base_desire + 0.9
+            base_desire += 0.9
+
+        # Check and schedule background prediction for this car individually.
+        current_time = time.time()
+        # Schedule new prediction only if 15 seconds have elapsed since the last update.
+        if self.prediction_future is None and (current_time - self.prediction_timestamp) > 15:
+            self.schedule_async_prediction(target_laps=40)
+        else:
+            self.check_async_prediction_done()
+
+        # Print the new prediction result only once.
+        if self.prediction_result and not self.prediction_printed:
+            if self.prediction_result.tire_percentage < T:
+                print(
+                    f"[DEBUG ASYNC] Car {self.driver_name}: Predicted tire % after 3 laps = "
+                    f"{self.prediction_result.tire_percentage:.2f} < threshold ({T}%). Consider pitting."
+                )
+            else:
+                print(
+                    f"[DEBUG ASYNC] Car {self.driver_name}: Predicted tire % after 3 laps = "
+                    f"{self.prediction_result.tire_percentage:.2f} >= threshold ({T})."
+                )
+            self.prediction_printed = True
+
         return base_desire
 
     def update(self, race_started, current_frame, cars, safety_car_active):
@@ -342,84 +401,50 @@ class Car:
         else:
             self.speed = 0.0
 
-    def update_race(self, race_started, current_frame, cars, safety_car_active):
-        if not self.is_active:
-            return
-
-        # ----- Fuel Consumption Update -----
+    def update_fuel(self):
         fuel_consumed = self.fuel_consumption_coefficient * self.speed * self.fuel_consumption_multiplier
         self.fuel_level = max(0, self.fuel_level - fuel_consumed)
         if self.fuel_level <= 0:
             self.fuel_level = 0
-            self.announcements.add_message(f"Car {self.car_number} ran out of fuel!")
+            #self.announcements.add_message(f"Car {self.car_number} ran out of fuel!")
             self.crashed = True
             self.is_active = False
             return
-
-        # Safety car special handling
-        if self.is_safety_car:
-            self.update_safety_car_behavior()
-            return
-        if not race_started or self.crashed:
-            return
-
-        self.previous_distance = self.distance
-        self.previous_pitlane_distance = self.pitlane_distance
-        if self.slipstream_cooldown > 0:
-            self.slipstream_cooldown -= 1
-
-        # ----- Tire Wear Update -----
+    def update_tires(self):
         wear_rate = TIRE_TYPES[self.tire_type]["wear_rate"] / self.suspension_quality
         if self.tire_percentage < TIRE_TYPES[self.tire_type]["threshold"]:
             wear_rate *= 2
         self.tire_percentage = max(1, self.tire_percentage - wear_rate)
         self.tire_percentage = max(self.tire_percentage, 1)
 
-        # ----- Update Tire Temperature with Advanced Model -----
         self.update_tire_temperature()
-
-        # Determine pit desire based solely on tire health (and safety car bonus)
-        pit_desire = self.calculate_pit_desire(safety_car_active)
-        if pit_desire >= 1.0:
-            self.pitting = True
-        self.engine_power = self.base_engine_power  # Reset engine power
-        self.aero_efficiency = self.base_aero_efficiency
-        self.apply_slipstream(cars)
-        self.attempt_overtake(cars, safety_car_active)
-
-        if self.pitting and not self.on_pitlane:
-            self.to_pitlane(current_frame)
-        elif self.on_pitlane:
-            self.in_pitlane(current_frame)
+    def update_speed(self):
+        base_target_speed = get_desired_speed_at_distance(
+            self.distance % TOTAL_TRACK_LENGTH,
+            DESIRED_SPEEDS_LIST,
+            TOTAL_TRACK_LENGTH,
+            self
+        )
+        # --- Advanced Tire Grip Effect ---
+        # Use a Gaussian curve for grip: maximum at optimal temperature.
+        temp_deviation = self.tire_temperature - self.optimal_tire_temperature
+        sigma = 50.0  # increased sigma for a broader performance curve
+        temp_factor = math.exp(- (temp_deviation ** 2) / (2 * (sigma ** 2)))
+        # Combine with wear factor (computed similarly as before)
+        tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
+        if self.tire_percentage >= tire_threshold:
+            tire_wear_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
+        elif self.tire_percentage >= tire_threshold - 5:
+            tire_wear_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
         else:
-            # Get the ideal target speed based on track position.
-            base_target_speed = get_desired_speed_at_distance(
-                self.distance % TOTAL_TRACK_LENGTH,
-                DESIRED_SPEEDS_LIST,
-                TOTAL_TRACK_LENGTH,
-                self
-            )
-            # --- Advanced Tire Grip Effect ---
-            # Use a Gaussian curve for grip: maximum at optimal temperature.
-            temp_deviation = self.tire_temperature - self.optimal_tire_temperature
-            sigma = 50.0  # increased sigma for a broader performance curve
-            temp_factor = math.exp(- (temp_deviation ** 2) / (2 * (sigma ** 2)))
-            # Combine with wear factor (computed similarly as before)
-            tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
-            if self.tire_percentage >= tire_threshold:
-                tire_wear_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
-            elif self.tire_percentage >= tire_threshold - 5:
-                tire_wear_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
-            else:
-                tire_wear_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
-            # Combine wear and temperature effects.
-            final_tire_factor = tire_wear_factor * temp_factor * TIRE_TYPES[self.tire_type]["grip"]
-            if self.driver_name == "Marco Bellini":
-                print(final_tire_factor)
-            self.target_speed = base_target_speed * final_tire_factor
-            self.target_speed = max(self.target_speed, self.min_speed)
+            tire_wear_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
+        # Combine wear and temperature effects.
+        final_tire_factor = tire_wear_factor * temp_factor * TIRE_TYPES[self.tire_type]["grip"]
+        self.target_speed = base_target_speed * final_tire_factor
+        self.target_speed = max(self.target_speed, self.min_speed)
 
         # ----- Weight-Adjusted Acceleration and Speed Adjustments -----
+
         weight_factor = self.get_weight_factor()
         effective_acceleration = self.base_acceleration * self.gearbox_quality * weight_factor
 
@@ -439,7 +464,6 @@ class Car:
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
 
-
         if self.speed < self.target_speed:
             self.speed += effective_acceleration
             self.speed = min(self.speed, self.target_speed)
@@ -454,6 +478,40 @@ class Car:
         max_speed = max(max_speed, self.min_max_speed)
         self.speed = min(self.speed, max_speed)
         self.speed = max(self.speed, self.min_speed)
+
+
+    def update_race(self, race_started, current_frame, cars, safety_car_active):
+        if not self.is_active:
+            return
+        self.update_fuel()
+        if self.is_safety_car:
+            self.update_safety_car_behavior()
+            return
+        if not race_started or self.crashed:
+            return
+
+        self.previous_distance = self.distance
+        self.previous_pitlane_distance = self.pitlane_distance
+        if self.slipstream_cooldown > 0:
+            self.slipstream_cooldown -= 1
+
+        self.update_tires()
+
+        pit_desire = self.calculate_pit_desire(safety_car_active)
+        if pit_desire >= 1.0:
+            self.pitting = True
+        self.engine_power = self.base_engine_power  # Reset engine power
+        self.aero_efficiency = self.base_aero_efficiency
+        self.apply_slipstream(cars)
+        self.attempt_overtake(cars, safety_car_active)
+
+        if self.pitting and not self.on_pitlane:
+            self.to_pitlane(current_frame)
+        elif self.on_pitlane:
+            self.in_pitlane(current_frame)
+        else:
+            self.update_speed() # Get the ideal target speed based on track position.
+
         if not self.on_pitlane and not safety_car_active:
             self.check_random_events()
 
@@ -744,85 +802,9 @@ class Car:
         # ----- Fuel Consumption for Qualifying -----
         if self.slipstream_cooldown > 0:
             self.slipstream_cooldown -= 1
-        fuel_consumed = self.fuel_consumption_coefficient * self.speed * self.fuel_consumption_multiplier
-        self.fuel_level = max(0, self.fuel_level - fuel_consumed)
-        if self.fuel_level <= 0:
-            self.fuel_level = 0
-            self.crashed = True
-            return
-        wear_rate = TIRE_TYPES[self.tire_type]["wear_rate"] / self.suspension_quality
-        if self.tire_percentage < TIRE_TYPES[self.tire_type]["threshold"]:
-            wear_rate *= 2
-        self.tire_percentage = max(1, self.tire_percentage - wear_rate)
-        self.tire_percentage = max(self.tire_percentage, 1)
-
-        base_target_speed = get_desired_speed_at_distance(
-            self.distance % TOTAL_TRACK_LENGTH,
-            DESIRED_SPEEDS_LIST,
-            TOTAL_TRACK_LENGTH,
-            self
-        )
-        # --- New Tire Effect Logic for Qualifying ---
-        temp_deviation = self.tire_temperature - self.optimal_tire_temperature
-        sigma = 50.0  # increased sigma for a broader performance curve
-        temp_factor = math.exp(- (temp_deviation ** 2) / (2 * (sigma ** 2)))
-        # Combine with wear factor (computed similarly as before)
-        tire_threshold = TIRE_TYPES[self.tire_type]["threshold"]
-        if self.tire_percentage >= tire_threshold:
-            tire_wear_factor = 0.98 + 0.02 * ((self.tire_percentage - tire_threshold) / (100 - tire_threshold))
-        elif self.tire_percentage >= tire_threshold - 5:
-            tire_wear_factor = 0.95 + ((self.tire_percentage - (tire_threshold - 5)) / 5) * (0.98 - 0.95)
-        else:
-            tire_wear_factor = 0.50 + (self.tire_percentage / (tire_threshold - 5)) * (0.95 - 0.50)
-        # Combine wear and temperature effects.
-        final_tire_factor = tire_wear_factor * temp_factor * TIRE_TYPES[self.tire_type]["grip"]
-        if self.driver_name == "Marco Bellini":
-            print(final_tire_factor)
-        self.target_speed = base_target_speed * final_tire_factor
-        self.target_speed = max(self.target_speed, self.min_speed)
-
-        weight_factor = self.get_weight_factor()
-        effective_acceleration = self.base_acceleration * self.gearbox_quality * weight_factor
-        if self.speed < self.target_speed:
-            self.speed += effective_acceleration
-            self.speed = min(self.speed, self.target_speed)
-        elif self.speed > self.target_speed:
-            speed_diff = self.speed - self.target_speed
-            braking_force = (self.braking_intensity * speed_diff) * 0.1
-            self.speed -= braking_force
-            self.speed = max(self.speed, self.target_speed)
-
-        # --- New corner-based adjustment (unchanged) ---
-        corner_type = self.get_corner_type(offset=10.0, threshold_degrees=15)
-        if corner_type == "slow":
-            multiplier = (self.brake_performance / 210.0) * self.suspension_quality
-        elif corner_type == "medium":
-            multiplier = (self.aero_efficiency + (self.brake_performance / 210.0)) / 2.0
-        elif corner_type == "fast":
-            multiplier = self.aero_efficiency
-        else:
-            multiplier = self.engine_power
-
-        max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
-        max_speed *= multiplier
-        max_speed = max(max_speed, self.min_max_speed)
-        self.speed = min(self.speed, max_speed)
-        self.speed = max(self.speed, self.min_speed)
-        effective_acceleration = self.base_acceleration * self.gearbox_quality
-        if self.speed < self.target_speed:
-            self.speed += effective_acceleration
-            self.speed = min(self.speed, self.target_speed)
-        elif self.speed > self.target_speed:
-            speed_diff = self.speed - self.target_speed
-            braking_force = (self.braking_intensity * speed_diff) * 0.1
-            self.speed -= braking_force
-            self.speed = max(self.speed, self.target_speed)
-
-        max_speed = self.base_max_speed * (self.tire_percentage / 100) * weight_factor
-        max_speed *= multiplier
-        max_speed = max(max_speed, self.min_max_speed)
-        self.speed = min(self.speed, max_speed)
-        self.speed = max(self.speed, self.min_speed)
+        self.update_fuel()
+        self.update_tires()
+        self.update_speed()
         self.distance += self.speed
 
         self.check_random_events()
@@ -906,6 +888,37 @@ class Car:
             return "medium"
         else:
             return "slow"
+
+    def get_weight_factor(self):
+        nominal_weight = self.base_weight + self.fuel_capacity * self.fuel_density
+        current_weight = self.base_weight + self.fuel_level * self.fuel_density
+        return nominal_weight / current_weight
+
+    def simulate_prediction(self, target_laps, frame_delay=1 / 30.0):
+        sim_car = copy.deepcopy(self)
+        # Ensure the simulation starts with the current tire state.
+        sim_car.tire_percentage = self.tire_percentage
+        sim_car.tire_temperature = self.tire_temperature
+
+        # Instead of counting laps, count the actual distance traveled.
+        total_distance_traveled = 0.0
+        target_distance = target_laps * TOTAL_TRACK_LENGTH
+
+        current_frame = 0
+        while total_distance_traveled < target_distance and sim_car.is_active:
+            sim_car.update_fuel()
+            sim_car.update_tires()
+            sim_car.update_speed()
+
+            sim_car.previous_distance = sim_car.distance
+            sim_car.distance += sim_car.speed
+            sim_car.distance %= TOTAL_TRACK_LENGTH
+
+            # Add the distance traveled in this frame to the total.
+            total_distance_traveled += sim_car.speed
+
+            current_frame += 1
+        return sim_car
 
     def reset_after_safety_car(self):
         self.is_under_safety_car = False
